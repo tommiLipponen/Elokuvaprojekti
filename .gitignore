@@ -37,6 +37,10 @@ data/
 *.swp
 *.swo
 
+# Local team planning files
+scrum-backlog-plan.md
+.markdownlint.json
+
 # Misc
 .cache/
 .tmp/
