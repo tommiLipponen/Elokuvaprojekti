@@ -39,6 +39,8 @@ data/
 
 # Local team planning files
 scrum-backlog-plan.md
+architecture-plan.md
+implementation-plan.md
 .markdownlint.json
 
 # Misc
