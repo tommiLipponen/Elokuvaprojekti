@@ -41,6 +41,7 @@ data/
 scrum-backlog-plan.md
 architecture-plan.md
 implementation-plan.md
+assignment-instructions.md
 .markdownlint.json
 
 # Misc
