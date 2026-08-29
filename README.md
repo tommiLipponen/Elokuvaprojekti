@@ -12,11 +12,11 @@ Team: Iisa, Veera, Topi, Tommi.
 
 ```mermaid
 flowchart LR
-    React["React (frontend)"] -->|REST API| Express
+    React["React (frontend)"] -->|"REST API (OpenAPI contract)"| Express
 
     subgraph Azure
         subgraph "Azure App Service"
-            Express["Node.js + Express"] --> Prisma["Prisma ORM"]
+            Express["Node.js + Express<br/>+ OpenAPI / Swagger UI"] --> Prisma["Prisma ORM"]
         end
         Prisma --> DB[("Azure Database for PostgreSQL")]
     end
