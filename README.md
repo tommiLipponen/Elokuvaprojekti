@@ -22,4 +22,8 @@ flowchart LR
     end
 ```
 
-> Detailed technical documentation (architecture, API docs, diagrams, etc.) will be added under a separate `docs/` folder as the project progresses.
+## Documentation
+
+- [Class diagram](docs/class-diagram.md)
+
+> The project documentation is kept in the docs folder and is versioned in Git for easy review on GitHub.

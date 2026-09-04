@@ -31,6 +31,11 @@ data/
 *.sqlite
 *.sqlite3
 
+# Local sample API payloads
+# Keep the TMDB sample payload local only
+
+tmdb-movie-550-sample.json
+
 # Editor / IDE
 .vscode/
 .idea/
@@ -38,9 +43,6 @@ data/
 *.swo
 
 # Local team planning files
-scrum-backlog-plan.md
-architecture-plan.md
-implementation-plan.md
 assignment-instructions.md
 .markdownlint.json
 
