@@ -1,3 +1,5 @@
+<!-- cSpell:ignore Elokuvaprojekti tlippone TMDB OAMK dotenv nodemon eslint bcrypt jsonwebtoken npx zod Supertest WIQL -->
+
 # Scrum Backlog Plan for the Movie Project
 
 This backlog is based on the official solution requirements and is structured for Azure DevOps Scrum use. The format is intentionally board-friendly so each item can be moved into a backlog, sprint, or work item with minimal editing.
@@ -7,9 +9,9 @@ This backlog is based on the official solution requirements and is structured fo
 As a user, I want to browse movies, search the catalog, join groups, share favorite lists, and add reviews through a responsive web application built with React, Node.js, and PostgreSQL.
 
 > Note: "Epic N" and "PBI N" labels in this plan are this document's own reference numbers for tracking and cross-referencing, not the actual Azure DevOps work item IDs. Azure DevOps assigns its own sequential ID to every work item you create (regardless of type), so a PBI documented here as "PBI 1" might be created as, e.g., ADO ID 37. When creating a board item from this plan, put the plan's label (e.g. "PBI 1") in the work item title or description for traceability, and note the resulting ADO ID here if useful.
-
+>
 > Azure DevOps IDs (created 2026-09-04): Epic 1-12 = ADO 46-57 (in order). PBI 1=58, 2=73, 3=74, 4=75, 5=79, 6=80, 7=66, 8=67, 9=81, 10=82, 11=83, 12=84, 13=77, 14=78, 15=62, 16=63, 17=64, 18=65, 19=59, 20=60, 21=61, 22=68, 23=69, 24=70, 25=71, 26=72, 27=76. Tasks under PBI 1 (ADO 58) = ADO 85-91, in the same order as the task breakdown below. Sprint 1-6 iterations exist in Azure Boards and are assigned to "Elokuvaprojekti Team", with dates matching weeks 36-41.
-
+>
 > Task creation status: every PBI below now has a concrete task breakdown written in this document. In Azure Boards, Task work items have been created for Sprint 1-2 PBIs only (1, 2, 3, 4, 5, 19, 20, 22, 23) since their concrete steps are stable now. Tasks for Sprint 3-6 PBIs (6-18, 21, 24, 27) are intentionally **not yet created in Azure Boards** - create them from this document's task breakdown just before each of those sprints starts, since their exact steps may shift depending on what gets built in Sprint 1-2 (e.g. exact Prisma schema, auth middleware shape). PBI 25 and 26 are continuous and can be created whenever convenient.
 
 ---
@@ -981,7 +983,7 @@ Code for this project lives in the GitHub repository `tommiLipponen/Elokuvaproje
 
 The final backlog contains 27 board-ready PBIs across 12 epics, including both product features and the required project delivery work. Epic 1 is a technical enabler for project foundation work, and the last two epics are necessary to cover the formal assignment requirements for testing, documentation, and project management.
 
-## Definition of Ready
+## Definition of Ready (Backlog Summary)
 
 A backlog item is ready when:
 
@@ -991,7 +993,7 @@ A backlog item is ready when:
 - Dependencies are understood by the team.
 - It is small enough to complete within a sprint.
 
-## Definition of Done
+## Definition of Done (Backlog Summary)
 
 A backlog item is done when:
 
