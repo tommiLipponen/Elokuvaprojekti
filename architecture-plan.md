@@ -479,32 +479,87 @@ The project is intended for a modern full-stack deployment and should support:
 - local development environment
 - PostgreSQL local database or containerized database
 - Azure App Service for backend deployment
+- The built React frontend is served as static files by the same Express app on the same App Service (single deployment, no CORS configuration needed)
 - Azure Database for PostgreSQL for runtime storage
+- Azure Managed Identity for the App Service to authenticate to other Azure resources without stored credentials
+- Azure Key Vault for storing secrets (database connection string, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, TMDB API key) referenced by App Service
+- Application Insights for exception logging, API failure tracking, request tracing, and performance monitoring on App Service
 - GitHub Actions CI/CD pipeline for automated validation and deployment
 - backend environment configuration through environment variables
 - frontend API base URL configuration
 - production-ready environment separation
 - optional import or sync jobs for movie datasets during deployment or as scheduled tasks
 
+### 11.1 Ownership and Deployment Topology
+
+- Application code lives in the GitHub repository `tommiLipponen/Elokuvaprojekti` (default branch `main`).
+- Deployment targets (Azure App Service and Azure Database for PostgreSQL) are provisioned under Topi's Azure resources/subscription, not the repo owner's.
+- The GitHub Actions CI/CD pipeline runs from the `tommiLipponen/Elokuvaprojekti` repo but publishes to Topi's Azure resources, so the required deployment secrets (e.g. Azure publish profile or service principal credentials, `DATABASE_URL` for the Flexible Server instance) must be configured as GitHub Actions secrets on that repo, granting access to Topi's Azure resources.
+- Topi is the migration owner: responsible for running/approving Prisma migrations (`prisma migrate deploy`) against the Azure Database for PostgreSQL instance, and for the files that drive them (`prisma/schema.prisma`, `prisma/migrations/*`), plus the Azure-side configuration (firewall rules, connection strings, environment variables) that the pipeline depends on.
+- Azure resources used for this project: App Service (backend hosting), Azure Database for PostgreSQL (runtime storage), Managed Identity (App Service identity for accessing Key Vault without stored credentials), Key Vault (secret storage), and Application Insights (logging/monitoring). Topi provisions and owns these resources; App Service reads secrets from Key Vault via its Managed Identity at runtime instead of storing them directly as App Service settings.
+- Migrations run as an automated CI/CD step, not manually: the GitHub Actions pipeline runs `npm ci` → `npx prisma generate` → `npm run build` → `npx prisma migrate deploy` → deploy to App Service, so every schema change is tied to the merged commit/PR rather than run by hand from a laptop. Because the migration step runs in GitHub Actions (not on App Service startup), the pipeline needs its own `DATABASE_URL` GitHub secret to connect directly to Postgres — this is separate from (but has the same value as) the `DATABASE_URL` stored in Key Vault for App Service's own runtime use; both are needed because they're read by two different processes.
+- PostgreSQL networking: use public access with SSL required, allowing Azure services and public access, secured by a strong admin password and SSL-only connections — not Private Endpoint/VNet integration. GitHub-hosted Actions runners don't have a small, stable IP range to whitelist, so firewall rules can't target them specifically; this is why SSL + a strong password is the actual safeguard, not IP restriction.
+
+```text
+React + Vite SPA
+     |
+     v
+Azure App Service (Express API)
+     |
+     | Managed Identity
+     v
+Azure Key Vault
+     |
+     +--> DATABASE-URL
+     +--> JWT-ACCESS-SECRET
+     +--> JWT-REFRESH-SECRET
+     +--> TMDB-API-KEY
+     |
+     v
+Prisma ORM
+     |
+     v
+Azure Database for PostgreSQL Flexible Server
+```
+
+### 11.2 Setup Instructions for Topi
+
+Before creating resources, Topi should install the Azure CLI locally and run `az login` to authenticate to his subscription (if `az login` shows more than one subscription/tenant, select the right one with `az account set --subscription <id>`). This gives a direct backup path to inspect or fix resources (e.g. run `prisma migrate deploy` manually, check firewall rules, or read Key Vault secrets) if the GitHub Actions pipeline fails or something goes wrong with a migration.
+
+The Azure resources should be set up in this order:
+
+1. **Create a resource group** for the project (e.g. `rg-elokuvaprojekti`) in Topi's Azure subscription, so all resources below are grouped together and easy to find/delete later.
+2. **Create Azure Database for PostgreSQL Flexible Server** in that resource group. Choose the **Burstable B1ms** compute tier (1 vCore, 2 GiB RAM) with the minimum storage size (32 GiB) and no high availability/zone redundancy — this is the cheapest tier and is enough for a student project. Note the server name and admin username/password, and enable public access with SSL required (allow Azure services + public access; GitHub-hosted Actions runners don't have a fixed IP range to whitelist, so rely on the strong admin password and SSL-only connections instead of firewall IP restriction).
+3. **Create the database** on the server (e.g. `elokuvaprojekti`) that Prisma will connect to, and record the full connection string (`postgresql://<user>:<password>@<server>.postgres.database.azure.com:5432/<db>?sslmode=require`).
+4. **Create an Azure Key Vault** in the same resource group. Add secrets for `DATABASE-URL`, `JWT-ACCESS-SECRET`, `JWT-REFRESH-SECRET`, and `TMDB-API-KEY` (Key Vault secret names typically use dashes instead of underscores).
+5. **Create an App Service Plan** (Linux) in the same resource group, using the **B1 (Basic)** tier — the cheapest tier with Always On support and no daily compute quota; avoid the Free (F1) tier (too limited for a running API + DB) and avoid Standard/Premium tiers (unnecessary cost for this project).
+6. **Create the Azure App Service** (Node.js runtime) on that plan, and enable **System-Assigned Managed Identity** on it (App Service → Identity → System assigned → On).
+7. **Grant the App Service's Managed Identity access to Key Vault using Azure RBAC**: assign the built-in `Key Vault Secrets User` role to the App Service's Managed Identity at the Key Vault scope, then reference the secrets from App Service configuration using Key Vault references (e.g. value `@Microsoft.KeyVault(SecretUri=https://<vault-name>.vault.azure.net/secrets/DATABASE-URL/)`).
+8. **Create an Application Insights resource** and connect it to the App Service (App Service → Application Insights → Turn on), so exceptions, failed API requests, and performance data are captured automatically. Application Insights bills per GB of data ingested, but includes a free monthly data allowance that easily covers a student project — optionally set a daily data volume cap (Application Insights → Usage and estimated costs → Daily cap) as a safeguard against unexpected cost.
+9. **Create a deployment credential for GitHub Actions** by downloading the App Service Publish Profile (App Service → Get publish profile). A Publish Profile is enough for a single-app, single-environment deployment like this one; a Microsoft Entra service principal is only needed for more advanced setups (multiple environments, Azure CLI/login actions), which this project doesn't require.
+10. **Add the required secrets to the GitHub repository** (`tommiLipponen/Elokuvaprojekti` → Settings → Secrets and variables → Actions): the Publish Profile contents from step 9 (e.g. as `AZURE_WEBAPP_PUBLISH_PROFILE`), plus `DATABASE_URL` (same value as the Key Vault secret) so the CI/CD pipeline's migration step can run `prisma migrate deploy` directly against the Azure Postgres instance.
+11. **Verify the infrastructure with the Azure CLI** — this step doesn't require the backend code or GitHub Actions workflow to exist yet, since those are built later: confirm the Postgres server is reachable (`az postgres flexible-server show`, or connect directly with `psql "<connection string>"`), confirm the Key Vault secrets were created (`az keyvault secret list --vault-name <vault-name>`), confirm the Managed Identity's role assignment on Key Vault (`az role assignment list --assignee <principal-id> --scope <key-vault-resource-id>`), and confirm App Service is running by visiting its default URL (a new App Service shows a placeholder "app is running" page even with no code deployed yet). Or prompt your VS Code Copilot to use your Azure CLI to verify the resources for you.
+12. **Verify end-to-end once the backend and GitHub Actions workflow exist**: push a small change through the pipeline and confirm the GitHub Actions run completes the migration step successfully and the deployed App Service app starts and can query the database.
+
 ## 12. Risks and Constraints
 
-### 11.1 Scope Risk
+### 12.1 Scope Risk
 
 The project includes many features, so sprint planning and backlog splitting are important. The board should keep each PBI small and testable.
 
-### 11.2 Data Consistency Risk
+### 12.2 Data Consistency Risk
 
 Group membership, reviews, and favorite list operations require careful transactional handling to prevent invalid or inconsistent state.
 
-### 11.3 External Data Dependency
+### 12.3 External Data Dependency
 
 Movie data will use a hybrid approach. The system imports external data into PostgreSQL for internal use, while selected functionality still calls an external provider at runtime when fresh or extended movie data is needed. TMDB is the primary provider for this external data layer because it matches the project’s movie discovery, metadata, poster, and trending requirements and exposes a mature API and OpenAPI documentation.
 
-### 11.4 CI/CD and Deployment Risk
+### 12.4 CI/CD and Deployment Risk
 
 Deployment must account for database migration, dataset import, and environment configuration in GitHub Actions before the application is considered ready for Azure App Service.
 
-### 11.5 Security Risk
+### 12.5 Security Risk
 
 Authentication, authorization, and protected content access must be designed early because they affect most user-facing features.
 
@@ -549,7 +604,7 @@ This provider layer is separate from the application’s internal logic and is u
 
 The rest of the system should use PostgreSQL first for reviews, favorites, groups, memberships, and general app behavior. This keeps performance stable, reduces third-party reliance, and supports the Azure deployment model. TMDB is the preferred provider because it matches the project’s movie discovery and metadata needs and provides OpenAPI documentation that supports a clean API contract and future client generation.
 
-## 14. Conclusion
+## 15. Conclusion
 
 The architecture is well suited to a layered, full-stack React + Express + Prisma + PostgreSQL application with a hybrid external movie-data strategy. The module-based structure is a strong fit for the project because it mirrors the actual feature domains: auth, users, movies, groups, memberships, reviews, and favorites.
 

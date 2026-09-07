@@ -20,6 +20,8 @@ Planned sprint rhythm:
 
 The first sprint starts at week 36, which matches the project timeline requirement.
 
+> Note (2026-09-06): Sprint 1's actual start was delayed past week 36 due to an OAMK professors' strike affecting course scheduling. The team began Sprint 1 work on 2026-09-06; the Azure Boards sprint calendar has been adjusted accordingly (Sprint 1: 2026-09-06 to 2026-09-12, with Sprints 2-6 shifted later by the same number of days), while this document's original Week 36-41 week numbers are kept for reference to the planned rhythm.
+
 ## 3. Guiding Principles
 
 - Build shared infrastructure before feature work.
@@ -256,6 +258,8 @@ The assignment includes mandatory project documentation and management tasks tha
 
 These tasks should be scheduled as parallel project responsibilities throughout the project timeline, not left until the end.
 
+> Tracked in scrum-backlog-plan.md as Epic 11 (PBI 22-26).
+
 ## 8. Automated API Testing Workstream
 
 The assignment requires automated API tests using Jest and Supertest. This should be treated as a required project workstream and should run alongside backend development.
@@ -279,6 +283,8 @@ The assignment requires automated API tests using Jest and Supertest. This shoul
 
 Testing should start as soon as the auth endpoints and review browsing endpoints are ready, and the CI pipeline should run them automatically during later sprints.
 
+> Tracked in scrum-backlog-plan.md as Epic 10 (PBI 19-21).
+
 ## 9. Optional Feature Work
 
 The project contains a free-choice optional feature worth 1 point. This should be treated as stretch scope and should not block the MVP or the final delivery.
@@ -290,6 +296,8 @@ Possible examples:
 - improved personalization or group extras
 
 The optional feature should be implemented only after the core project scope is stable and the required documentation and testing work is on track.
+
+> Tracked in scrum-backlog-plan.md as Epic 12, PBI 27.
 
 ## 10. Chunked Work Breakdown
 
