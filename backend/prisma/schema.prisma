@@ -1,0 +1,149 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String           @id @default(cuid())
+  email          String           @unique
+  username       String           @unique
+  passwordHash   String
+  createdAt      DateTime         @default(now())
+
+  refreshTokens  RefreshToken[]
+  reviews        Review[]
+  ownedGroups    Group[]          @relation("GroupOwner")
+  memberships    GroupMembership[]
+  favoriteLists  FavoriteList[]
+}
+
+model RefreshToken {
+  id         String   @id @default(cuid())
+  userId     String
+  tokenHash  String   @unique
+  expiresAt  DateTime
+  revokedAt  DateTime
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Movie {
+  id            String         @id @default(cuid())
+  tmdbId        Int            @unique
+  title         String
+  originalTitle String
+  overview      String
+  posterPath    String
+  backdropPath  String
+  releaseDate   DateTime
+  runtime       Int
+  status        String
+  voteAverage   Decimal
+  voteCount     Int
+  popularity    Decimal
+
+  reviews       Review[]
+  favoriteItems FavoriteItem[]
+  groupMovies   GroupMovie[]
+}
+
+model Genre {
+  id          String @id @default(cuid())
+  tmdbGenreId Int    @unique
+  name        String
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  movieId   String
+  userId    String
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
+
+  movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([movieId])
+  @@index([userId])
+}
+
+model Group {
+  id           String           @id @default(cuid())
+  name         String
+  ownerId      String
+  createdAt    DateTime         @default(now())
+
+  owner        User             @relation("GroupOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  memberships  GroupMembership[]
+  groupMovies  GroupMovie[]
+
+  @@index([ownerId])
+}
+
+model GroupMembership {
+  id        String   @id @default(cuid())
+  groupId   String
+  userId    String
+  status    String
+  joinedAt  DateTime @default(now())
+
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@index([userId])
+}
+
+model FavoriteList {
+  id          String         @id @default(cuid())
+  userId      String
+  name        String
+  isPublic    Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items       FavoriteItem[]
+
+  @@index([userId])
+}
+
+model FavoriteItem {
+  id             String       @id @default(cuid())
+  favoriteListId String
+  movieId        String
+  addedAt        DateTime     @default(now())
+
+  favoriteList   FavoriteList @relation(fields: [favoriteListId], references: [id], onDelete: Cascade)
+  movie          Movie        @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([favoriteListId, movieId])
+  @@index([movieId])
+}
+
+model GroupMovie {
+  id       String   @id @default(cuid())
+  groupId  String
+  movieId  String
+  addedBy  String
+  addedAt  DateTime @default(now())
+
+  group    Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  movie    Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, movieId])
+  @@index([movieId])
+}
