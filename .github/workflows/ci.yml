@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm test
+
+      # Only Topi (migration owner) applies migrations to the shared Azure DB.
+      # Requires a DATABASE_URL repo secret pointing at Azure Postgres.
+      - name: Deploy migrations to Azure
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          if [ -n "$DATABASE_URL" ]; then
+            npx prisma migrate deploy
+          else
+            echo "DATABASE_URL secret not set yet - skipping migrate deploy"
+          fi
