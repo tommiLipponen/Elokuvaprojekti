@@ -58,3 +58,4 @@ assignment-instructions.md
 /backend/.claude/
 /backend/.windsurf/
 /backend/node_modules/
+/backend/skills-lock.json
