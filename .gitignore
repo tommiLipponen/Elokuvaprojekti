@@ -48,6 +48,12 @@ tmdb-movie-550-sample.json
 assignment-instructions.md
 .markdownlint.json
 
+# AI agent-vendored skill docs (not project code)
+.agents/
+.claude/
+.windsurf/
+skills-lock.json
+
 # Misc
 .cache/
 .tmp/
