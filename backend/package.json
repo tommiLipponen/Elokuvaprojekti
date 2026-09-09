@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "jest --passWithNoTests",
     "lint": "eslint ."
   },
@@ -33,4 +34,7 @@
     "nodemon": "^3.1.14",
     "supertest": "^7.2.2"
   }
+
 }
+
+
