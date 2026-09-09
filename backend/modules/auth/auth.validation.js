@@ -2,13 +2,13 @@
 
 
 // check that email is in a valid format. Needs to contain an "@" symbol and a domain name (e.g., pekka.pouta@example.com)
-export const validateEmail = (email) => {
+const validateEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 };
 
 // Check that password is at least 8 characters long, contains at least one uppercase letter, and at least one number
-export const validatePassword = (password) => {
+const validatePassword = (password) => {
   return (
     typeof password === 'string' &&
     password.length >= 8 &&
@@ -17,7 +17,7 @@ export const validatePassword = (password) => {
   );
 };
 
-export const validateAuth = ({ email, password }) => {
+const validateAuth = ({ email, password }) => {
   const errors = {};
 
   if (!validateEmail(email)) {
@@ -31,3 +31,9 @@ export const validateAuth = ({ email, password }) => {
 
   return errors;
 };
+
+module.exports = {
+  validateEmail,
+  validatePassword,
+  validateAuth,
+}

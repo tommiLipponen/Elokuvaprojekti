@@ -1,7 +1,7 @@
-import brypt from 'bcrypt';
+const bcrypt = require('bcrypt');
 
-export const createUser = async (email, password) => {
-    const hashedPassword = await brypt.hash(password, 10);
+const createUser = async (email, password) => {
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = {
         email,
@@ -9,3 +9,5 @@ export const createUser = async (email, password) => {
     };
     return user;
 };
+
+module.exports = { createUser };

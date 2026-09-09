@@ -1,5 +1,5 @@
-import express from 'express';
-import authRoutes from './modules/auth/auth.routes.js';
+const express = require('express');
+const authRoutes = require('./modules/auth/auth.routes');
 
 const app = express();
 
@@ -7,4 +7,4 @@ app.use(express.json());
 
 app.use('/auth', authRoutes);
 
-export default app;
+module.exports = app;

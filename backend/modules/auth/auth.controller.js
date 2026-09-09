@@ -1,7 +1,8 @@
-import { validateAuth } from './auth.validation.js';
-import { createUser } from './auth.service.js';
+const { validateAuth } = require('./auth.validation');
+const { createUser } = require('./auth.service');
 
-export const register = async (req, res) => {
+
+const register = async (req, res) => {
 // Extract email and password from the request body
   const { email, password } = req.body;
 
@@ -17,3 +18,5 @@ export const register = async (req, res) => {
 
   return res.status(201).json(user);
 };
+
+module.exports = { register };
