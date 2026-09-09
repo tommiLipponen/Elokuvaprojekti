@@ -37,10 +37,9 @@ CI (`.github/workflows/ci.yml`) runs on Ubuntu with `npm ci`, which requires `ba
 
 Whenever you add, update, or remove a backend dependency (any change that touches `backend/package-lock.json`), regenerate the lockfile on Linux before pushing:
 
-```
+```bash
 cd backend
 docker run --rm -v ${PWD}:/app -w /app node:24 npm install
 ```
 
 Requires Docker Desktop. Day-to-day work with no dependency changes is unaffected — just use `npm install` as normal.
-
