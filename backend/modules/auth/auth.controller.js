@@ -14,9 +14,16 @@ const register = async (req, res) => {
     return res.status(400).json({ errors });
   }
 // If validation passes, create a new user using the createUser function
-  const user = await createUser(email, password);
-
-  return res.status(201).json(user);
+  try {
+    const user = await createUser(email, password);
+    return res.status(201).json(user);
+  } catch (err) {
+    // Prisma unique constraint violation (duplicate email/username)
+    if (err.code === 'P2002') {
+      return res.status(409).json({ errors: { email: 'Email already registered' } });
+    }
+    throw err;
+  }
 };
 
 module.exports = { register };
