@@ -1,0 +1,42 @@
+name: Deploy to Azure App Service
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm test
+
+      # Deploy to Azure App Service (migrations already deployed by CI workflow)
+      - name: Deploy to App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: moviedb-eqgbbphehffnerf7
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: backend/
+
+      # Verify deployed app is responding
+      - name: Smoke test deployed app
+        run: |
+          echo "Waiting for app to start..."
+          sleep 5
+          curl -f https://moviedb-eqgbbphehffnerf7.francecentral-01.azurewebsites.net/api-docs || exit 1
+          echo "✅ App is running and Swagger UI is accessible"
