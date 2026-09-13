@@ -6,6 +6,75 @@ const options = {
     info: {
       title: 'Elokuvaprojekti API',
       version: '1.0.0',
+      description: 'A full-stack application for movie discovery, social reviews, and group collaboration. Supports user registration, movie search, group management, and favorite lists.',
+      contact: {
+        name: 'OAMK Team',
+        email: 'support@elokuvaprojekti.local',
+      },
+      license: {
+        name: 'MIT',
+      },
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000',
+        description: 'Development server',
+      },
+      {
+        url: 'https://elokuvaprojekti.azurewebsites.net',
+        description: 'Production server (Azure App Service)',
+      },
+    ],
+    components: {
+      schemas: {
+        Error400: {
+          type: 'object',
+          properties: {
+            errors: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  msg: {
+                    type: 'string',
+                    example: 'Invalid email format',
+                  },
+                  param: {
+                    type: 'string',
+                    example: 'email',
+                  },
+                },
+              },
+            },
+          },
+        },
+        Error409: {
+          type: 'object',
+          properties: {
+            message: {
+              type: 'string',
+              example: 'Email already in use',
+            },
+          },
+        },
+        Error500: {
+          type: 'object',
+          properties: {
+            message: {
+              type: 'string',
+              example: 'Internal server error',
+            },
+          },
+        },
+      },
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'JWT access token for protected endpoints',
+        },
+      },
     },
   },
   apis: ['./modules/**/*.js'],
