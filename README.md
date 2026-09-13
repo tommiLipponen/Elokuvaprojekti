@@ -43,3 +43,9 @@ docker run --rm -v ${PWD}:/app -w /app node:24 npm install
 ```
 
 Requires Docker Desktop. Day-to-day work with no dependency changes is unaffected — just use `npm install` as normal.
+
+## Backend test database
+
+Jest sets `NODE_ENV=test`. Database-backed tests must use `TEST_DATABASE_URL`; they never fall back to the development `DATABASE_URL`.
+
+Create `backend/.env.test` from [backend/.env.test.example](backend/.env.test.example) and point it to a separate PostgreSQL database before adding database-backed tests. The current smoke test does not need a database.
