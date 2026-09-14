@@ -26,10 +26,11 @@ jobs:
       - run: npm test
 
       # Deploy to Azure App Service (migrations already deployed by CI workflow)
+      # app-name must be the actual App Service resource name, not the auto-generated hostname
       - name: Deploy to App Service
         uses: azure/webapps-deploy@v2
         with:
-          app-name: moviedb-eqgbbphehffnerf7
+          app-name: moviedb
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: backend/
 
