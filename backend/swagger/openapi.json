@@ -45,6 +45,43 @@
           }
         }
       },
+      "Error200": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "JWT access token"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "JWT refresh token"
+          }
+        }
+      },
+      "Error401": {
+  "type": "object",
+  "properties": {
+    "errors": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Invalid email or password"
+        }
+      }
+    }
+  }
+},
+      "Error404": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Refresh token not found"
+          }
+        }
+      },
+
       "Error409": {
         "type": "object",
         "properties": {
@@ -174,6 +211,125 @@
       }
     }
   },
+
+  "/auth/login": {
+  "post": {
+    "summary": "Login user",
+    "description": "Authenticate a user with email and password and return access and refresh tokens.",
+    "tags": [
+      "Auth"
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "email",
+              "password"
+            ],
+            "properties": {
+              "email": {
+                "type": "string",
+                "format": "email",
+                "example": "test@example.com"
+              },
+              "password": {
+                "type": "string",
+                "example": "Password123"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Login successful",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "accessToken": {
+                  "type": "string",
+                  "description": "JWT access token"
+                },
+                "refreshToken": {
+                  "type": "string",
+                  "description": "JWT refresh token"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Invalid email or password"
+      },
+      "500": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error500"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+
+"/auth/logout": {
+  "post": {
+    "summary": "Logout user",
+    "description": "Revoke the provided refresh token.",
+    "tags": [
+      "Auth"
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "refreshToken"
+            ],
+            "properties": {
+              "refreshToken": {
+                "type": "string",
+                "description": "Refresh token to revoke",
+                "example": "eyJhbGciOiJIUzI1NiIs..."
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "204": {
+        "description": "Logout successful"
+      },
+      "404": {
+        "description": "Refresh token not found"
+      },
+      "500": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error500"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+
   "tags": [
     {
       "name": "Auth",

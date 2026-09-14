@@ -1,5 +1,6 @@
 const { validateAuth } = require('./auth.validation');
 const { createUser } = require('./auth.service');
+const { login, revokeRefreshToken } = require('./auth.service');
 
 
 const register = async (req, res) => {
@@ -26,4 +27,31 @@ const register = async (req, res) => {
   }
 };
 
-module.exports = { register };
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const tokens = await login(email, password);
+// If login is successful, return the access and refresh tokens
+    return res.status(200).json(tokens);
+  } catch (err) {
+// If login fails (invalid email or password), return a 401 Unauthorized response with an error message
+    return res.status(401).json({ errors: { message: 'Invalid email or password' } });
+  }
+};
+
+const logoutUser = async (req, res) => {
+  const { refreshToken } = req.body;
+
+  try {
+    await revokeRefreshToken(refreshToken);
+// If the refresh token is successfully revoked, return a 204 No Content response
+    return res.status(204).send();
+  } catch (err) {
+// If the refresh token is not found, return a 404 Not Found response with an error message
+    return res.status(404).json({ errors: { message: 'Refresh token not found' } });
+  }
+};
+
+
+module.exports = { register, loginUser, logoutUser };
