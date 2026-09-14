@@ -17,12 +17,8 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
-        description: 'Development server',
-      },
-      {
-        url: 'https://elokuvaprojekti.azurewebsites.net',
-        description: 'Production server (Azure App Service)',
+        url: '/',
+        description: 'Current server',
       },
     ],
     components: {
