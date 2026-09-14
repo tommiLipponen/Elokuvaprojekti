@@ -34,7 +34,7 @@ const loginUser = async (req, res) => {
     const tokens = await login(email, password);
 // If login is successful, return the access and refresh tokens
     return res.status(200).json(tokens);
-  } catch (err) {
+  } catch {
 // If login fails (invalid email or password), return a 401 Unauthorized response with an error message
     return res.status(401).json({ errors: { message: 'Invalid email or password' } });
   }
@@ -47,7 +47,7 @@ const logoutUser = async (req, res) => {
     await revokeRefreshToken(refreshToken);
 // If the refresh token is successfully revoked, return a 204 No Content response
     return res.status(204).send();
-  } catch (err) {
+  } catch {
 // If the refresh token is not found, return a 404 Not Found response with an error message
     return res.status(404).json({ errors: { message: 'Refresh token not found' } });
   }
