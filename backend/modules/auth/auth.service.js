@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const { getPrisma } = require('../../config/prisma');
+const { generateAccessToken, generateRefreshToken, revokeRefreshToken } = require('./token.service');
 
 const createUser = async (email, password) => {
     const prisma = await getPrisma();
@@ -15,4 +16,27 @@ const createUser = async (email, password) => {
     return safeUser;
 };
 
-module.exports = { createUser };
+const login = async (email, password) => {
+    const prisma = await getPrisma();
+
+    const user = await prisma.user.findUnique({
+        where: { email },
+    });
+
+    if (!user) {
+        throw new Error('Invalid email or password');
+    }
+
+    const passwordValid = await bcrypt.compare(password, user.passwordHash);
+
+    if (!passwordValid) {
+        throw new Error('Invalid email or password');
+    }
+
+    const accessToken = generateAccessToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
+
+    return { accessToken, refreshToken };
+}
+
+module.exports = { createUser, login, revokeRefreshToken };

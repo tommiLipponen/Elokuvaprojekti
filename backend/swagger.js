@@ -48,6 +48,47 @@ const options = {
             },
           },
         },
+        Error200: {
+          type: 'object',
+          properties: {
+            accessToken: {
+              type: 'string',
+              description: 'JWT access token',
+            },
+            refreshToken: {
+              type: 'string',
+              description: 'JWT refresh token',
+            },
+          },
+        },
+        Error401: {
+          type: 'object',
+          properties: {
+            errors: {
+              type: 'object',
+              properties: {
+                message: {
+                  type: 'string',
+                  example: 'Invalid email or password',
+                },
+              },
+            },
+          },
+        },
+        Error404: {
+          type: 'object',
+          properties: {
+            errors: {
+              type: 'object',
+              properties: {
+                message: {
+                  type: 'string',
+                  example: 'Refresh token not found',
+                },
+              },
+            },
+          },
+        },
         Error409: {
           type: 'object',
           properties: {
