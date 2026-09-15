@@ -12,6 +12,11 @@ jobs:
     defaults:
       run:
         working-directory: backend
+    env:
+      # Placeholder only - prisma.config.ts resolves DATABASE_URL eagerly (even for
+      # `prisma generate`, which needs no real connection). Real migrations use the
+      # DATABASE_URL secret set explicitly in the deploy step below.
+      DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
     steps:
       - uses: actions/checkout@v4
 
