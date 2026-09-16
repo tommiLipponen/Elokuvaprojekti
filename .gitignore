@@ -50,6 +50,7 @@ tmdb-movie-550-sample.json
 # Local team planning files
 assignment-instructions.md
 .markdownlint.json
+notes-*.md
 
 # AI agent-vendored skill docs (not project code)
 .agents/
