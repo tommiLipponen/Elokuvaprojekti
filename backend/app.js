@@ -20,7 +20,8 @@ app.use('/users', userRoutes);
 const frontendDist = path.join(__dirname, 'public');
 if (fs.existsSync(frontendDist)) {
   app.use(express.static(frontendDist));
-  app.get('*', (req, res) => res.sendFile(path.join(frontendDist, 'index.html')));
+  // Express 5 requires a named wildcard instead of a bare '*'
+  app.get('/{*splat}', (req, res) => res.sendFile(path.join(frontendDist, 'index.html')));
 }
 
 module.exports = app;
