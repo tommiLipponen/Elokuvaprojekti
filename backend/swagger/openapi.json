@@ -329,6 +329,38 @@
     }
   }
 },
+"/users/me": {
+  "delete": {
+    "summary": "Delete current user",
+    "description": "Delete the authenticated user's account and all related data.",
+    "tags": [
+      "Users"
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "responses": {
+      "204": {
+        "description": "User successfully deleted"
+      },
+      "401": {
+        "description": "Access token required or invalid"
+      },
+      "500": {
+        "description": "Failed to delete user",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error500"
+            }
+          }
+        }
+      }
+    }
+  }
+},
 
   "tags": [
     {
