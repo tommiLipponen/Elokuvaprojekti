@@ -1,6 +1,7 @@
 const js = require("@eslint/js");
 
 module.exports = [
+  { ignores: ["public/**", "generated/**"] },
   js.configs.recommended,
   {
     languageOptions: {

@@ -12,6 +12,11 @@ jobs:
     defaults:
       run:
         working-directory: backend
+    env:
+      # Placeholder only - prisma.config.ts resolves DATABASE_URL eagerly (even for
+      # `prisma generate`, which needs no real connection). Real migrations use the
+      # DATABASE_URL secret set explicitly in the deploy step below.
+      DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
     steps:
       - uses: actions/checkout@v4
 
@@ -39,3 +44,26 @@ jobs:
           else
             echo "DATABASE_URL secret not set yet - skipping migrate deploy"
           fi
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm test
+
+      - run: npm run build
+

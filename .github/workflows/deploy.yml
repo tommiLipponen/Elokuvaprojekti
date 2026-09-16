@@ -4,26 +4,45 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: "npm"
-          cache-dependency-path: backend/package-lock.json
 
-      - run: npm ci
+      - name: Install and build frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
 
-      - run: npm run lint
+      - name: Copy frontend build into backend/public
+        run: |
+          rm -rf backend/public
+          cp -r frontend/dist backend/public
 
-      - run: npm test
+      - name: Install backend dependencies
+        working-directory: backend
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npm ci
+
+      - name: Lint backend
+        working-directory: backend
+        run: npm run lint
+
+      - name: Test backend
+        working-directory: backend
+        run: npm test
 
       # Deploy to Azure App Service (migrations already deployed by CI workflow)
       # app-name must be the actual App Service resource name, not the auto-generated hostname
@@ -34,10 +53,9 @@ jobs:
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: backend/
 
-      # Verify deployed app is responding
+      # Verify deployed app is responding; retry to allow for App Service cold start
       - name: Smoke test deployed app
         run: |
-          echo "Waiting for app to start..."
-          sleep 5
-          curl -f https://moviedb-eqgbbphehffnerf7.francecentral-01.azurewebsites.net/api-docs || exit 1
+          curl -f --retry 6 --retry-delay 5 --retry-connrefused \
+            https://moviedb-eqgbbphehffnerf7.francecentral-01.azurewebsites.net/api-docs || exit 1
           echo "✅ App is running and Swagger UI is accessible"

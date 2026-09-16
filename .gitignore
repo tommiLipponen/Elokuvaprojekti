@@ -23,6 +23,9 @@ out/
 .vite/
 coverage/
 
+# Frontend build copied into backend for single App Service deployment
+backend/public/
+
 # OS files
 .DS_Store
 Thumbs.db
@@ -50,6 +53,7 @@ tmdb-movie-550-sample.json
 # Local team planning files
 assignment-instructions.md
 .markdownlint.json
+notes-*.md
 
 # AI agent-vendored skill docs (not project code)
 .agents/

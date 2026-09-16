@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "jest --passWithNoTests",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
