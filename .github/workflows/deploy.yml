@@ -27,6 +27,8 @@ jobs:
 
       - name: Install backend dependencies
         working-directory: backend
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npm ci
 
       - name: Lint backend
