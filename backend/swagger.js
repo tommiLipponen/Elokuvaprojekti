@@ -20,6 +20,10 @@ const options = {
         url: '/',
         description: 'Current server',
       },
+      {
+        url: 'https://moviedb-eqgbbphehffnerf7.francecentral-01.azurewebsites.net',
+        description: 'Production server (Azure App Service)',
+      },
     ],
     components: {
       schemas: {
