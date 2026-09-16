@@ -1,3 +1,5 @@
+const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');
@@ -13,5 +15,12 @@ app.get('/api-docs.json', (req, res) => res.json(swaggerSpec));
 
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
+
+// Serve the built React SPA if present (populated by the deploy pipeline, not present in local dev)
+const frontendDist = path.join(__dirname, 'public');
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get('*', (req, res) => res.sendFile(path.join(frontendDist, 'index.html')));
+}
 
 module.exports = app;

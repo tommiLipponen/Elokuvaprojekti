@@ -23,6 +23,9 @@ out/
 .vite/
 coverage/
 
+# Frontend build copied into backend for single App Service deployment
+backend/public/
+
 # OS files
 .DS_Store
 Thumbs.db
