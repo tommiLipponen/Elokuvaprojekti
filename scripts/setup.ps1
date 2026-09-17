@@ -48,7 +48,7 @@ try {
 
     if (Test-Path "prisma/schema.prisma") {
         Write-Host "Generating Prisma client..." -ForegroundColor Cyan
-        npx prisma generate
+        npm run prisma:generate
         if ($LASTEXITCODE -ne 0) {
             Write-Host "prisma generate failed." -ForegroundColor Red
             exit 1

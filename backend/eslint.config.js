@@ -13,6 +13,8 @@ module.exports = [
         module: "writable",
         __dirname: "readonly",
         console: "readonly",
+        fetch: "readonly",
+        URL: "readonly",
       },
     },
   },
