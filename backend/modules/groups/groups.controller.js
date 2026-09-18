@@ -15,9 +15,9 @@ const create = async (req, res) => {
         if (validationError) {
             return res.status(400).json({ message: validationError });
         }
-        
+
         const group = await createGroup(name, req.user.id);
-        
+
         res.status(201).json(group);
     } catch (error) {
         console.error(error);
@@ -29,11 +29,11 @@ const create = async (req, res) => {
 const list = async (req, res) => {
     try {
         const groups = await getGroups();
-        
+
         res.status(200).json(groups);
     } catch (error) {
         console.error(error);
-        
+
         return res.status(500).json({ message: 'Failed to get groups' });
     }
 };
@@ -76,7 +76,7 @@ const remove = async (req, res) => {
             return res.status(403).json({ message: 'To delete this group, you need to be the owner' });
         }
 
-        return re.status(204).send();
+        return res.status(204).send();
     } catch (error) {
         console.error(error);
 
