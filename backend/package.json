@@ -7,7 +7,9 @@
     "start": "node index.js",
     "test": "jest --passWithNoTests",
     "lint": "eslint .",
-    "postinstall": "prisma generate"
+    "prisma:generate": "prisma generate && node scripts/ensure-prisma-esm.js",
+    "postinstall": "npm run prisma:generate",
+    "seed": "node seed.js"
   },
   "keywords": [],
   "author": "",

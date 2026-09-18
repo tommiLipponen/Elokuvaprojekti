@@ -12,6 +12,8 @@ As a user, I want to browse movies, search the catalog, join groups, share favor
 >
 > Azure DevOps IDs (created 2026-09-04): Epic 1-12 = ADO 46-57 (in order). PBI 1=58, 2=73, 3=74, 4=75, 5=79, 6=80, 7=66, 8=67, 9=81, 10=82, 11=83, 12=84, 13=77, 14=78, 15=62, 16=63, 17=64, 18=65, 19=59, 20=60, 21=61, 22=68, 23=69, 24=70, 25=71, 26=72, 27=76. Tasks under PBI 1 (ADO 58) = ADO 85-91, in the same order as the task breakdown below. Sprint 1-6 iterations exist in Azure Boards and are assigned to "Elokuvaprojekti Team", with dates matching weeks 36-41.
 >
+> PBI 28 (ADO 140, created 2026-09-15 by Tommi) was originally titled "PBI 26: Import baseline movie dataset into PostgreSQL" in Azure Boards, colliding with the real PBI 26 (ADO 72, Epic 11). Retitled in Azure Boards to "PBI 28" on 2026-09-17 and documented below under Epic 3. Its tasks are ADO 141-144 (moved to In Progress 2026-09-17). Baseline import scope reduced from ~10k to ~1,000-2,000 curated movies on 2026-09-17 (see PBI 28 scope note below).
+>
 > Task creation status: every PBI below now has a concrete task breakdown written in this document. In Azure Boards, Task work items have been created for Sprint 1-2 PBIs only (1, 2, 3, 4, 5, 19, 20, 22, 23) since their concrete steps are stable now. Tasks for Sprint 3-6 PBIs (6-18, 21, 24, 27) are intentionally **not yet created in Azure Boards** - create them from this document's task breakdown just before each of those sprints starts, since their exact steps may shift depending on what gets built in Sprint 1-2 (e.g. exact Prisma schema, auth middleware shape). PBI 25 and 26 are continuous and can be created whenever convenient.
 
 ---
@@ -289,6 +291,37 @@ Task breakdown (for reference when creating Tasks under this PBI in Azure DevOps
 - Add a "Now in cinemas" section/page in frontend reusing the MovieCard component
 - Test that the endpoint returns current Finnish cinema listings
 - [DoD] Add the GET /movies/now-playing entry to openapi.yaml and write a Jest/Supertest test for it (see Definition of Done)
+
+### PBI 28: Import baseline movie dataset into PostgreSQL
+
+Title: Import baseline movie dataset into PostgreSQL
+
+User story:
+
+As the team, we want a baseline set of TMDB movies imported into PostgreSQL so browsing/discovery features have local data without hitting TMDB live for every request.
+
+Mapped requirement: Technical enabler (not mapped to a graded requirement ID; supports PBI 5 and PBI 6)
+
+Acceptance criteria:
+
+- movies.import.service.js can fetch and upsert a batch of TMDB movies into the Movie table.
+- seed.js can run an initial import (~1,000-2,000 curated rows: popular + now-playing-Finland + top-rated) without duplicating existing rows.
+- Re-running the import updates existing rows instead of erroring or duplicating.
+- Import process is documented (how to run it, expected runtime).
+
+> Scope note (2026-09-17): reduced from the original ~10k-row plan to ~1,000-2,000 curated movies.
+> Movie search (PBI 5) hits TMDB live, so the local table mainly backs now-playing/browse and
+> review/favorite/group references, not full search coverage — a curated set is enough and keeps
+> the committed seed snapshot small (under ~1 MB instead of ~5-8 MB).
+
+Task breakdown (for reference; already created in Azure DevOps as ADO 141-144):
+
+#### Implement baseline import
+
+- Implement movies.import.service.js (TMDB fetch + upsert into Movie table)
+- Create seed.js entry point for baseline import (~1-2k curated rows: popular + now-playing-Finland + top-rated)
+- Handle duplicate/re-run safety for import
+- Document the import process
 
 ---
 
