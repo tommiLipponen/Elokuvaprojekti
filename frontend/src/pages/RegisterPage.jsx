@@ -19,7 +19,7 @@ const handleSubmit = async (event) => {
     }
 
     setMessage('Registration successful!');
-  } catch (error) {
+  } catch {
     setMessage('Registration failed.');
   }
 };
