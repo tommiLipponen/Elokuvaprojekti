@@ -16,6 +16,7 @@ export function AuthProvider({ children }) {
       throw new Error(response.errors.message || 'Login failed');
     }
 
+    setUser(response.user);
     setAccessToken(response.accessToken);
     setRefreshToken(response.refreshToken);
 
