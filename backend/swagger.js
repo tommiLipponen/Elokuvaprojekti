@@ -115,6 +115,27 @@ const options = {
             },
           },
         },
+        Group: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              example: 'c1a2b3d4-e5f6-7890-abcd-ef1234567890',
+            },
+            name: {
+              type: 'string',
+              example: 'Friday Movie Club',
+            },
+            ownerId: {
+              type: 'string',
+              example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+          },
+        },
       },
       securitySchemes: {
         bearerAuth: {

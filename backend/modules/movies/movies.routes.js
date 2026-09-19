@@ -1,5 +1,5 @@
 const express = require('express');
-const { searchMoviesHandler } = require('./movies.controller');
+const { searchMoviesHandler, nowPlayingHandler } = require('./movies.controller');
 
 const router = express.Router();
 
@@ -70,5 +70,54 @@ const router = express.Router();
  *               $ref: '#/components/schemas/Error500'
  */
 router.get('/search', searchMoviesHandler);
+
+/**
+ * @swagger
+ * /movies/now-playing:
+ *   get:
+ *     summary: Movies now playing in Finnish cinemas
+ *     description: Returns movies currently playing in cinemas for the given region (default FI). Works without login. Returns an empty array when nothing is playing.
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: query
+ *         name: region
+ *         schema:
+ *           type: string
+ *         description: ISO 3166-1 region code
+ *         example: FI
+ *     responses:
+ *       200:
+ *         description: Movies currently playing (empty array if none)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   tmdbId:
+ *                     type: integer
+ *                     example: 550
+ *                   title:
+ *                     type: string
+ *                     example: Fight Club
+ *                   releaseYear:
+ *                     type: integer
+ *                     example: 1999
+ *                   posterUrl:
+ *                     type: string
+ *                     nullable: true
+ *                   overview:
+ *                     type: string
+ *                   voteAverage:
+ *                     type: number
+ *       500:
+ *         description: Failed to fetch now-playing movies
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error500'
+ */
+router.get('/now-playing', nowPlayingHandler);
 
 module.exports = router;

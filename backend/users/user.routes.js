@@ -4,8 +4,6 @@ const { deleteMe } = require('./user.controller');
 
 const router = express.Router();
 
-router.delete('/me', authMiddleware, deleteMe);
-
 /**
  * @swagger
  * /users/me:
@@ -28,7 +26,5 @@ router.delete('/me', authMiddleware, deleteMe);
  *               $ref: '#/components/schemas/Error500'
  */
 router.delete('/me', authMiddleware, deleteMe);
-
-
 
 module.exports = router;

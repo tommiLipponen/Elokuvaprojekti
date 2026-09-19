@@ -39,6 +39,9 @@ data/
 # Azure publish profile credentials
 *.PublishSettings
 
+# Local scratch/working folders (not part of the repo)
+tmp/
+
 # Local sample API payloads
 # Keep the TMDB sample payload local only
 
