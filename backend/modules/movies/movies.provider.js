@@ -72,4 +72,10 @@ async function searchMovies({ title, genre, year } = {}) {
   return data.results || [];
 }
 
-module.exports = { searchMovies, getGenreId, GENRES };
+// Returns movies currently playing in cinemas for the given region (default Finland).
+async function getNowPlaying({ region = 'FI' } = {}) {
+  const data = await callTmdb('/movie/now_playing', { region });
+  return data.results || [];
+}
+
+module.exports = { searchMovies, getGenreId, getNowPlaying, GENRES };
