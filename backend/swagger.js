@@ -59,6 +59,14 @@ const options = {
               type: 'string',
               description: 'JWT refresh token',
             },
+            user: {
+              type: 'object',
+              properties: {
+                id: { type: 'string' },
+                email: { type: 'string' },
+                username: { type: 'string' },
+              },
+            },
           },
         },
         Error401: {
