@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "prisma:generate": "prisma generate && node scripts/ensure-prisma-esm.js",
     "postinstall": "npm run prisma:generate",
-    "seed": "node seed.js"
+    "seed": "node seed.js",
+    "docs:generate": "node scripts/generate-openapi.js"
   },
   "keywords": [],
   "author": "",

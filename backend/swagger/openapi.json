@@ -14,11 +14,11 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000",
-      "description": "Development server"
+      "url": "/",
+      "description": "Current server"
     },
     {
-      "url": "https://elokuvaprojekti.azurewebsites.net",
+      "url": "https://moviedb-eqgbbphehffnerf7.francecentral-01.azurewebsites.net",
       "description": "Production server (Azure App Service)"
     }
   ],
@@ -59,29 +59,33 @@
         }
       },
       "Error401": {
-  "type": "object",
-  "properties": {
-    "errors": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string",
-          "example": "Invalid email or password"
-        }
-      }
-    }
-  }
-},
-      "Error404": {
         "type": "object",
         "properties": {
-          "error": {
-            "type": "string",
-            "example": "Refresh token not found"
+          "errors": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Invalid email or password"
+              }
+            }
           }
         }
       },
-
+      "Error404": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Refresh token not found"
+              }
+            }
+          }
+        }
+      },
       "Error409": {
         "type": "object",
         "properties": {
@@ -99,6 +103,27 @@
             "example": "Internal server error"
           }
         }
+      },
+      "Group": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "c1a2b3d4-e5f6-7890-abcd-ef1234567890"
+          },
+          "name": {
+            "type": "string",
+            "example": "Friday Movie Club"
+          },
+          "ownerId": {
+            "type": "string",
+            "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
       }
     },
     "securitySchemes": {
@@ -111,6 +136,356 @@
     }
   },
   "paths": {
+    "/movies/search": {
+      "get": {
+        "summary": "Search movies",
+        "description": "Searches TMDB for movies by title, genre, and/or release year. Works without login. Returns an empty array when nothing matches.",
+        "tags": [
+          "Movies"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "title",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Movie title to search for",
+            "example": "Fight Club"
+          },
+          {
+            "in": "query",
+            "name": "genre",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Genre name (e.g. Action, Comedy, Drama)",
+            "example": "Drama"
+          },
+          {
+            "in": "query",
+            "name": "year",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Release year",
+            "example": 1999
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Matching movies (empty array if no matches)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "tmdbId": {
+                        "type": "integer",
+                        "example": 550
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "Fight Club"
+                      },
+                      "releaseYear": {
+                        "type": "integer",
+                        "example": 1999
+                      },
+                      "posterUrl": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "overview": {
+                        "type": "string"
+                      },
+                      "voteAverage": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Movie search failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies/now-playing": {
+      "get": {
+        "summary": "Movies now playing in Finnish cinemas",
+        "description": "Returns movies currently playing in cinemas for the given region (default FI). Works without login. Returns an empty array when nothing is playing.",
+        "tags": [
+          "Movies"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "region",
+            "schema": {
+              "type": "string"
+            },
+            "description": "ISO 3166-1 region code",
+            "example": "FI"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Movies currently playing (empty array if none)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "tmdbId": {
+                        "type": "integer",
+                        "example": 550
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "Fight Club"
+                      },
+                      "releaseYear": {
+                        "type": "integer",
+                        "example": 1999
+                      },
+                      "posterUrl": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "overview": {
+                        "type": "string"
+                      },
+                      "voteAverage": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to fetch now-playing movies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/groups": {
+      "get": {
+        "summary": "List all groups",
+        "description": "Returns all groups, newest first. Works without login.",
+        "tags": [
+          "Groups"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of groups",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Group"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to get groups",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error500"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a group",
+        "description": "Creates a new group owned by the authenticated user. Use the Bearer access token obtained from POST /auth/login.",
+        "tags": [
+          "Groups"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Friday Movie Club"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Group created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or missing group name"
+          },
+          "401": {
+            "description": "Access token required or invalid"
+          },
+          "500": {
+            "description": "Failed to create group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/groups/{id}": {
+      "get": {
+        "summary": "Get a group by id",
+        "description": "Returns a single group. Requires the authenticated user to be the owner or an approved member.",
+        "tags": [
+          "Groups"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token required or invalid"
+          },
+          "403": {
+            "description": "Not a member of this group"
+          },
+          "404": {
+            "description": "Group not found"
+          },
+          "500": {
+            "description": "Failed to get group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error500"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a group",
+        "description": "Deletes a group. Requires the authenticated user to be the group's owner.",
+        "tags": [
+          "Groups"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Group successfully deleted"
+          },
+          "401": {
+            "description": "Access token required or invalid"
+          },
+          "403": {
+            "description": "Not the owner of this group"
+          },
+          "404": {
+            "description": "Group not found"
+          },
+          "500": {
+            "description": "Failed to delete group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/register": {
       "post": {
         "summary": "Register a new user",
@@ -209,160 +584,168 @@
           }
         }
       }
-    }
-  },
-
-  "/auth/login": {
-  "post": {
-    "summary": "Login user",
-    "description": "Authenticate a user with email and password and return access and refresh tokens.",
-    "tags": [
-      "Auth"
-    ],
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "required": [
-              "email",
-              "password"
-            ],
-            "properties": {
-              "email": {
-                "type": "string",
-                "format": "email",
-                "example": "test@example.com"
-              },
-              "password": {
-                "type": "string",
-                "example": "Password123"
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Log in a user",
+        "description": "Authenticate a user with email and password.",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "test@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Password123"
+                  }
+                }
               }
             }
           }
-        }
-      }
-    },
-    "responses": {
-      "200": {
-        "description": "Login successful",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "accessToken": {
-                  "type": "string",
-                  "description": "JWT access token"
-                },
-                "refreshToken": {
-                  "type": "string",
-                  "description": "JWT refresh token"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error200"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid email or password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error401"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error500"
                 }
               }
             }
           }
         }
-      },
-      "401": {
-        "description": "Invalid email or password"
-      },
-      "500": {
-        "description": "Internal server error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Error500"
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Log out a user",
+        "description": "Revoke a refresh token.",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "refreshToken"
+                ],
+                "properties": {
+                  "refreshToken": {
+                    "type": "string",
+                    "example": "example-refresh-token"
+                  }
+                }
+              }
             }
           }
-        }
-      }
-    }
-  }
-},
-
-"/auth/logout": {
-  "post": {
-    "summary": "Logout user",
-    "description": "Revoke the provided refresh token.",
-    "tags": [
-      "Auth"
-    ],
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "required": [
-              "refreshToken"
-            ],
-            "properties": {
-              "refreshToken": {
-                "type": "string",
-                "description": "Refresh token to revoke",
-                "example": "eyJhbGciOiJIUzI1NiIs..."
+        },
+        "responses": {
+          "204": {
+            "description": "Successful logout"
+          },
+          "404": {
+            "description": "Refresh token not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error500"
+                }
               }
             }
           }
         }
       }
     },
-    "responses": {
-      "204": {
-        "description": "Logout successful"
-      },
-      "404": {
-        "description": "Refresh token not found"
-      },
-      "500": {
-        "description": "Internal server error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Error500"
+    "/users/me": {
+      "delete": {
+        "summary": "Delete current user",
+        "description": "Deletes the authenticated user's account and all related data. Use the Bearer access token obtained from POST /auth/login.",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User successfully deleted"
+          },
+          "401": {
+            "description": "Access token required or invalid"
+          },
+          "500": {
+            "description": "Failed to delete user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error500"
+                }
+              }
             }
           }
         }
       }
     }
-  }
-},
-"/users/me": {
-  "delete": {
-    "summary": "Delete current user",
-    "description": "Delete the authenticated user's account and all related data.",
-    "tags": [
-      "Users"
-    ],
-    "security": [
-      {
-        "bearerAuth": []
-      }
-    ],
-    "responses": {
-      "204": {
-        "description": "User successfully deleted"
-      },
-      "401": {
-        "description": "Access token required or invalid"
-      },
-      "500": {
-        "description": "Failed to delete user",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Error500"
-            }
-          }
-        }
-      }
-    }
-  }
-},
-
+  },
   "tags": [
+    {
+      "name": "Movies",
+      "description": "Movie search backed by TMDB"
+    },
+    {
+      "name": "Groups",
+      "description": "Group creation, viewing, and deletion"
+    },
     {
       "name": "Auth",
       "description": "User registration and authentication"
