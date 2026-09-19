@@ -36,7 +36,9 @@ const login = async (email, password) => {
     const accessToken = generateAccessToken(user.id);
     const refreshToken = generateRefreshToken(user.id);
 
-    return { accessToken, refreshToken };
+    const safeUser = { id: user.id, email: user.email, username: user.username };
+
+    return { accessToken, refreshToken, user: safeUser };
 }
 
 module.exports = { createUser, login, revokeRefreshToken };
