@@ -11,6 +11,8 @@ const { login } = require('../modules/auth/auth.service');
 
 describe('auth.service.login', () => {
   test('returns tokens and a safe user object (no passwordHash)', async () => {
+    const refreshTokenCreate = jest.fn();
+
     getPrisma.mockResolvedValue({
       user: {
         findUnique: jest.fn().mockResolvedValue({
@@ -19,6 +21,9 @@ describe('auth.service.login', () => {
           username: 'test',
           passwordHash: 'hashed',
         }),
+      },
+      refreshToken: {
+        create: refreshTokenCreate,
       },
     });
     bcrypt.compare.mockResolvedValue(true);
@@ -31,6 +36,9 @@ describe('auth.service.login', () => {
       accessToken: 'access-token',
       refreshToken: 'refresh-token',
       user: { id: 'user-1', email: 'test@example.com', username: 'test' },
+    });
+    expect(refreshTokenCreate).toHaveBeenCalledWith({
+      data: expect.objectContaining({ userId: 'user-1' }),
     });
   });
 

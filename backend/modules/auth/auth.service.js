@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const { getPrisma } = require('../../config/prisma');
 const { generateAccessToken, generateRefreshToken, revokeRefreshToken } = require('./token.service');
 
@@ -35,6 +36,18 @@ const login = async (email, password) => {
 
     const accessToken = generateAccessToken(user.id);
     const refreshToken = generateRefreshToken(user.id);
+    const tokenHash = crypto
+        .createHash('sha256')
+        .update(refreshToken)
+        .digest('hex');
+
+    await prisma.refreshToken.create({
+        data: {
+            userId: user.id,
+            tokenHash,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        },
+    });
 
     const safeUser = { id: user.id, email: user.email, username: user.username };
 
