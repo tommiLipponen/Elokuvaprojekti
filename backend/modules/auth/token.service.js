@@ -2,10 +2,19 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { getPrisma } = require('../../config/prisma');
 
+// Fails clearly at token creation instead of a cryptic jsonwebtoken error deep in the stack
+const getRequiredEnv = (name) => {
+    const value = process.env[name];
+    if (!value) {
+        throw new Error(`${name} is not set`);
+    }
+    return value;
+};
+
 const generateAccessToken = (userId) => {
     return jwt.sign(
         { userId },
-        process.env.JWT_SECRET,
+        getRequiredEnv('JWT_SECRET'),
         { expiresIn: '20min' }
     );
 };
@@ -13,7 +22,7 @@ const generateAccessToken = (userId) => {
 const generateRefreshToken = (userId) => {
     return jwt.sign(
         { userId },
-        process.env.JWT_REFRESH_SECRET,
+        getRequiredEnv('JWT_REFRESH_SECRET'),
         { expiresIn: '7d' }
     );
 };

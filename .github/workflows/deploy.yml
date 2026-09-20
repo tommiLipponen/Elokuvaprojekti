@@ -64,6 +64,9 @@ jobs:
 
       - name: Test backend
         working-directory: backend
+        env:
+          JWT_SECRET: "ci-access-token-secret"
+          JWT_REFRESH_SECRET: "ci-refresh-token-secret"
         run: npm test
 
       # Deploy to Azure App Service (migrations already deployed by CI workflow)
