@@ -16,7 +16,7 @@ const create = async (req, res) => {
             return res.status(400).json({ message: validationError });
         }
 
-        const group = await createGroup(name, req.user.id);
+        const group = await createGroup(name, req.user.userId);
 
         res.status(201).json(group);
     } catch (error) {
