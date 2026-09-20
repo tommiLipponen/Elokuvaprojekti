@@ -33,7 +33,7 @@ const getGroupById = async(groupId, userId) => {
             id: groupId,
         },
         include: {
-            membership: true,
+            memberships: true,
         },
     });
 
@@ -43,10 +43,10 @@ const getGroupById = async(groupId, userId) => {
 
     const isOwner = group.ownerId === userId;
 
-    const isMember = group.membership.some(
-        (membership) => 
-        membership.userId === userId &&
-        membership.status === 'APPROVED'
+    const isMember = group.memberships.some(
+        (memberships) => 
+        memberships.userId === userId &&
+        memberships.status === 'APPROVED'
     );
 
     if (!isOwner && !isMember) {
