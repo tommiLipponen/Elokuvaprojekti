@@ -3,6 +3,14 @@ const crypto = require('crypto');
 const { getPrisma } = require('../../config/prisma');
 const { generateAccessToken, generateRefreshToken, revokeRefreshToken } = require('./token.service');
 
+// Distinguishes bad credentials (401) from unexpected server errors (500) in the controller
+class InvalidCredentialsError extends Error {
+    constructor() {
+        super('Invalid email or password');
+        this.name = 'InvalidCredentialsError';
+    }
+}
+
 const createUser = async (email, password) => {
     const prisma = await getPrisma();
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -25,13 +33,13 @@ const login = async (email, password) => {
     });
 
     if (!user) {
-        throw new Error('Invalid email or password');
+        throw new InvalidCredentialsError();
     }
 
     const passwordValid = await bcrypt.compare(password, user.passwordHash);
 
     if (!passwordValid) {
-        throw new Error('Invalid email or password');
+        throw new InvalidCredentialsError();
     }
 
     const accessToken = generateAccessToken(user.id);
@@ -54,4 +62,4 @@ const login = async (email, password) => {
     return { accessToken, refreshToken, user: safeUser };
 }
 
-module.exports = { createUser, login, revokeRefreshToken };
+module.exports = { createUser, login, revokeRefreshToken, InvalidCredentialsError };
