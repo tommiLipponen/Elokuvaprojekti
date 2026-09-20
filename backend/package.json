@@ -34,7 +34,11 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^8.0.6",
+    "@babel/preset-env": "^8.0.6",
+    "@babel/preset-typescript": "^8.0.1",
     "@eslint/js": "^10.0.1",
+    "babel-jest": "^30.5.2",
     "eslint": "^10.10.0",
     "jest": "^30.5.1",
     "nodemon": "^3.1.14",

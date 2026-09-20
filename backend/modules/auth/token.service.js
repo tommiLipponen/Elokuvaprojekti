@@ -34,7 +34,7 @@ const revokeRefreshToken = async (token) => {
     .update(token)
     .digest('hex');
 
-    await prisma.RefreshToken.update({
+    await prisma.refreshToken.update({
         where: { 
             tokenHash 
         },
