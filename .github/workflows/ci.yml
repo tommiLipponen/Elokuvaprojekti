@@ -32,6 +32,8 @@ jobs:
       # DATABASE_URL secret set explicitly in the deploy step below.
       DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
       TEST_DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
+      JWT_SECRET: "ci-access-token-secret"
+      JWT_REFRESH_SECRET: "ci-refresh-token-secret"
     steps:
       - uses: actions/checkout@v4
 
