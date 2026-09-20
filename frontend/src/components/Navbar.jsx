@@ -7,6 +7,7 @@ function Navbar() {
       <Link to="/login">Login</Link>
       <Link to="/register">Register</Link>
       <Link to="/movies">Movie Search</Link>
+      <Link to="/movies/now-playing">Now in Cinemas</Link>
       <Link to="/groups">Groups</Link>
       <Link to="/profile">Profile</Link>
       <Link to="/favorites">Favorites</Link>

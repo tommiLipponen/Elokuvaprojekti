@@ -1,4 +1,4 @@
-const { searchMovies } = require('./movies.provider');
+const { searchMovies, getNowPlaying } = require('./movies.provider');
 
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w342';
 
@@ -19,4 +19,10 @@ async function search({ title, genre, year }) {
   return results.map(toMovieCard);
 }
 
-module.exports = { search };
+// Returns an empty array (never throws) when nothing is currently playing.
+async function nowPlaying({ region } = {}) {
+  const results = await getNowPlaying({ region });
+  return results.map(toMovieCard);
+}
+
+module.exports = { search, nowPlaying };

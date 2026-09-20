@@ -59,6 +59,14 @@ const options = {
               type: 'string',
               description: 'JWT refresh token',
             },
+            user: {
+              type: 'object',
+              properties: {
+                id: { type: 'string' },
+                email: { type: 'string' },
+                username: { type: 'string' },
+              },
+            },
           },
         },
         Error401: {
@@ -104,6 +112,27 @@ const options = {
             message: {
               type: 'string',
               example: 'Internal server error',
+            },
+          },
+        },
+        Group: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              example: 'c1a2b3d4-e5f6-7890-abcd-ef1234567890',
+            },
+            name: {
+              type: 'string',
+              example: 'Friday Movie Club',
+            },
+            ownerId: {
+              type: 'string',
+              example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
             },
           },
         },
