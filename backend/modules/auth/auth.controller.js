@@ -1,6 +1,6 @@
 const { validateAuth } = require('./auth.validation');
 const { createUser } = require('./auth.service');
-const { login, revokeRefreshToken } = require('./auth.service');
+const { login, revokeRefreshToken, InvalidCredentialsError } = require('./auth.service');
 
 
 const register = async (req, res) => {
@@ -34,9 +34,13 @@ const loginUser = async (req, res) => {
     const tokens = await login(email, password);
 // If login is successful, return the access and refresh tokens
     return res.status(200).json(tokens);
-  } catch {
-// If login fails (invalid email or password), return a 401 Unauthorized response with an error message
-    return res.status(401).json({ errors: { message: 'Invalid email or password' } });
+  } catch (err) {
+// Bad credentials -> 401. Anything else (e.g. missing JWT secret, DB down) is a real server error -> 500, not masked as a login failure
+    if (err instanceof InvalidCredentialsError) {
+      return res.status(401).json({ errors: { message: 'Invalid email or password' } });
+    }
+    console.error(err);
+    return res.status(500).json({ errors: { message: 'Login failed' } });
   }
 };
 
