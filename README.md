@@ -1,4 +1,5 @@
 <!-- cSpell:ignore Elokuvaprojekti TMDB OAMK Iisa Veera Topi Tommi -->
+<!-- redeploy trigger: force a fresh CD run after the Azure Key Vault / App Service setting fixes -->
 
 # Elokuvaprojekti
 
