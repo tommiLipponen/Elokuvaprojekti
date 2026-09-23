@@ -27,9 +27,9 @@ flowchart LR
 
 ## Documentation
 
-- [Scrum backlog plan](scrum-backlog-plan.md)
-- [Architecture plan](architecture-plan.md)
-- [Implementation plan](implementation-plan.md)
+- [Scrum backlog plan](plans/scrum-backlog-plan.md)
+- [Architecture plan](plans/architecture-plan.md)
+- [Implementation plan](plans/implementation-plan.md)
 - [Class diagram](docs/class-diagram.md)
 
 > The project documentation is kept in the docs folder and is versioned in Git for easy review on GitHub.

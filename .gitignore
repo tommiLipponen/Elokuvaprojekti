@@ -54,7 +54,7 @@ tmdb-movie-550-sample.json
 *.swo
 
 # Local team planning files
-assignment-instructions.md
+plans/assignment-instructions.md
 .markdownlint.json
 notes-*.md
 
