@@ -136,6 +136,58 @@ const options = {
             },
           },
         },
+        FavoriteList: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              example: 'c1a2b3d4-e5f6-7890-abcd-ef1234567890',
+            },
+            userId: {
+              type: 'string',
+              example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+            },
+            name: {
+              type: 'string',
+              example: 'Weekend watchlist',
+            },
+            isPublic: {
+              type: 'boolean',
+              example: false,
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+            items: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/FavoriteItem',
+              },
+            },
+          },
+        },
+        FavoriteItem: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              example: 'd1a2b3d4-e5f6-7890-abcd-ef1234567890',
+            },
+            favoriteListId: {
+              type: 'string',
+              example: 'c1a2b3d4-e5f6-7890-abcd-ef1234567890',
+            },
+            movieId: {
+              type: 'string',
+              example: 'e1a2b3d4-e5f6-7890-abcd-ef1234567890',
+            },
+            addedAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+          },
+        },
       },
       securitySchemes: {
         bearerAuth: {
