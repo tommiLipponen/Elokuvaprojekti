@@ -3,7 +3,7 @@
 
 # Elokuvaprojekti
 
-**Live site:** https://moviedb-eqgbbphehffnerf7.francecentral-01.azurewebsites.net
+**Live site:** [moviedb-eqgbbphehffnerf7.francecentral-01.azurewebsites.net](https://moviedb-eqgbbphehffnerf7.francecentral-01.azurewebsites.net)
 
 A responsive movie web app for browsing and searching movies/series, viewing what's currently in Finnish cinemas, joining groups, writing reviews, and sharing favorite lists. Built with React, Node.js, and PostgreSQL, using [The Movie Database (TMDB)](https://www.themoviedb.org/) as the external movie data source.
 
