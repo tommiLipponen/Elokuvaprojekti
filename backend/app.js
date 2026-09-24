@@ -18,7 +18,7 @@ app.get('/api-docs.json', (req, res) => res.json(swaggerSpec));
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/movies', movieRoutes);
-app.use('/groups', groupRoutes);
+app.use('/api/groups', groupRoutes);
 
 // Serve the built React SPA if present (populated by the deploy pipeline, not present in local dev)
 const frontendDist = path.join(__dirname, 'public');
