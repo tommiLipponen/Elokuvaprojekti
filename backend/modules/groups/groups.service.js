@@ -1,5 +1,5 @@
 const { getPrisma } = require('../../config/prisma');
-const { getMovieDetails } = require('../movies/movies.provider');
+
 
 
 const createGroup = async (name, ownerId) => {
