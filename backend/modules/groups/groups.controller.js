@@ -3,6 +3,8 @@ const {
     getGroups,
     getGroupById,
     deleteGroup,
+    addMovieToGroup,
+    getMyGroups,
 } = require('./groups.service');
 
 const { validateGroupName } = require('./groups.validation');
@@ -84,9 +86,76 @@ const remove = async (req, res) => {
     }
 };
 
+const listMyGroups = async (req, res) => {
+    try {
+        const groups = await getMyGroups(req.user.userId);
+
+        return res.status(200).json(groups);
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            message: 'Failed to get your groups',
+        });
+    }
+};
+
+
+const addMovie = async (req, res) => {
+    try {
+        const { movieId } = req.body;
+
+        if (!movieId) {
+            return res.status(400).json({
+                message: 'Movie ID is required',
+            });
+        }
+
+        const groupMovie = await addMovieToGroup(
+            req.params.id,
+            movieId,
+            req.user.userId
+        );
+
+        if (!groupMovie) {
+            return res.status(404).json({
+                message: 'Group not found',
+            });
+        }
+
+        if (groupMovie.accessDenied) {
+            return res.status(403).json({
+                message: 'You need to be an approved member of this group',
+            });
+        }
+
+        if (groupMovie.movieNotFound) {
+            return res.status(404).json({
+                message: 'Movie not found',
+            });
+        }
+
+        return res.status(201).json(groupMovie);
+    } catch (error) {
+        console.error(error);
+
+        if (error.code === 'P2002') {
+            return res.status(409).json({
+                message: 'Movie is already in this group',
+            });
+        }
+
+        return res.status(500).json({
+            message: 'Failed to add movie to group',
+        });
+    }
+};
+
 module.exports = {
     create,
     list,
+    listMyGroups,
     getById,
     remove,
+    addMovie,
 };

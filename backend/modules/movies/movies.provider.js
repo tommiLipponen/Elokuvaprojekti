@@ -78,4 +78,8 @@ async function getNowPlaying({ region = 'FI' } = {}) {
   return data.results || [];
 }
 
-module.exports = { searchMovies, getGenreId, getNowPlaying, GENRES };
+async function getMovieDetails(tmdbId) {
+  return callTmdb(`/movie/${tmdbId}`);
+}
+
+module.exports = { searchMovies, getGenreId, getNowPlaying, GENRES, getMovieDetails };

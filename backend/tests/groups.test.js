@@ -17,7 +17,7 @@ describe('Groups API', () => {
         });
     });
 
-    describe('POST /groups', () => {
+    describe('POST /api/groups', () => {
         test('authenticated user can create a group', async () => {
             const createdGroup = {
                 id: 'group-1',
@@ -33,7 +33,7 @@ describe('Groups API', () => {
             });
 
             const response = await request(app)
-                .post('/groups')
+                .post('/api/groups')
                 .set('Authorization', 'Bearer test-token')
                 .send({
                     name: 'Friday Movie Club',
@@ -46,7 +46,7 @@ describe('Groups API', () => {
 
         test('returns 400 when group name is missing', async () => {
             const response = await request(app)
-                .post('/groups')
+                .post('/api/groups')
                 .set('Authorization', 'Bearer test-token')
                 .send({});
 
@@ -55,7 +55,7 @@ describe('Groups API', () => {
 
         test('returns 401 without access token', async () => {
             const response = await request(app)
-                .post('/groups')
+                .post('/api/groups')
                 .send({
                     name: 'Friday Movie Club',
                 });
@@ -64,7 +64,7 @@ describe('Groups API', () => {
         });
     });
 
-    describe('GET /groups', () => {
+    describe('GET /api/groups', () => {
         test('returns list of groups without authentication', async () => {
             const groups = [
                 {
@@ -88,7 +88,7 @@ describe('Groups API', () => {
             });
 
             const response = await request(app)
-                .get('/groups');
+                .get('/api/groups');
 
             expect(response.status).toBe(200);
             expect(response.body).toHaveLength(2);
@@ -96,7 +96,7 @@ describe('Groups API', () => {
         });
     });
 
-    describe('GET /groups/:id', () => {
+    describe('GET /api/groups/:id', () => {
         test('owner can view group details', async () => {
             verifyAccessToken.mockReturnValue({
                 userId: 'owner-1',
@@ -115,7 +115,7 @@ describe('Groups API', () => {
             });
 
             const response = await request(app)
-                .get('/groups/group-1')
+                .get('/api/groups/group-1')
                 .set('Authorization', 'Bearer owner-token');
 
             expect(response.status).toBe(200);
@@ -145,7 +145,7 @@ describe('Groups API', () => {
             });
 
             const response = await request(app)
-                .get('/groups/group-1')
+                .get('/api/groups/group-1')
                 .set('Authorization', 'Bearer member-token');
 
             expect(response.status).toBe(200);
@@ -169,7 +169,7 @@ describe('Groups API', () => {
             });
 
             const response = await request(app)
-                .get('/groups/group-1')
+                .get('/api/groups/group-1')
                 .set('Authorization', 'Bearer other-token');
 
             expect(response.status).toBe(403);
@@ -183,14 +183,14 @@ describe('Groups API', () => {
             });
 
             const response = await request(app)
-                .get('/groups/non-existent')
+                .get('/api/groups/non-existent')
                 .set('Authorization', 'Bearer test-token');
 
             expect(response.status).toBe(404);
         });
     });
 
-    describe('DELETE /groups/:id', () => {
+    describe('DELETE /api/groups/:id', () => {
         test('owner can delete their group', async () => {
             verifyAccessToken.mockReturnValue({
                 userId: 'owner-1',
@@ -212,7 +212,7 @@ describe('Groups API', () => {
             });
 
             const response = await request(app)
-                .delete('/groups/group-1')
+                .delete('/api/groups/group-1')
                 .set('Authorization', 'Bearer owner-token');
 
             expect(response.status).toBe(204);
@@ -234,7 +234,7 @@ describe('Groups API', () => {
             });
 
             const response = await request(app)
-                .delete('/groups/group-1')
+                .delete('/api/groups/group-1')
                 .set('Authorization', 'Bearer other-token');
 
             expect(response.status).toBe(403);
@@ -248,7 +248,7 @@ describe('Groups API', () => {
             });
 
             const response = await request(app)
-                .delete('/groups/non-existent')
+                .delete('/api/groups/non-existent')
                 .set('Authorization', 'Bearer test-token');
 
             expect(response.status).toBe(404);
@@ -256,7 +256,7 @@ describe('Groups API', () => {
 
         test('returns 401 without access token', async () => {
             const response = await request(app)
-                .delete('/groups/group-1');
+                .delete('/api/groups/group-1');
 
             expect(response.status).toBe(401);
         });

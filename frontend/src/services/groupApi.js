@@ -5,6 +5,20 @@ export async function getGroups() {
   return res.json();
 }
 
+export async function getMyGroups(accessToken) {
+  const res = await fetch(`${API_BASE}/mine`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to get your groups');
+  }
+
+  return res.json();
+}
+
 export async function getGroupById(groupId, accessToken) {
   const res = await fetch(`${API_BASE}/${groupId}`, {
     headers: {
@@ -41,4 +55,24 @@ export async function deleteGroup(groupId, accessToken) {
   }
 
   return null;
+}
+
+export async function addMovieToGroup(groupId, movieId, accessToken) {
+
+  const res = await fetch(`${API_BASE}/${groupId}/movies`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({ movieId }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || 'Failed to add movie to group');
+  }
+
+  return data;
 }
