@@ -1,4 +1,4 @@
-const { searchMovies, getNowPlaying } = require('./movies.provider');
+const { searchMovies, getNowPlaying} = require('./movies.provider');
 
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w342';
 
