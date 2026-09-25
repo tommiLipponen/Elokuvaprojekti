@@ -14,6 +14,8 @@ function GroupDetailPage() {
   const [deleteError, setDeleteError] = useState('');
   const [joinError, setJoinError] = useState('');
   const [joinMessage, setJoinMessage] = useState('');
+  const [joinRequests, setJoinRequests] = useState([]);
+  const [joinRequestsError, setJoinRequestsError] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -46,6 +48,31 @@ function GroupDetailPage() {
     };
   }, [id, accessToken]);
 
+  useEffect(() => {
+    if (!group || group.ownerId !== user?.id) {
+      return;
+    }
+
+    async function loadJoinRequests() {
+      setJoinRequestsError('');
+
+      try {
+        const result = await groupApi.getJoinRequests(id, accessToken);
+
+        if (result.message) {
+          setJoinRequestsError(result.message);
+          return;
+        }
+
+        setJoinRequests(result);
+      } catch {
+        setJoinRequestsError('Failed to load join requests');
+      }
+    }
+
+    loadJoinRequests();
+  }, [group, id, accessToken, user]);
+
   const handleDelete = async () => {
     if (!window.confirm('Delete this group? This cannot be undone.')) {
       return;
@@ -77,6 +104,26 @@ function GroupDetailPage() {
     setJoinMessage('Join request sent!');
   };
 
+  const handleUpdateJoinRequest = async (userId, status) => {
+    setJoinRequestsError('');
+
+    const result = await groupApi.updateJoinRequest(
+      id,
+      userId,
+      status,
+      accessToken
+    );
+
+    if (result?.message) {
+      setJoinRequestsError(result.message);
+      return;
+    }
+
+    setJoinRequests((currentRequests) =>
+      currentRequests.filter((request) => request.userId !== userId)
+    );
+  };
+
   if (!hasLoaded) {
     return <p>Loading group...</p>;
   }
@@ -104,6 +151,38 @@ function GroupDetailPage() {
       )}
 
       {deleteError && <p>{deleteError}</p>}
+
+      {isOwner && (
+        <div>
+          <h2>Join requests</h2>
+
+          {joinRequestsError && <p>{joinRequestsError}</p>}
+
+          {joinRequests.length === 0 ? (
+            <p>No pending join requests.</p>
+          ) : (
+            <ul>
+              {joinRequests.map((request) => (
+                <li key={request.id}>
+                  {request.user.username}
+
+                  <button
+                    onClick={() => handleUpdateJoinRequest(request.userId, 'APPROVED')}
+                  >
+                    Approve
+                  </button>
+
+                  <button
+                    onClick={() => handleUpdateJoinRequest(request.userId, 'REJECTED')}
+                  >
+                    Reject
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
 
       {!isOwner && (
         <button onClick={handleJoinRequest}>
