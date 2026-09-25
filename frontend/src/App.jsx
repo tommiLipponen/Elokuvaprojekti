@@ -12,6 +12,7 @@ import UserProfilePage from './pages/UserProfilePage.jsx'
 import FavoriteListPage from './pages/FavoriteListPage.jsx'
 import SharedListPage from './pages/SharedListPage.jsx'
 
+
 function App() {
   return (
     <Routes>
