@@ -5,7 +5,10 @@ const {
     list,
     getById,
     remove,
+    addMovie,
+    listMyGroups,
 } = require('./groups.controller');
+
 
 const router = express.Router();
 
@@ -138,7 +141,11 @@ router.post('/', authMiddleware, create);
  *             schema:
  *               $ref: '#/components/schemas/Error500'
  */
+
+router.get('/mine', authMiddleware, listMyGroups);
+
 router.get('/:id', authMiddleware, getById);
+router.post('/:id/movies', authMiddleware, addMovie);
 router.delete('/:id', authMiddleware, remove);
 
 module.exports = router;
