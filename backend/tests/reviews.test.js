@@ -1,3 +1,5 @@
+/* global describe, test, expect, beforeEach, jest */
+
 jest.mock('../config/prisma'); 
 jest.mock('../modules/auth/token.service');
 
