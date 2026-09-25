@@ -8,6 +8,7 @@ const userRoutes = require('./users/user.routes');
 const movieRoutes = require('./modules/movies/movies.routes');
 const groupRoutes = require('./modules/groups/groups.routes');
 const membershipsRoutes = require('./modules/memberships/memberships.routes');
+const reviewRoutes = require('./modules/reviews/reviews.routes');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use('/movies', movieRoutes);
 app.use('/groups', groupRoutes);
 app.use('/groups', membershipsRoutes);
 app.use('/api/groups', groupRoutes);
+app.use('/movies', reviewRoutes);
 
 // Serve the built React SPA if present (populated by the deploy pipeline, not present in local dev)
 const frontendDist = path.join(__dirname, 'public');
