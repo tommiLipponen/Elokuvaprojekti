@@ -76,3 +76,13 @@ export async function addMovieToGroup(groupId, movieId, accessToken) {
 
   return data;
 }
+export async function requestToJoinGroup(groupId, accessToken) {
+  const res = await fetch(`${API_BASE}/${groupId}/join-requests`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  
+  return res.json();
+}

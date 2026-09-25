@@ -12,6 +12,8 @@ function GroupDetailPage() {
   const [error, setError] = useState('');
   const [hasLoaded, setHasLoaded] = useState(false);
   const [deleteError, setDeleteError] = useState('');
+  const [joinError, setJoinError] = useState('');
+  const [joinMessage, setJoinMessage] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -61,6 +63,20 @@ function GroupDetailPage() {
     navigate('/groups');
   };
 
+  const handleJoinRequest = async () => {
+    setJoinError('');
+    setJoinMessage('');
+
+    const result = await groupApi.requestToJoinGroup(id, accessToken);
+
+    if (result?.message) {
+      setJoinError(result.message);
+      return;
+    }
+
+    setJoinMessage('Join request sent!');
+  };
+
   if (!hasLoaded) {
     return <p>Loading group...</p>;
   }
@@ -88,6 +104,15 @@ function GroupDetailPage() {
       )}
 
       {deleteError && <p>{deleteError}</p>}
+
+      {!isOwner && (
+        <button onClick={handleJoinRequest}>
+          Request to join
+        </button>
+      )}
+
+      {joinMessage && <p>{joinMessage}</p>}
+      {joinError && <p>{joinError}</p>}
     </div>
   );
 }
