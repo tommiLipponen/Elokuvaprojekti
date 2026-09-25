@@ -15,8 +15,8 @@ function LoginPage() {
     try {
       await login({ email, password });
       setMessage('Login successful!');
-    } catch {
-      setMessage('Login failed.');
+    } catch (error) {
+      setMessage(error.message || 'Login failed.');
     }
   };
 
