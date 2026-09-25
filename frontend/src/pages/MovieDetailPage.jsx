@@ -9,10 +9,12 @@ function MovieDetailPage() {
   const [rating, setRating] = useState('5');
   const [comment, setComment] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setMessage('');
+    setLoading(true);
 
     try {
       const response = await submitReview(
@@ -30,6 +32,8 @@ function MovieDetailPage() {
       setMessage('Review submitted.');
     } catch {
       setMessage('Failed to submit review.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,7 +64,9 @@ function MovieDetailPage() {
             required
           />
 
-          <button type="submit">Submit review</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Submitting...' : 'Submit review'}
+          </button>
           {message && <p>{message}</p>}
         </form>
       )}
