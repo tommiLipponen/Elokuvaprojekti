@@ -64,6 +64,11 @@ const getGroupById = async(groupId, userId) => {
         },
         include: {
             memberships: true,
+            groupMovies: {
+                include: {
+                    movie: true,
+                },
+            },
         },
     });
 
