@@ -4,6 +4,7 @@ import { register } from '../services/authApi.js';
 function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState('');
 
 const handleSubmit = async (event) => {
@@ -46,12 +47,15 @@ const handleSubmit = async (event) => {
           <label htmlFor="password">Password</label>
           <input
             id="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
             minLength={8}
           />
+          <span id="togglePassword" onClick={() => setShowPassword(!showPassword)}>
+            👁
+          </span>
         </div>
 
         <button type="submit">Register</button>
