@@ -88,6 +88,22 @@ function GroupDetailPage() {
       )}
 
       {deleteError && <p>{deleteError}</p>}
+
+<section>
+  <h2>Movies</h2>
+
+  {group.groupMovies?.length > 0 ? (
+    <ul>
+      {group.groupMovies.map((groupMovie) => (
+        <li key={groupMovie.id}>
+          {groupMovie.movie.title}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p>No movies in this group yet.</p>
+  )}
+</section>
     </div>
   );
 }
