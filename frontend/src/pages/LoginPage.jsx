@@ -6,6 +6,7 @@ function LoginPage() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState('');
 
   const handleSubmit = async (event) => {
@@ -15,8 +16,8 @@ function LoginPage() {
     try {
       await login({ email, password });
       setMessage('Login successful!');
-    } catch {
-      setMessage('Login failed.');
+    } catch (error) {
+      setMessage(error.message || 'Login failed.');
     }
   };
 
@@ -40,11 +41,14 @@ function LoginPage() {
           <label htmlFor="password">Password</label>
           <input
             id="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
           />
+          <span id="togglePassword" onClick={() => setShowPassword(!showPassword)}>
+            👁
+          </span>
         </div>
 
         <button type="submit">Login</button>

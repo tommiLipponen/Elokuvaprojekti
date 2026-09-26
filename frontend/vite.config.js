@@ -6,7 +6,14 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/movies': 'http://localhost:3000',
+      '/movies': {
+        target: 'http://localhost:3000',
+        bypass(request) {
+          if (request.method === 'GET' && /^\/movies\/[^/]+$/.test(request.url)) {
+            return '/index.html';
+          }
+        },
+      },
       '/auth': 'http://localhost:3000',
       '/users': 'http://localhost:3000',
       '/api': 'http://localhost:3000',
