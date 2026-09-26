@@ -522,6 +522,83 @@
           }
         }
       },
+
+  "/groups/{id}/movies": {
+  "post": {
+    "summary": "Add a movie to a group",
+    "description": "Adds a movie to a group. The authenticated user must be the group owner or an approved member.",
+    "tags": [
+      "Groups"
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "in": "path",
+        "name": "id",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Group ID"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "movieId"
+            ],
+            "properties": {
+              "movieId": {
+                "type": "integer",
+                "example": 550,
+                "description": "TMDB movie ID"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": {
+        "description": "Movie successfully added to the group"
+      },
+      "400": {
+        "description": "Movie ID is missing"
+      },
+      "401": {
+        "description": "Access token required or invalid"
+      },
+      "403": {
+        "description": "User is not an approved member of the group"
+      },
+      "404": {
+        "description": "Group or movie not found"
+      },
+      "409": {
+        "description": "Movie is already in the group"
+      },
+      "500": {
+        "description": "Failed to add movie to group",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error500"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+
       "delete": {
         "summary": "Delete a group",
         "description": "Deletes a group. Requires the authenticated user to be the group's owner.",
