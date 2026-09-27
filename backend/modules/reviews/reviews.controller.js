@@ -1,4 +1,4 @@
-const { createReview } = require('./reviews.service');
+const { createReview, getMovieReviews } = require('./reviews.service');
 const { validateReview } = require('./reviews.validation');
 
 const createReviewHandler = async (req, res) => {
@@ -36,6 +36,19 @@ const createReviewHandler = async (req, res) => {
     }
 };
 
+const getMovieReviewsHandler = async (req, res) => {
+    try {
+        const reviews = await getMovieReviews(req.params.id);
+        return res.status(200).json(reviews);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: 'Failed to get reviews',
+        });
+    }
+};
+
 module.exports = {
     createReviewHandler,
+    getMovieReviewsHandler,
 };
