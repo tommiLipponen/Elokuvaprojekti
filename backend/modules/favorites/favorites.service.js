@@ -10,7 +10,7 @@ const createFavoriteList = async (name, isPublic, userId) => {
             userId,
         },
         include: {
-            items: true,
+            items: { include: { movie: true } },
         },
     });
 
@@ -25,7 +25,7 @@ const getFavoriteLists = async (userId) => {
             userId,
         },
         include: {
-            items: true,
+            items: { include: { movie: true } },
         },
         orderBy: {
             createdAt: 'desc',
@@ -43,7 +43,7 @@ const getFavoriteListById = async (favoriteListId, userId) => {
             id: favoriteListId,
         },
         include: {
-            items: true,
+            items: { include: { movie: true } },
         },
     });
 
@@ -125,6 +125,9 @@ const addItemToList = async (favoriteListId, movieId, userId) => {
         data: {
             favoriteListId,
             movieId,
+        },
+        include: {
+            movie: true,
         },
     });
 

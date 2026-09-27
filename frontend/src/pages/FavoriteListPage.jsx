@@ -1,38 +1,45 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../context/useAuth.js';
+import { useFavorites } from '../hooks/useFavorites.js';
 
 function FavoriteListPage() {
   const { user } = useAuth() ?? {};
+  const { lists, loading, error, loadLists, addList, removeMovie } = useFavorites();
 
-  const [lists, setLists] = useState([]);
   const [newListName, setNewListName] = useState('');
-  const [error, setError] = useState('');
+  const [formError, setFormError] = useState('');
 
-  const handleCreateList = (event) => {
+  useEffect(() => {
+    if (user) {
+      loadLists();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  const handleCreateList = async (event) => {
     event.preventDefault();
-    setError('');
+    setFormError('');
 
     const name = newListName.trim();
     if (!name) {
-      setError('List name is required');
+      setFormError('List name is required');
       return;
     }
 
-    setLists((current) => [
-      { id: `local-${Date.now()}`, name, items: [] },
-      ...current,
-    ]);
-    setNewListName('');
+    try {
+      await addList(name);
+      setNewListName('');
+    } catch (err) {
+      setFormError(err.message || 'Failed to create favorite list');
+    }
   };
 
-  const handleRemoveMovie = (listId, movieId) => {
-    setLists((current) =>
-      current.map((list) =>
-        list.id === listId
-          ? { ...list, items: list.items.filter((item) => item.movieId !== movieId) }
-          : list
-      )
-    );
+  const handleRemoveMovie = async (listId, movieId) => {
+    try {
+      await removeMovie(listId, movieId);
+    } catch (err) {
+      setFormError(err.message || 'Failed to remove movie');
+    }
   };
 
   if (!user) {
@@ -58,22 +65,25 @@ function FavoriteListPage() {
         />
         <button type="submit">Create list</button>
       </form>
+      {formError && <p>{formError}</p>}
       {error && <p>{error}</p>}
 
-      {lists.length === 0 ? (
+      {loading && <p>Loading...</p>}
+
+      {!loading && lists.length === 0 ? (
         <p>You don&apos;t have any favorite lists yet.</p>
       ) : (
         <ul>
           {lists.map((list) => (
             <li key={list.id}>
               <h2>{list.name}</h2>
-              {list.items.length === 0 ? (
+              {!list.items || list.items.length === 0 ? (
                 <p>No movies in this list yet.</p>
               ) : (
                 <ul>
                   {list.items.map((item) => (
                     <li key={item.movieId}>
-                      {item.title}
+                      {item.movie?.title ?? item.movieId}
                       <button
                         type="button"
                         onClick={() => handleRemoveMovie(list.id, item.movieId)}
