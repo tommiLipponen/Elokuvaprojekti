@@ -1,6 +1,6 @@
 const express = require('express');
 const authMiddleware = require('../auth/auth.middleware');
-const { createReviewHandler } = require('./reviews.controller');
+const { createReviewHandler, getMovieReviewsHandler  } = require('./reviews.controller');
 
 const router = express.Router();
 
@@ -50,5 +50,50 @@ const router = express.Router();
  *         description: Failed to create review
  */
 router.post('/:id/reviews', authMiddleware, createReviewHandler);
+
+/**
+ * @swagger
+ * /movies/{id}/reviews:
+ *   get:
+ *     summary: Get reviews for a movie
+ *     description: Returns all reviews for a specific movie.
+ *     tags: [Reviews]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of reviews for the movie
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   username:
+ *                     type: string
+ *                   rating:
+ *                     type: integer
+ *                   comment:
+ *                     type: string
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *       500:
+ *         description: Failed to get reviews
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error500'
+ * */
+
+
+router.get('/:id/reviews', getMovieReviewsHandler);
 
 module.exports = router;
