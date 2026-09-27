@@ -2,6 +2,8 @@ const {
     createJoinRequest,
     getJoinRequests,
     updateJoinRequest,
+    removeMember,
+    leaveGroup,
 } = require('./memberships.service');
 
 const {
@@ -93,8 +95,87 @@ const update = async (req, res) => {
     } catch (error) { console.error(error); return res.status(500).json({ message: 'Failed to update join request' }); }
 };
 
+const remove = async (req, res) => {
+    try {
+        const result = await removeMember(
+            req.params.id,
+            req.user.userId,
+            req.params.userId
+        );
+
+        if (!result) {
+            return res.status(404).json({
+                message: 'Group not found',
+            });
+        }
+
+        if (result.accessDenied) {
+            return res.status(403).json({
+                message: 'Only the group owner can remove members',
+            });
+        }
+
+        if (result.cannotRemoveOwner) {
+            return res.status(400).json({
+                message: 'The group owner cannot be removed',
+            });
+        }
+
+        if (result.memberNotFound) {
+            return res.status(404).json({
+                message: 'Member not found',
+            });
+        }
+
+        return res.status(204).send();
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            message: 'Failed to remove member',
+        });
+    }
+};
+
+const leave = async (req, res) => {
+    try {
+        const result = await leaveGroup(
+            req.params.id,
+            req.user.userId
+        );
+
+        if (!result) {
+            return res.status(404).json({
+                message: 'Group not found',
+            });
+        }
+
+        if (result.ownerCannotLeave) {
+            return res.status(400).json({
+                message: 'The group owner cannot leave the group',
+            });
+        }
+
+        if (result.memberNotFound) {
+            return res.status(404).json({
+                message: 'You are not a member of this group',
+            });
+        }
+
+        return res.status(204).send();
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            message: 'Failed to leave group',
+        });
+    }
+};
+
 module.exports = {
     create,
     list,
     update,
+    remove,
+    leave,
 };

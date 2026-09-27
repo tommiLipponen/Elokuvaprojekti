@@ -5,6 +5,8 @@ const {
     create,
     list,
     update,
+    remove,
+    leave,
 } = require('./memberships.controller');
 
 const router = express.Router();
@@ -119,7 +121,74 @@ router.get('/:id/join-requests', authMiddleware, list);
  *       500:
  *         description: Failed to update join request
  */
-
 router.patch('/:id/join-requests/:userId', authMiddleware, update);
+
+/**
+ * @swagger
+ * /groups/{id}/members/me:
+ *   delete:
+ *     summary: Leave a group
+ *     description: Allows the authenticated member to leave the group.
+ *     tags:
+ *       - Memberships
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Group ID
+ *         schema:
+ *           type: string
+ *     responses:
+ *       204:
+ *         description: Successfully left the group
+ *       401:
+ *         description: Access token required or invalid
+ *       400:
+ *         description: Group owner cannot leave the group
+ *       404:
+ *         description: Group not found or user is not a member
+ *       500:
+ *         description: Failed to leave group
+ */
+router.delete('/:id/members/me', authMiddleware, leave);
+
+/**
+ * @swagger
+ * /groups/{id}/members/{userId}:
+ *   delete:
+ *     summary: Remove a member from a group
+ *     description: Allows the group owner to remove a member from the group.
+ *     tags:
+ *       - Memberships
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Group ID
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: User ID of the member to remove
+ *         schema:
+ *           type: string
+ *     responses:
+ *       204:
+ *         description: Member successfully removed
+ *       401:
+ *         description: Access token required or invalid
+ *       403:
+ *         description: Only the group owner can remove members
+ *       404:
+ *         description: Group or member not found
+ *       500:
+ *         description: Failed to remove member
+ */
+router.delete('/:id/members/:userId', authMiddleware, remove);
 
 module.exports = router;

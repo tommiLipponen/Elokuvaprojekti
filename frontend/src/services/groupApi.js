@@ -117,3 +117,45 @@ export async function updateJoinRequest(
 
   return res.json();
 }
+
+export async function removeGroupMember(
+  groupId,
+  userId,
+  accessToken
+) {
+  const res = await fetch(
+    `${API_BASE}/${groupId}/members/${userId}`,
+    {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.message || 'Failed to remove member');
+  }
+
+  return true;
+}
+
+export async function leaveGroup(groupId, accessToken) {
+  const res = await fetch(
+    `${API_BASE}/${groupId}/members/me`,
+    {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.message || 'Failed to leave group');
+  }
+
+  return true;
+}

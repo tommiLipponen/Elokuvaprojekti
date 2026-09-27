@@ -2,7 +2,7 @@ const { getPrisma } = require('../../config/prisma');
 
 const createGroup = async (name, ownerId) => {
     const prisma = await getPrisma();
-    
+
     const group = await prisma.group.create({
         data: {
             name,
@@ -53,7 +53,7 @@ const getMyGroups = async (userId) => {
 };
 
 
-const getGroupById = async(groupId, userId) => {
+const getGroupById = async (groupId, userId) => {
     const prisma = await getPrisma();
 
     const group = await prisma.group.findUnique({
@@ -61,7 +61,16 @@ const getGroupById = async(groupId, userId) => {
             id: groupId,
         },
         include: {
-            memberships: true,
+            memberships: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            username: true,
+                        },
+                    },
+                },
+            },
             groupMovies: {
                 include: {
                     movie: true,
@@ -77,9 +86,9 @@ const getGroupById = async(groupId, userId) => {
     const isOwner = group.ownerId === userId;
 
     const isMember = group.memberships.some(
-        (memberships) => 
-        memberships.userId === userId &&
-        memberships.status === 'APPROVED'
+        (memberships) =>
+            memberships.userId === userId &&
+            memberships.status === 'APPROVED'
     );
 
     if (!isOwner && !isMember) {

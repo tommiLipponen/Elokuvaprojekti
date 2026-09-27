@@ -440,4 +440,178 @@ describe('Memberships API', () => {
             expect(response.status).toBe(401);
         });
     });
+
+    describe('DELETE /api/groups/:id/members/:userId', () => {
+        test('owner can remove an approved member', async () => {
+            verifyAccessToken.mockReturnValue({
+                userId: 'owner-1',
+            });
+
+            getPrisma.mockResolvedValue({
+                group: {
+                    findUnique: jest.fn().mockResolvedValue({
+                        id: 'group-1',
+                        name: 'Friday Movie Club',
+                        ownerId: 'owner-1',
+                    }),
+                },
+                groupMembership: {
+                    findUnique: jest.fn().mockResolvedValue({
+                        id: 'membership-1',
+                        groupId: 'group-1',
+                        userId: 'user-1',
+                        status: 'APPROVED',
+                    }),
+                    delete: jest.fn().mockResolvedValue({}),
+                },
+            });
+
+            const response = await request(app)
+                .delete('/api/groups/group-1/members/user-1')
+                .set('Authorization', 'Bearer owner-token');
+
+            expect(response.status).toBe(204);
+        });
+
+        test('non-owner cannot remove a member', async () => {
+            verifyAccessToken.mockReturnValue({
+                userId: 'user-2',
+            });
+
+            getPrisma.mockResolvedValue({
+                group: {
+                    findUnique: jest.fn().mockResolvedValue({
+                        id: 'group-1',
+                        name: 'Friday Movie Club',
+                        ownerId: 'owner-1',
+                    }),
+                },
+            });
+
+            const response = await request(app)
+                .delete('/api/groups/group-1/members/user-1')
+                .set('Authorization', 'Bearer user-token');
+
+            expect(response.status).toBe(403);
+        });
+
+        test('returns 404 when member does not exist', async () => {
+            verifyAccessToken.mockReturnValue({
+                userId: 'owner-1',
+            });
+
+            getPrisma.mockResolvedValue({
+                group: {
+                    findUnique: jest.fn().mockResolvedValue({
+                        id: 'group-1',
+                        name: 'Friday Movie Club',
+                        ownerId: 'owner-1',
+                    }),
+                },
+                groupMembership: {
+                    findUnique: jest.fn().mockResolvedValue(null),
+                },
+            });
+
+            const response = await request(app)
+                .delete('/api/groups/group-1/members/user-1')
+                .set('Authorization', 'Bearer owner-token');
+
+            expect(response.status).toBe(404);
+        });
+
+        test('returns 401 without access token', async () => {
+            const response = await request(app)
+                .delete('/api/groups/group-1/members/user-1');
+
+            expect(response.status).toBe(401);
+        });
+    });
+
+    describe('DELETE /api/groups/:id/members/me', () => {
+        test('member can leave the group', async () => {
+            verifyAccessToken.mockReturnValue({
+                userId: 'user-1',
+            });
+
+            getPrisma.mockResolvedValue({
+                group: {
+                    findUnique: jest.fn().mockResolvedValue({
+                        id: 'group-1',
+                        name: 'Friday Movie Club',
+                        ownerId: 'owner-1',
+                    }),
+                },
+                groupMembership: {
+                    findUnique: jest.fn().mockResolvedValue({
+                        id: 'membership-1',
+                        groupId: 'group-1',
+                        userId: 'user-1',
+                        status: 'APPROVED',
+                    }),
+                    delete: jest.fn().mockResolvedValue({}),
+                },
+            });
+
+            const response = await request(app)
+                .delete('/api/groups/group-1/members/me')
+                .set('Authorization', 'Bearer user-token');
+
+            expect(response.status).toBe(204);
+        });
+
+        test('owner cannot leave the group', async () => {
+            verifyAccessToken.mockReturnValue({
+                userId: 'owner-1',
+            });
+
+            getPrisma.mockResolvedValue({
+                group: {
+                    findUnique: jest.fn().mockResolvedValue({
+                        id: 'group-1',
+                        name: 'Friday Movie Club',
+                        ownerId: 'owner-1',
+                    }),
+                },
+            });
+
+            const response = await request(app)
+                .delete('/api/groups/group-1/members/me')
+                .set('Authorization', 'Bearer owner-token');
+
+            expect(response.status).toBe(400);
+        });
+
+        test('returns 404 when user is not a member', async () => {
+            verifyAccessToken.mockReturnValue({
+                userId: 'user-1',
+            });
+
+            getPrisma.mockResolvedValue({
+                group: {
+                    findUnique: jest.fn().mockResolvedValue({
+                        id: 'group-1',
+                        name: 'Friday Movie Club',
+                        ownerId: 'owner-1',
+                    }),
+                },
+                groupMembership: {
+                    findUnique: jest.fn().mockResolvedValue(null),
+                },
+            });
+
+            const response = await request(app)
+                .delete('/api/groups/group-1/members/me')
+                .set('Authorization', 'Bearer user-token');
+
+            expect(response.status).toBe(404);
+        });
+
+        test('returns 401 without access token', async () => {
+            const response = await request(app)
+                .delete('/api/groups/group-1/members/me');
+
+            expect(response.status).toBe(401);
+        });
+    });
 });
