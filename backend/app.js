@@ -25,6 +25,7 @@ app.use('/groups', groupRoutes);
 app.use('/favorites', favoriteRoutes);
 app.use('/groups', membershipsRoutes);
 app.use('/api/groups', groupRoutes);
+app.use('/api/groups', membershipsRoutes);
 app.use('/api/favorites', favoriteRoutes);
 app.use('/movies', reviewRoutes);
 
