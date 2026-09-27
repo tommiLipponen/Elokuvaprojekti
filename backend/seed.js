@@ -1,7 +1,7 @@
 // Baseline movie import for local/dev/shared databases (PBI 28, ADO 140).
 // Run: node seed.js            (uses the committed snapshot if present)
 //      node seed.js --refresh  (re-fetches from TMDB and overwrites the snapshot)
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const path = require('path');
 const fs = require('fs/promises');
