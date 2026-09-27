@@ -172,8 +172,112 @@ const updateJoinRequest = async (
 
 };
 
+const removeMember = async (groupId, ownerId, memberId) => {
+    const prisma = await getPrisma();
+
+    const group = await prisma.group.findUnique({
+        where: {
+            id: groupId,
+        },
+    });
+
+    if (!group) {
+        return null;
+    }
+
+    if (group.ownerId !== ownerId) {
+        return {
+            accessDenied: true,
+        };
+    }
+
+    if (memberId === group.ownerId) {
+        return {
+            cannotRemoveOwner: true,
+        };
+    }
+
+    const membership = await prisma.groupMembership.findUnique({
+        where: {
+            groupId_userId: {
+                groupId,
+                userId: memberId,
+            },
+        },
+    });
+
+    if (!membership || membership.status !== 'APPROVED') {
+        return {
+            memberNotFound: true,
+        };
+    }
+
+    await prisma.groupMembership.delete({
+        where: {
+            groupId_userId: {
+                groupId,
+                userId: memberId,
+            },
+        },
+    });
+
+    return {
+        success: true,
+    };
+};
+
+const leaveGroup = async (groupId, userId) => {
+    const prisma = await getPrisma();
+
+    const group = await prisma.group.findUnique({
+        where: {
+            id: groupId,
+        },
+    });
+
+    if (!group) {
+        return null;
+    }
+
+    if (group.ownerId === userId) {
+        return {
+            ownerCannotLeave: true,
+        };
+    }
+
+    const membership = await prisma.groupMembership.findUnique({
+        where: {
+            groupId_userId: {
+                groupId,
+                userId,
+            },
+        },
+    });
+
+    if (!membership || membership.status !== 'APPROVED') {
+        return {
+            memberNotFound: true,
+        };
+    }
+
+    await prisma.groupMembership.delete({
+        where: {
+            groupId_userId: {
+                groupId,
+                userId,
+            },
+        },
+    });
+
+    return {
+        success: true,
+    };
+};
+
 module.exports = {
     createJoinRequest,
     getJoinRequests,
     updateJoinRequest,
+    removeMember,
+    leaveGroup,
 };

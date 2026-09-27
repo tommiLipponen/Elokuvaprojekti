@@ -16,6 +16,7 @@ function GroupDetailPage() {
   const [joinMessage, setJoinMessage] = useState('');
   const [joinRequests, setJoinRequests] = useState([]);
   const [joinRequestsError, setJoinRequestsError] = useState('');
+  const [membersError, setMembersEror] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -124,6 +125,41 @@ function GroupDetailPage() {
     );
   };
 
+  const handleRemoveMember = async (userId) => {
+    setMembersError('');
+
+    const result = await groupApi.removeGroupMember(
+      id,
+      userId,
+      accessToken
+    );
+
+    if (result?.message) {
+      setMembersError(result.message);
+      return;
+    }
+
+    setGroup((currentGroup) => ({
+      ...currentGroup,
+      memberships: currentGroup.memberships.filter(
+        (membership) => membership.userId !== userId
+      ),
+    }));
+  };
+
+  const handleLeaveGroup = async () => {
+    setMembersError('');
+
+    const result = await groupApi.leaveGroup(id, accessToken);
+
+    if (result?.message) {
+      setMembersError(result.message);
+      return;
+    }
+
+    navigate('/groups');
+  };
+
   if (!hasLoaded) {
     return <p>Loading group...</p>;
   }
@@ -193,23 +229,58 @@ function GroupDetailPage() {
       {joinMessage && <p>{joinMessage}</p>}
       {joinError && <p>{joinError}</p>}
 
+      <section>
+        <h2>Members</h2>
+
+        {membersError && <p>{membersError}</p>}
+
+        {group.memberships?.filter(
+          (membership) => membership.status === 'APPROVED'
+        ).length > 0 ? (
+          <ul>
+            {group.memberships
+              .filter((membership) => membership.status === 'APPROVED')
+              .map((membership) => (
+                <li key={membership.id}>
+                  {membership.user?.username || membership.userId}
+
+                  {isOwner && membership.userId !== group.ownerId && (
+                    <button
+                      onClick={() => handleRemoveMember(membership.userId)}
+                    >
+                      Remove
+                    </button>
+                  )}
+                </li>
+              ))}
+          </ul>
+        ) : (
+          <p>No members in this group yet.</p>
+        )}
+
+        {!isOwner && (
+          <button onClick={handleLeaveGroup}>
+            Leave group
+          </button>
+        )}
+      </section>
 
 
-  <section>
-  <h2>Movies</h2>
+      <section>
+        <h2>Movies</h2>
 
-  {group.groupMovies?.length > 0 ? (
-    <ul>
-      {group.groupMovies.map((groupMovie) => (
-        <li key={groupMovie.id}>
-          {groupMovie.movie.title}
-        </li>
-      ))}
-    </ul>
-  ) : (
-    <p>No movies in this group yet.</p>
-  )}
-</section>
+        {group.groupMovies?.length > 0 ? (
+          <ul>
+            {group.groupMovies.map((groupMovie) => (
+              <li key={groupMovie.id}>
+                {groupMovie.movie.title}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No movies in this group yet.</p>
+        )}
+      </section>
 
     </div>
   );
