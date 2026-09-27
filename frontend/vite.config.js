@@ -16,6 +16,7 @@ export default defineConfig({
       },
       '/auth': 'http://localhost:3000',
       '/users': 'http://localhost:3000',
+      '/favorites': 'http://localhost:3000',
       '/api': 'http://localhost:3000',
     },
   },

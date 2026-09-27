@@ -3,7 +3,7 @@
 
 # Elokuvaprojekti
 
-**Live site:** https://moviedb-eqgbbphehffnerf7.francecentral-01.azurewebsites.net
+**Live site:** [moviedb-eqgbbphehffnerf7.francecentral-01.azurewebsites.net](https://moviedb-eqgbbphehffnerf7.francecentral-01.azurewebsites.net)
 
 A responsive movie web app for browsing and searching movies/series, viewing what's currently in Finnish cinemas, joining groups, writing reviews, and sharing favorite lists. Built with React, Node.js, and PostgreSQL, using [The Movie Database (TMDB)](https://www.themoviedb.org/) as the external movie data source.
 
@@ -27,9 +27,9 @@ flowchart LR
 
 ## Documentation
 
-- [Scrum backlog plan](scrum-backlog-plan.md)
-- [Architecture plan](architecture-plan.md)
-- [Implementation plan](implementation-plan.md)
+- [Scrum backlog plan](plans/scrum-backlog-plan.md)
+- [Architecture plan](plans/architecture-plan.md)
+- [Implementation plan](plans/implementation-plan.md)
 - [Class diagram](docs/class-diagram.md)
 
 > The project documentation is kept in the docs folder and is versioned in Git for easy review on GitHub.

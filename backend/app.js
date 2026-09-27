@@ -7,6 +7,7 @@ const authRoutes = require('./modules/auth/auth.routes');
 const userRoutes = require('./users/user.routes');
 const movieRoutes = require('./modules/movies/movies.routes');
 const groupRoutes = require('./modules/groups/groups.routes');
+const favoriteRoutes = require('./modules/favorites/favorites.routes');
 const membershipsRoutes = require('./modules/memberships/memberships.routes');
 const reviewRoutes = require('./modules/reviews/reviews.routes');
 
@@ -21,8 +22,10 @@ app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/movies', movieRoutes);
 app.use('/groups', groupRoutes);
+app.use('/favorites', favoriteRoutes);
 app.use('/groups', membershipsRoutes);
 app.use('/api/groups', groupRoutes);
+app.use('/api/favorites', favoriteRoutes);
 app.use('/movies', reviewRoutes);
 
 // Serve the built React SPA if present (populated by the deploy pipeline, not present in local dev)
