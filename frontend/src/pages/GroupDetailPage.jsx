@@ -54,24 +54,32 @@ function GroupDetailPage() {
       return;
     }
 
-    async function loadJoinRequests() {
-      setJoinRequestsError('');
+    let cancelled = false;
 
+    async function loadJoinRequests() {
       try {
         const result = await groupApi.getJoinRequests(id, accessToken);
 
-        if (result.message) {
+        if (cancelled) return;
+
+        if (result?.message) {
           setJoinRequestsError(result.message);
           return;
         }
 
         setJoinRequests(result);
       } catch {
-        setJoinRequestsError('Failed to load join requests');
+        if (!cancelled) {
+          setJoinRequestsError('Failed to load join requests');
+        }
       }
     }
 
     loadJoinRequests();
+
+    return () => {
+      cancelled = true;
+    };
   }, [group, id, accessToken, user]);
 
   const handleDelete = async () => {
@@ -105,7 +113,7 @@ function GroupDetailPage() {
     setJoinMessage('Join request sent!');
   };
 
-  const handleUpdateJoinRequest = async (userId, status) => {
+  const handleJoinRequestUpdate = async (userId, status) => {
     setJoinRequestsError('');
 
     const result = await groupApi.updateJoinRequest(
@@ -115,7 +123,7 @@ function GroupDetailPage() {
       accessToken
     );
 
-    if (result?.message) {
+    if (result?.message && !result?.status) {
       setJoinRequestsError(result.message);
       return;
     }
@@ -188,6 +196,15 @@ function GroupDetailPage() {
 
       {deleteError && <p>{deleteError}</p>}
 
+      {!isOwner && (
+        <button onClick={handleJoinRequest}>
+          Request to join
+        </button>
+      )}
+
+      {joinMessage && <p>{joinMessage}</p>}
+      {joinError && <p>{joinError}</p>}
+
       {isOwner && (
         <div>
           <h2>Join requests</h2>
@@ -200,16 +217,28 @@ function GroupDetailPage() {
             <ul>
               {joinRequests.map((request) => (
                 <li key={request.id}>
-                  {request.user.username}
+                  <span>
+                    {request.user?.username || request.userId}
+                  </span>
 
                   <button
-                    onClick={() => handleUpdateJoinRequest(request.userId, 'APPROVED')}
+                    onClick={() =>
+                      handleJoinRequestUpdate(
+                        request.userId,
+                        'APPROVED'
+                      )
+                    }
                   >
                     Approve
                   </button>
 
                   <button
-                    onClick={() => handleUpdateJoinRequest(request.userId, 'REJECTED')}
+                    onClick={() =>
+                      handleJoinRequestUpdate(
+                        request.userId,
+                        'REJECTED'
+                      )
+                    }
                   >
                     Reject
                   </button>
