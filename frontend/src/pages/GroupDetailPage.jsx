@@ -15,7 +15,7 @@ function GroupDetailPage() {
   const [joinError, setJoinError] = useState('');
   const [joinMessage, setJoinMessage] = useState('');
   const [joinRequests, setJoinRequests] = useState([]);
-  const [requestError, setRequestError] = useState('');
+  const [joinRequestsError, setJoinRequestsError] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -62,14 +62,14 @@ function GroupDetailPage() {
         if (cancelled) return;
 
         if (result?.message) {
-          setRequestError(result.message);
+          setJoinRequestsError(result.message);
           return;
         }
 
         setJoinRequests(result);
       } catch {
         if (!cancelled) {
-          setRequestError('Failed to load join requests');
+          setJoinRequestsError('Failed to load join requests');
         }
       }
     }
@@ -113,7 +113,7 @@ function GroupDetailPage() {
   };
 
   const handleJoinRequestUpdate = async (userId, status) => {
-    setRequestError('');
+    setJoinRequestsError('');
 
     const result = await groupApi.updateJoinRequest(
       id,
@@ -123,7 +123,7 @@ function GroupDetailPage() {
     );
 
     if (result?.message && !result?.status) {
-      setRequestError(result.message);
+      setJoinRequestsError(result.message);
       return;
     }
 
@@ -173,7 +173,7 @@ function GroupDetailPage() {
         <div>
           <h2>Join requests</h2>
 
-          {requestError && <p>{requestError}</p>}
+          {joinRequestsError && <p>{joinRequestsError}</p>}
 
           {joinRequests.length === 0 ? (
             <p>No pending join requests.</p>
@@ -212,6 +212,22 @@ function GroupDetailPage() {
           )}
         </div>
       )}
+
+      <section>
+        <h2>Movies</h2>
+
+        {group.groupMovies?.length > 0 ? (
+          <ul>
+            {group.groupMovies.map((groupMovie) => (
+              <li key={groupMovie.id}>
+                {groupMovie.movie.title}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No movies in this group yet.</p>
+        )}
+      </section>
     </div>
   );
 }
