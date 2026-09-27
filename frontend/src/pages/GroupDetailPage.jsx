@@ -16,7 +16,7 @@ function GroupDetailPage() {
   const [joinMessage, setJoinMessage] = useState('');
   const [joinRequests, setJoinRequests] = useState([]);
   const [joinRequestsError, setJoinRequestsError] = useState('');
-  const [membersError, setMembersEror] = useState('');
+  const [membersError, setMembersError] = useState('');
 
   useEffect(() => {
     let cancelled = false;
