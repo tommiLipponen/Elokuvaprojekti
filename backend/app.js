@@ -25,6 +25,7 @@ app.use('/groups', groupRoutes);
 app.use('/favorites', favoriteRoutes);
 app.use('/groups', membershipsRoutes);
 app.use('/api/groups', groupRoutes);
+app.use('/api/favorites', favoriteRoutes);
 app.use('/movies', reviewRoutes);
 
 // Serve the built React SPA if present (populated by the deploy pipeline, not present in local dev)
