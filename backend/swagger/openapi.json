@@ -183,11 +183,29 @@
           },
           "movieId": {
             "type": "string",
+            "description": "The Movie's internal id (not its TMDB id).",
             "example": "e1a2b3d4-e5f6-7890-abcd-ef1234567890"
           },
           "addedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "movie": {
+            "type": "object",
+            "description": "Populated on read endpoints so the frontend can render titles without a second request.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "e1a2b3d4-e5f6-7890-abcd-ef1234567890"
+              },
+              "title": {
+                "type": "string",
+                "example": "Fight Club"
+              },
+              "posterPath": {
+                "type": "string"
+              }
+            }
           }
         }
       }
@@ -427,6 +445,165 @@
         }
       }
     },
+    "/groups/{id}/join-requests": {
+      "post": {
+        "summary": "Request to join a group",
+        "description": "Sends a join request for the authenticated user.",
+        "tags": [
+          "Memberships"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Group ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Join request created"
+          },
+          "400": {
+            "description": "Join request already exists or request is invalid"
+          },
+          "401": {
+            "description": "Access token required or invalid"
+          },
+          "404": {
+            "description": "Group not found"
+          },
+          "500": {
+            "description": "Failed to create join request"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get group join requests",
+        "description": "Returns join requests for a group. Only the group owner can access them.",
+        "tags": [
+          "Memberships"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Group ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of join requests"
+          },
+          "401": {
+            "description": "Access token required or invalid"
+          },
+          "403": {
+            "description": "Only the group owner can view join requests"
+          },
+          "404": {
+            "description": "Group not found"
+          },
+          "500": {
+            "description": "Failed to get join requests"
+          }
+        }
+      }
+    },
+    "/groups/{id}/join-requests/{userId}": {
+      "patch": {
+        "summary": "Approve or reject a join request",
+        "description": "Allows the group owner to approve or reject a pending join request.",
+        "tags": [
+          "Memberships"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Group ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "description": "User ID of the join requester",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "status"
+                ],
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "APPROVED",
+                      "REJECTED"
+                    ],
+                    "example": "APPROVED"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Join request updated successfully"
+          },
+          "400": {
+            "description": "Invalid status or join request is not pending"
+          },
+          "401": {
+            "description": "Access token required or invalid"
+          },
+          "403": {
+            "description": "Only the group owner can approve or reject requests"
+          },
+          "404": {
+            "description": "Group or join request not found"
+          },
+          "500": {
+            "description": "Failed to update join request"
+          }
+        }
+      }
+    },
     "/groups": {
       "get": {
         "summary": "List all groups",
@@ -574,83 +751,6 @@
           }
         }
       },
-
-  "/groups/{id}/movies": {
-  "post": {
-    "summary": "Add a movie to a group",
-    "description": "Adds a movie to a group. The authenticated user must be the group owner or an approved member.",
-    "tags": [
-      "Groups"
-    ],
-    "security": [
-      {
-        "bearerAuth": []
-      }
-    ],
-    "parameters": [
-      {
-        "in": "path",
-        "name": "id",
-        "required": true,
-        "schema": {
-          "type": "string"
-        },
-        "description": "Group ID"
-      }
-    ],
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "required": [
-              "movieId"
-            ],
-            "properties": {
-              "movieId": {
-                "type": "integer",
-                "example": 550,
-                "description": "TMDB movie ID"
-              }
-            }
-          }
-        }
-      }
-    },
-    "responses": {
-      "201": {
-        "description": "Movie successfully added to the group"
-      },
-      "400": {
-        "description": "Movie ID is missing"
-      },
-      "401": {
-        "description": "Access token required or invalid"
-      },
-      "403": {
-        "description": "User is not an approved member of the group"
-      },
-      "404": {
-        "description": "Group or movie not found"
-      },
-      "409": {
-        "description": "Movie is already in the group"
-      },
-      "500": {
-        "description": "Failed to add movie to group",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Error500"
-            }
-          }
-        }
-      }
-    }
-  }
-},
-
       "delete": {
         "summary": "Delete a group",
         "description": "Deletes a group. Requires the authenticated user to be the group's owner.",

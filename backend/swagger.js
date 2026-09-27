@@ -180,11 +180,29 @@ const options = {
             },
             movieId: {
               type: 'string',
+              description: "The Movie's internal id (not its TMDB id).",
               example: 'e1a2b3d4-e5f6-7890-abcd-ef1234567890',
             },
             addedAt: {
               type: 'string',
               format: 'date-time',
+            },
+            movie: {
+              type: 'object',
+              description: 'Populated on read endpoints so the frontend can render titles without a second request.',
+              properties: {
+                id: {
+                  type: 'string',
+                  example: 'e1a2b3d4-e5f6-7890-abcd-ef1234567890',
+                },
+                title: {
+                  type: 'string',
+                  example: 'Fight Club',
+                },
+                posterPath: {
+                  type: 'string',
+                },
+              },
             },
           },
         },
