@@ -175,6 +175,35 @@ describe('Groups API', () => {
             expect(response.status).toBe(403);
         });
 
+        test('rejected member cannot view group details', async () => {
+            verifyAccessToken.mockReturnValue({
+                userId: 'rejected-1',
+            });
+
+            getPrisma.mockResolvedValue({
+                group: {
+                    findUnique: jest.fn().mockResolvedValue({
+                        id: 'group-1',
+                        name: 'Friday Movie Club',
+                        ownerId: 'owner-1',
+                        createdAt: new Date(),
+                        memberships: [
+                            {
+                                userId: 'rejected-1',
+                                status: 'REJECTED',
+                            },
+                        ],
+                    }),
+                },
+            });
+
+            const response = await request(app)
+                .get('/api/groups/group-1')
+                .set('Authorization', 'Bearer rejected-token');
+
+            expect(response.status).toBe(403);
+        });
+
         test('returns 404 when group does not exist', async () => {
             getPrisma.mockResolvedValue({
                 group: {

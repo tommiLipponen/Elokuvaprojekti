@@ -1,7 +1,5 @@
 const { getPrisma } = require('../../config/prisma');
 
-
-
 const createGroup = async (name, ownerId) => {
     const prisma = await getPrisma();
     
