@@ -127,4 +127,50 @@ describe('Reviews API', () => {
             expect(response.status).toBe(401);
         });
     });
+
+    describe('GET /movies/:id/reviews', () => {
+        test('returns reviews without login', async () => {
+            getPrisma.mockResolvedValue({
+                review: {
+                    findMany: jest.fn().mockResolvedValue([]),
+                },
+            });
+            const response = await request(app)
+                .get('/movies/movie-1/reviews');
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual([]);
+        });
+
+        test('returns review details including username', async () => {
+            getPrisma.mockResolvedValue({
+                review: {
+                    findMany: jest.fn().mockResolvedValue([
+                        {
+                            id: 'review-1',
+                            rating: 5,
+                            comment: 'Excellent movie',
+                            createdAt: new Date(),
+                            user: {
+                                username: 'testuser',
+                            },
+                        },
+                    ]),
+                },
+            });
+            const response = await request(app)
+                .get('/movies/movie-1/reviews');
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual([
+                {
+                    id: 'review-1',
+                    username: 'testuser',
+                    rating: 5,
+                    comment: 'Excellent movie',
+                    createdAt: expect.any(String),
+                },
+            ]);
+        });
+
+    });
+
 });

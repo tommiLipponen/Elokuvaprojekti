@@ -980,13 +980,13 @@ Code for this project lives in the GitHub repository `tommiLipponen/Elokuvaproje
 - PBI 12: Add a movie to a group page
 - PBI 13: Create a movie review
 - PBI 14: Browse movie reviews
-- PBI 21: Test review browsing endpoint
 
 ### Sprint 5 (Week 40): Favorites, sharing, and frontend integration
 
 - PBI 15: Create favorite list
 - PBI 16: Share favorite list via URL
 - PBI 17: View shared favorite lists
+- PBI 21: Test review browsing endpoint (moved from Sprint 4, team agreed 2026-09-27; blocked on PBI 14 finishing)
 
 ### Sprint 6 (Week 41): Polish, responsiveness, documentation, and delivery
 

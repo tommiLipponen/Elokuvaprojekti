@@ -86,3 +86,34 @@ export async function requestToJoinGroup(groupId, accessToken) {
   
   return res.json();
 }
+
+export async function getJoinRequests(groupId, accessToken) {
+  const res = await fetch(`${API_BASE}/${groupId}/join-requests`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return res.json();
+}
+
+export async function updateJoinRequest(
+  groupId,
+  userId,
+  status,
+  accessToken
+) {
+  const res = await fetch(
+    `${API_BASE}/${groupId}/join-requests/${userId}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ status }),
+    }
+  );
+
+  return res.json();
+}

@@ -3,6 +3,7 @@ const path = require('path');
 const environmentFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
 require('dotenv').config({
   path: path.join(__dirname, '..', environmentFile),
+  quiet: true,
 });
 const { PrismaPg } = require('@prisma/adapter-pg');
 

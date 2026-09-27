@@ -39,6 +39,9 @@ data/
 # Azure publish profile credentials
 *.PublishSettings
 
+# Local-only notes (not for the shared repo)
+docs/62-implementation.md
+
 # Local scratch/working folders (not part of the repo)
 tmp/
 
@@ -54,7 +57,7 @@ tmdb-movie-550-sample.json
 *.swo
 
 # Local team planning files
-assignment-instructions.md
+plans/assignment-instructions.md
 .markdownlint.json
 notes-*.md
 
