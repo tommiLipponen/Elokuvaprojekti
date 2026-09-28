@@ -53,7 +53,7 @@ const getMyGroups = async (userId) => {
 };
 
 
-const getGroupById = async (groupId) => {
+const getGroupById = async (groupId, userId) => {
     const prisma = await getPrisma();
 
     const group = await prisma.group.findUnique({
@@ -81,6 +81,20 @@ const getGroupById = async (groupId) => {
 
     if (!group) {
         return null;
+    }
+
+    const isOwner = group.ownerId === userId;
+
+    const isMember = group.memberships.some(
+        (membership) =>
+            membership.userId === userId &&
+            membership.status === 'APPROVED'
+    );
+
+    if (!isOwner && !isMember) {
+        return {
+            accessDenied: true,
+        };
     }
 
     return group;
