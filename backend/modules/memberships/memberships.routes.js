@@ -1,6 +1,9 @@
+// import the express framework & authentication middleware
+// which checks that the user has a valid access token
 const express = require('express');
 const authMiddleware = require('../auth/auth.middleware');
 
+// import controller functions that handle the actual business logic
 const {
     create,
     list,
@@ -9,6 +12,7 @@ const {
     leave,
 } = require('./memberships.controller');
 
+//create a new express router that will contain all routes related to group memberships
 const router = express.Router();
 
 /**
@@ -66,7 +70,15 @@ const router = express.Router();
  *       500:
  *         description: Failed to get join requests
  */
+
+// Handle POST requests for creating a new join request.
+// authMiddleware first checks that the user is authenticated.
+// If authentication succeeds, the create controller is called.
 router.post('/:id/join-requests', authMiddleware, create);
+
+// Handle GET requests for retrieving join requests.
+// The authenticated user must pass the authentication middleware
+// before the list controller is executed.
 router.get('/:id/join-requests', authMiddleware, list);
 
 /**
@@ -121,6 +133,11 @@ router.get('/:id/join-requests', authMiddleware, list);
  *       500:
  *         description: Failed to update join request
  */
+
+// Handle PATCH requests for approving or rejecting a join request.
+// :id is the group ID.
+// :userId is the ID of the user who wants to join.
+// authMiddleware checks authentication before update is called.
 router.patch('/:id/join-requests/:userId', authMiddleware, update);
 
 /**
@@ -152,6 +169,10 @@ router.patch('/:id/join-requests/:userId', authMiddleware, update);
  *       500:
  *         description: Failed to leave group
  */
+
+// Handle DELETE requests when the current user wants to leave a group.
+// "me" means that the user is identified through their authentication token,
+// rather than by providing their user ID in the URL.
 router.delete('/:id/members/me', authMiddleware, leave);
 
 /**
@@ -189,6 +210,12 @@ router.delete('/:id/members/me', authMiddleware, leave);
  *       500:
  *         description: Failed to remove member
  */
+
+// Handle DELETE requests for removing a specific member.
+// :id = group ID
+// :userId = ID of the member to remove
+// authMiddleware checks authentication before remove is called.
 router.delete('/:id/members/:userId', authMiddleware, remove);
 
+// Export this router so it can be imported and used by the main express application.
 module.exports = router;

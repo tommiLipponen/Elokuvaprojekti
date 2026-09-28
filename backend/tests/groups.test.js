@@ -151,7 +151,7 @@ describe('Groups API', () => {
             expect(response.status).toBe(200);
         });
 
-        test('non-member cannot view group details', async () => {
+        test('non-member can view group details', async () => {
             verifyAccessToken.mockReturnValue({
                 userId: 'other-1',
             });
@@ -172,10 +172,11 @@ describe('Groups API', () => {
                 .get('/api/groups/group-1')
                 .set('Authorization', 'Bearer other-token');
 
-            expect(response.status).toBe(403);
+            expect(response.status).toBe(200);
+            expect(response.body.id).toBe('group-1');
         });
 
-        test('rejected member cannot view group details', async () => {
+        test('rejected member can view group details', async () => {
             verifyAccessToken.mockReturnValue({
                 userId: 'rejected-1',
             });
@@ -201,7 +202,8 @@ describe('Groups API', () => {
                 .get('/api/groups/group-1')
                 .set('Authorization', 'Bearer rejected-token');
 
-            expect(response.status).toBe(403);
+            expect(response.status).toBe(200);
+            expect(response.body.id).toBe('group-1');
         });
 
         test('returns 404 when group does not exist', async () => {
