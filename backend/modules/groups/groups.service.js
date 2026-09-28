@@ -53,7 +53,7 @@ const getMyGroups = async (userId) => {
 };
 
 
-const getGroupById = async (groupId, userId) => {
+const getGroupById = async (groupId) => {
     const prisma = await getPrisma();
 
     const group = await prisma.group.findUnique({
