@@ -83,20 +83,6 @@ const getGroupById = async (groupId, userId) => {
         return null;
     }
 
-    const isOwner = group.ownerId === userId;
-
-    const isMember = group.memberships.some(
-        (memberships) =>
-            memberships.userId === userId &&
-            memberships.status === 'APPROVED'
-    );
-
-    if (!isOwner && !isMember) {
-        return {
-            accessDenied: true,
-        };
-    }
-
     return group;
 };
 
