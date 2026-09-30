@@ -12,6 +12,7 @@ function GroupListPage() {
   const [error, setError] = useState('');
   const [hasLoaded, setHasLoaded] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [myGroupIds, setMyGroupIds] = useState([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -28,6 +29,14 @@ function GroupListPage() {
           setGroups(result);
         }
 
+        if (accessToken) {
+          const myGroups = await groupApi.getMyGroups(accessToken);
+
+          if (cancelled) return;
+
+          setMyGroupIds(myGroups.map((group) => group.id));
+        }
+
         setHasLoaded(true);
       } catch {
         if (!cancelled) {
@@ -42,7 +51,7 @@ function GroupListPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [accessToken]);
 
   const handleCreateGroup = async (event) => {
     event.preventDefault();
@@ -72,6 +81,23 @@ function GroupListPage() {
       setError('Failed to create group');
     } finally {
       setIsCreating(false);
+    }
+  };
+
+  const handleJoinRequest = async (groupId) => {
+    setError('');
+
+    try {
+      const result = await groupApi.requestToJoinGroup(
+        groupId,
+        accessToken
+      );
+
+      if (result.message) {
+        setError(result.message);
+      }
+    } catch {
+      setError('Failed to send join request');
     }
   };
 
@@ -111,13 +137,27 @@ function GroupListPage() {
         <p>No groups yet.</p>
       ) : (
         <ul>
-          {groups.map((group) => (
-            <li key={group.id}>
-              <button onClick={() => navigate(`/groups/${group.id}`)}>
-                {group.name}
-              </button>
-            </li>
-          ))}
+          {groups.map((group) => {
+            const isMyGroup = myGroupIds.includes(group.id);
+
+            return (
+              <li key={group.id}>
+                <span>{group.name}</span>
+
+                {accessToken && isMyGroup && (
+                  <button onClick={() => navigate(`/groups/${group.id}`)}>
+                    View group
+                  </button>
+                )}
+
+                {accessToken && !isMyGroup && (
+                  <button onClick={() => handleJoinRequest(group.id)}>
+                    Request to join
+                  </button>
+                )}
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

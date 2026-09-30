@@ -151,11 +151,11 @@ describe('Groups API', () => {
             expect(response.status).toBe(200);
         });
 
-        test('non-member can view group details', async () => {
+        test('non-member cannot view group details', async () => {
             verifyAccessToken.mockReturnValue({
                 userId: 'other-1',
             });
-
+            
             getPrisma.mockResolvedValue({
                 group: {
                     findUnique: jest.fn().mockResolvedValue({
@@ -167,20 +167,19 @@ describe('Groups API', () => {
                     }),
                 },
             });
-
+                
             const response = await request(app)
                 .get('/api/groups/group-1')
                 .set('Authorization', 'Bearer other-token');
-
-            expect(response.status).toBe(200);
-            expect(response.body.id).toBe('group-1');
+                
+            expect(response.status).toBe(403);
         });
 
-        test('rejected member can view group details', async () => {
+        test('rejected member cannot view group details', async () => {
             verifyAccessToken.mockReturnValue({
                 userId: 'rejected-1',
             });
-
+            
             getPrisma.mockResolvedValue({
                 group: {
                     findUnique: jest.fn().mockResolvedValue({
@@ -188,23 +187,19 @@ describe('Groups API', () => {
                         name: 'Friday Movie Club',
                         ownerId: 'owner-1',
                         createdAt: new Date(),
-                        memberships: [
-                            {
-                                userId: 'rejected-1',
-                                status: 'REJECTED',
-                            },
-                        ],
+                        memberships: [ {
+                            userId: 'rejected-1',
+                            status: 'REJECTED',
+                        },],
                     }),
                 },
             });
-
+            
             const response = await request(app)
                 .get('/api/groups/group-1')
                 .set('Authorization', 'Bearer rejected-token');
-
-            expect(response.status).toBe(200);
-            expect(response.body.id).toBe('group-1');
-        });
+                expect(response.status).toBe(403);
+            });
 
         test('returns 404 when group does not exist', async () => {
             getPrisma.mockResolvedValue({
