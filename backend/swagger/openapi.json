@@ -664,6 +664,99 @@
         }
       }
     },
+    "/groups/{id}/members/me": {
+      "delete": {
+        "summary": "Leave a group",
+        "description": "Allows the authenticated member to leave the group.",
+        "tags": [
+          "Memberships"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Group ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully left the group"
+          },
+          "400": {
+            "description": "Group owner cannot leave the group"
+          },
+          "401": {
+            "description": "Access token required or invalid"
+          },
+          "404": {
+            "description": "Group not found or user is not a member"
+          },
+          "500": {
+            "description": "Failed to leave group"
+          }
+        }
+      }
+    },
+    "/groups/{id}/members/{userId}": {
+      "delete": {
+        "summary": "Remove a member from a group",
+        "description": "Allows the group owner to remove a member from the group.",
+        "tags": [
+          "Memberships"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Group ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "description": "User ID of the member to remove",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Member successfully removed"
+          },
+          "401": {
+            "description": "Access token required or invalid"
+          },
+          "403": {
+            "description": "Only the group owner can remove members"
+          },
+          "404": {
+            "description": "Group or member not found"
+          },
+          "500": {
+            "description": "Failed to remove member"
+          }
+        }
+      }
+    },
     "/groups": {
       "get": {
         "summary": "List all groups",
@@ -1052,6 +1145,84 @@
           },
           "500": {
             "description": "Failed to delete favorite list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favorites/{id}/public": {
+      "patch": {
+        "summary": "Update favorite list visibility",
+        "description": "Makes the authenticated user's favorite list public or private.",
+        "tags": [
+          "Favorites"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Favorite list ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "isPublic"
+                ],
+                "properties": {
+                  "isPublic": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Favorite list visibility updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FavoriteList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid isPublic value"
+          },
+          "401": {
+            "description": "Access token required or invalid"
+          },
+          "403": {
+            "description": "Not the owner of this favorite list"
+          },
+          "404": {
+            "description": "Favorite list not found"
+          },
+          "500": {
+            "description": "Failed to update favorite list visibility",
             "content": {
               "application/json": {
                 "schema": {

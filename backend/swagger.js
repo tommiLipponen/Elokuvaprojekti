@@ -218,8 +218,8 @@ const options = {
     },
   },
   apis: [
-  './modules/**/*.js',
-  './users/**/*.js'
+  './backend/modules/**/*.js',
+  './backend/users/**/*.js',
 ],
 
 

@@ -177,6 +177,40 @@ const removeItemFromList = async (favoriteListId, movieId, userId) => {
     return favoriteItem;
 };
 
+const toggleFavoriteListPublic = async (favoriteListId, isPublic, userId) => {
+    const prisma = await getPrisma();
+
+    const favoriteList = await prisma.favoriteList.findUnique({
+        where: {
+            id: favoriteListId,
+        },
+    });
+
+    if (!favoriteList) {
+        return null;
+    }
+
+    if (favoriteList.userId !== userId) {
+        return {
+            accessDenied: true,
+        };
+    }
+
+    const updatedFavoriteList = await prisma.favoriteList.update({
+        where: {
+            id: favoriteListId,
+        },
+        data: {
+            isPublic,
+        },
+    });
+
+    return updatedFavoriteList;
+};
+
+
+
+
 module.exports = {
     createFavoriteList,
     getFavoriteLists,
@@ -184,4 +218,5 @@ module.exports = {
     deleteFavoriteList,
     addItemToList,
     removeItemFromList,
+     toggleFavoriteListPublic,
 };

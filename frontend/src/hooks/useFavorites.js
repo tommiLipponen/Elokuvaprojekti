@@ -47,5 +47,27 @@ export function useFavorites() {
     );
   }
 
-  return { lists, loading, error, loadLists, addList, removeMovie };
+  async function updateListVisibility(listId, isPublic) {
+  const updatedList = await favoriteApi.updateFavoriteListVisibility(
+    listId,
+    isPublic,
+    accessToken
+  );
+
+  if (updatedList?.message) {
+    throw new Error(updatedList.message);
+  }
+
+  setLists((current) =>
+    current.map((list) =>
+      list.id === listId
+        ? { ...list, isPublic: updatedList.isPublic }
+        : list
+    )
+  );
+
+  return updatedList;
+}
+
+  return { lists, loading, error, loadLists, addList, removeMovie, updateListVisibility };
 }
