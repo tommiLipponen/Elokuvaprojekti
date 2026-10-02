@@ -5,9 +5,10 @@ const {
     deleteFavoriteList,
     addItemToList,
     removeItemFromList,
+    toggleFavoriteListPublic,
 } = require('./favorites.service');
 
-const { validateFavoriteListName, validateMovieId } = require('./favorites.validation');
+const { validateFavoriteListName, validateMovieId, validateIsPublic } = require('./favorites.validation');
 
 const create = async (req, res) => {
     try {
@@ -143,6 +144,39 @@ const removeItem = async (req, res) => {
     }
 };
 
+
+const togglePublic = async (req, res) => {
+    try {
+        const { isPublic } = req.body;
+
+        const validationError = validateIsPublic(isPublic);
+        if (validationError) {
+            return res.status(400).json({ message: validationError });
+        }
+
+        const favoriteList = await toggleFavoriteListPublic(
+            req.params.id,
+            isPublic,
+            req.user.userId
+        );
+
+        if (!favoriteList) {
+            return res.status(404).json({ message: 'Favorite list not found' });
+        }
+
+        if (favoriteList.accessDenied) {
+            return res.status(403).json({ message: 'Not the owner of this favorite list' });
+        }
+
+        return res.status(200).json(favoriteList);
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({ message: 'Failed to update favorite list visibility' });
+    }
+};
+
+
 module.exports = {
     create,
     list,
@@ -150,4 +184,5 @@ module.exports = {
     remove,
     addItem,
     removeItem,
+    togglePublic,
 };

@@ -4,7 +4,7 @@ import { useFavorites } from '../hooks/useFavorites.js';
 
 function FavoriteListPage() {
   const { user } = useAuth() ?? {};
-  const { lists, loading, error, loadLists, addList, removeMovie } = useFavorites();
+  const { lists, loading, error, loadLists, addList, removeMovie, updateListVisibility } = useFavorites();
 
   const [newListName, setNewListName] = useState('');
   const [formError, setFormError] = useState('');
@@ -51,6 +51,15 @@ function FavoriteListPage() {
     );
   }
 
+const handleTogglePublic = async (list) => {
+  try {
+    await updateListVisibility(list.id, !list.isPublic);
+  } catch (err) {
+    setFormError(err.message || 'Failed to update list visibility');
+  }
+};
+
+
   return (
     <div>
       <h1>Favorite Lists</h1>
@@ -77,6 +86,35 @@ function FavoriteListPage() {
           {lists.map((list) => (
             <li key={list.id}>
               <h2>{list.name}</h2>
+
+              <button
+                type="button"
+                onClick={() => handleTogglePublic(list)}
+              >
+                {list.isPublic ? 'Share' : 'Make public'}
+              </button>
+
+              {list.isPublic && (
+                <p>
+                  Share link:{' '}
+                  <a href={`/favorite-lists/${list.id}`}>
+                    /favorite-lists/{list.id}
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      navigator.clipboard.writeText(
+                        `${window.location.origin}/favorite-lists/${list.id}`
+                      )
+                    }
+                  >
+                    Copy
+                  </button>
+                </p>
+              )}
+
+
+
               {!list.items || list.items.length === 0 ? (
                 <p>No movies in this list yet.</p>
               ) : (

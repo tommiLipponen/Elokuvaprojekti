@@ -81,3 +81,22 @@ export async function removeItemFromList(listId, movieId, accessToken) {
 
   return null;
 }
+
+export async function updateFavoriteListVisibility(listId, isPublic, accessToken) {
+  const res = await fetch(`${API_BASE}/${listId}/public`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({ isPublic }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || 'Failed to update favorite list visibility');
+  }
+
+  return data;
+}

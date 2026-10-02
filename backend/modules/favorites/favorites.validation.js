@@ -22,7 +22,17 @@ const validateMovieId = (movieId) => {
     return null;
 };
 
+const validateIsPublic = (isPublic) => {
+    if (typeof isPublic !== 'boolean') {
+        return 'isPublic must be a boolean';
+    }
+
+    return null;
+};
+
+
 module.exports = {
     validateFavoriteListName,
     validateMovieId,
+    validateIsPublic,
 };

@@ -7,6 +7,7 @@ const {
     remove,
     addItem,
     removeItem,
+    togglePublic,
 } = require('./favorites.controller');
 
 const router = express.Router();
@@ -148,6 +149,58 @@ router.post('/', authMiddleware, create);
  */
 router.get('/:id', authMiddleware, getById);
 router.delete('/:id', authMiddleware, remove);
+/**
+ * @swagger
+ * /favorites/{id}/public:
+ *   patch:
+ *     summary: Update favorite list visibility
+ *     description: Makes the authenticated user's favorite list public or private.
+ *     tags: [Favorites]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Favorite list ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - isPublic
+ *             properties:
+ *               isPublic:
+ *                 type: boolean
+ *                 example: true
+ *     responses:
+ *       200:
+ *         description: Favorite list visibility updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/FavoriteList'
+ *       400:
+ *         description: Invalid isPublic value
+ *       401:
+ *         description: Access token required or invalid
+ *       403:
+ *         description: Not the owner of this favorite list
+ *       404:
+ *         description: Favorite list not found
+ *       500:
+ *         description: Failed to update favorite list visibility
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error500'
+ */
+router.patch('/:id/public', authMiddleware, togglePublic);
+
 
 /**
  * @swagger

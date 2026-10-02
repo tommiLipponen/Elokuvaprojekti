@@ -165,6 +165,59 @@ describe('Favorites API', () => {
         });
     });
 
+        describe('PATCH /api/favorites/:id/public', () => {
+        test('owner can toggle isPublic', async () => {
+            getPrisma.mockResolvedValue({
+                favoriteList: {
+                    findUnique: jest.fn().mockResolvedValue({
+                        id: 'list-1',
+                        userId: 'owner-1',
+                        isPublic: false,
+                    }),
+                    update: jest.fn().mockResolvedValue({
+                        id: 'list-1',
+                        name: 'Weekend watchlist',
+                        userId: 'owner-1',
+                        isPublic: true,
+                        items: [],
+                    }),
+                },
+            });
+
+            const response = await request(app)
+                .patch('/api/favorites/list-1/public')
+                .set('Authorization', 'Bearer test-token')
+                .send({ isPublic: true });
+
+            expect(response.status).toBe(200);
+            expect(response.body.id).toBe('list-1');
+            expect(response.body.isPublic).toBe(true);
+        });
+
+        test('non-owner cannot toggle isPublic', async () => {
+            verifyAccessToken.mockReturnValue({ userId: 'other-1' });
+
+            getPrisma.mockResolvedValue({
+                favoriteList: {
+                    findUnique: jest.fn().mockResolvedValue({
+                        id: 'list-1',
+                        userId: 'owner-1',
+                        isPublic: false,
+                    }),
+                },
+            });
+
+            const response = await request(app)
+                .patch('/api/favorites/list-1/public')
+                .set('Authorization', 'Bearer other-token')
+                .send({ isPublic: true });
+
+            expect(response.status).toBe(403);
+        });
+    });
+
+
+
     describe('POST /api/favorites/:id/items', () => {
         test('owner can add a movie to their list', async () => {
             getPrisma.mockResolvedValue({
