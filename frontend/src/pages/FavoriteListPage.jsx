@@ -4,7 +4,7 @@ import { useFavorites } from '../hooks/useFavorites.js';
 
 function FavoriteListPage() {
   const { user } = useAuth() ?? {};
-  const { lists, loading, error, loadLists, addList, removeMovie, updateListVisibility } = useFavorites();
+  const { lists, loading, error, loadLists, addList, removeMovie, removeList, updateListVisibility } = useFavorites();
 
   const [newListName, setNewListName] = useState('');
   const [formError, setFormError] = useState('');
@@ -39,6 +39,18 @@ function FavoriteListPage() {
       await removeMovie(listId, movieId);
     } catch (err) {
       setFormError(err.message || 'Failed to remove movie');
+    }
+  };
+
+  const handleDeleteList = async (listId) => {
+    if (!window.confirm('Delete this favorite list?')) {
+      return;
+    }
+
+    try {
+      await removeList(listId);
+    } catch (err) {
+      setFormError(err.message || 'Failed to delete favorite list');
     }
   };
 
@@ -92,6 +104,13 @@ const handleTogglePublic = async (list) => {
                 onClick={() => handleTogglePublic(list)}
               >
                 {list.isPublic ? 'Share' : 'Make public'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleDeleteList(list.id)}
+              >
+                Delete list
               </button>
 
               {list.isPublic && (

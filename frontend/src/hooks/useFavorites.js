@@ -47,6 +47,15 @@ export function useFavorites() {
     );
   }
 
+  async function removeList(listId) {
+    const result = await favoriteApi.deleteFavoriteList(listId, accessToken);
+    if (result?.message) {
+      throw new Error(result.message);
+    }
+
+    setLists((current) => current.filter((list) => list.id !== listId));
+  }
+
   async function updateListVisibility(listId, isPublic) {
   const updatedList = await favoriteApi.updateFavoriteListVisibility(
     listId,
@@ -69,5 +78,5 @@ export function useFavorites() {
   return updatedList;
 }
 
-  return { lists, loading, error, loadLists, addList, removeMovie, updateListVisibility };
+  return { lists, loading, error, loadLists, addList, removeMovie, removeList, updateListVisibility };
 }
