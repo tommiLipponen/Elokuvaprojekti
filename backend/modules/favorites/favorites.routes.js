@@ -1,5 +1,6 @@
 const express = require('express');
 const authMiddleware = require('../auth/auth.middleware');
+const { optionalAuthMiddleware } = require('../auth/auth.middleware');
 const {
     create,
     list,
@@ -147,7 +148,7 @@ router.post('/', authMiddleware, create);
  *             schema:
  *               $ref: '#/components/schemas/Error500'
  */
-router.get('/:id', authMiddleware, getById);
+router.get('/:id', optionalAuthMiddleware, getById);
 router.delete('/:id', authMiddleware, remove);
 /**
  * @swagger

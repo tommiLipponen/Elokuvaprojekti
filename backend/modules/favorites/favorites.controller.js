@@ -43,7 +43,7 @@ const list = async (req, res) => {
 
 const getById = async (req, res) => {
     try {
-        const favoriteList = await getFavoriteListById(req.params.id, req.user.userId);
+        const favoriteList = await getFavoriteListById(req.params.id, req.user?.userId);
 
         if (!favoriteList) {
             return res.status(404).json({ message: 'Favorite list not found' });
