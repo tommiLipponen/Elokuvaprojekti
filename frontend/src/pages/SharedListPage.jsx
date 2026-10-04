@@ -1,36 +1,25 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useAuth } from '../context/useAuth.js';
-import { getFavoriteListById } from '../services/favoriteApi.js';
+import { Link } from 'react-router-dom';
+import { getPublicFavoriteLists } from '../services/favoriteApi.js';
 
 function SharedListPage() {
-  const { id } = useParams();
-  const { accessToken } = useAuth() ?? {};
-
-  const [list, setList] = useState(null);
+  const [lists, setLists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [viewedId, setViewedId] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
 
-    getFavoriteListById(id, accessToken)
+    getPublicFavoriteLists()
       .then((data) => {
-        if (cancelled) {
-          return;
-        }
-
-        if (data?.message) {
-          setError(data.message);
-          setList(null);
-        } else {
-          setError('');
-          setList(data);
+        if (!cancelled) {
+          setLists(Array.isArray(data) ? data : []);
         }
       })
-      .catch(() => {
+      .catch((err) => {
         if (!cancelled) {
-          setError('Failed to load shared favorite list');
+          setError(err.message || 'Failed to load shared favorite lists');
         }
       })
       .finally(() => {
@@ -42,39 +31,49 @@ function SharedListPage() {
     return () => {
       cancelled = true;
     };
-  }, [id, accessToken]);
-
-  if (loading) {
-    return (
-      <div>
-        <h1>Shared List</h1>
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
-  if (error || !list) {
-    return (
-      <div>
-        <h1>Shared List</h1>
-        <p>{error || 'This favorite list is not available.'}</p>
-      </div>
-    );
-  }
+  }, []);
 
   return (
     <div>
-      <h1>{list.name}</h1>
+      <h1>Shared Lists</h1>
 
-      {!list.items || list.items.length === 0 ? (
-        <p>No movies in this list yet.</p>
-      ) : (
-        <ul>
-          {list.items.map((item) => (
-            <li key={item.movieId}>{item.movie?.title ?? item.movieId}</li>
-          ))}
-        </ul>
-      )}
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
+      {!loading && !error && lists.length === 0 && <p>No public lists yet.</p>}
+
+      <ul>
+        {lists.map((list) => (
+          <li key={list.id}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <h2 style={{ margin: 0 }}>
+                {list.name}
+                {list.user?.username && <small> by {list.user.username}</small>}
+              </h2>
+              <button
+                type="button"
+                onClick={() => setViewedId((current) => (current === list.id ? null : list.id))}
+              >
+                {viewedId === list.id ? 'Hide' : 'View'}
+              </button>
+            </div>
+
+            {viewedId === list.id &&
+              (!list.items || list.items.length === 0 ? (
+                <p>No movies in this list yet.</p>
+              ) : (
+                <ul>
+                  {list.items.map((item) => (
+                    <li key={item.movieId}>
+                      <strong>{item.movie?.title ?? item.movieId}</strong>{' '}
+                      <Link to={`/movies/${item.movieId}`}>Read reviews</Link>
+                      {item.movie?.overview && <p>{item.movie.overview}</p>}
+                    </li>
+                  ))}
+                </ul>
+              ))}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

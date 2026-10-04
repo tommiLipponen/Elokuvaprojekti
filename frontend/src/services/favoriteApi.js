@@ -98,3 +98,13 @@ export async function updateFavoriteListVisibility(listId, isPublic, accessToken
 
   return data;
 }
+export async function getPublicFavoriteLists() {
+  const res = await fetch(`/api/favorites/public`);
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || 'Failed to load shared favorite lists');
+  }
+
+  return data;
+}

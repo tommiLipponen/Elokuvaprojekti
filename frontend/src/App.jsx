@@ -27,7 +27,7 @@ function App() {
         <Route path="groups/:id" element={<GroupDetailPage />} />
         <Route path="profile" element={<UserProfilePage />} />
         <Route path="favorites" element={<FavoriteListPage />} />
-        <Route path="favorite-lists/:id" element={<SharedListPage />} />
+        <Route path="shared" element={<SharedListPage />} />
       </Route>
     </Routes>
   )

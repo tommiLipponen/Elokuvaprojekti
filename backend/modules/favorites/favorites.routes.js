@@ -5,6 +5,7 @@ const {
     create,
     list,
     getById,
+    listPublic,
     remove,
     addItem,
     removeItem,
@@ -83,6 +84,7 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/Error500'
  */
+router.get('/public', listPublic);
 router.get('/', authMiddleware, list);
 router.post('/', authMiddleware, create);
 

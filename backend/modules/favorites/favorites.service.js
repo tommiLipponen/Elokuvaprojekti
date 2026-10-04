@@ -35,6 +35,19 @@ const getFavoriteLists = async (userId) => {
     return favoriteLists;
 };
 
+const getPublicFavoriteLists = async () => {
+    const prisma = await getPrisma();
+
+    return prisma.favoriteList.findMany({
+        where: { isPublic: true },
+        include: {
+            items: { include: { movie: true } },
+            user: { select: { username: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+    });
+};
+
 const getFavoriteListById = async (favoriteListId, userId) => {
     const prisma = await getPrisma();
 
@@ -215,6 +228,7 @@ module.exports = {
     createFavoriteList,
     getFavoriteLists,
     getFavoriteListById,
+    getPublicFavoriteLists,
     deleteFavoriteList,
     addItemToList,
     removeItemFromList,
