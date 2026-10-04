@@ -25,9 +25,7 @@ export async function createFavoriteList(name, accessToken) {
 
 export async function getFavoriteListById(listId, accessToken) {
   const res = await fetch(`${API_BASE}/${listId}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
   });
 
   return res.json();
