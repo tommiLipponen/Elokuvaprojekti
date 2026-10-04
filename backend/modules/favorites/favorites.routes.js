@@ -226,8 +226,9 @@ router.patch('/:id/public', authMiddleware, togglePublic);
  *             required: [movieId]
  *             properties:
  *               movieId:
- *                 type: string
- *                 example: e1a2b3d4-e5f6-7890-abcd-ef1234567890
+ *                 type: integer
+ *                 description: TMDB id of the movie (must already exist in the local database)
+ *                 example: 550
  *     responses:
  *       201:
  *         description: Movie added to the favorite list

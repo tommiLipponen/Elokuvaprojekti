@@ -15,7 +15,7 @@ const validateFavoriteListName = (name) => {
 };
 
 const validateMovieId = (movieId) => {
-    if (!movieId || typeof movieId !== 'string') {
+    if (movieId === undefined || movieId === null || movieId === '' || Number.isNaN(Number(movieId))) {
         return 'Movie ID is required';
     }
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/useAuth.js';
 import {getMyGroups,addMovieToGroup,} from '../services/groupApi.js';
+import { getFavorites, addItemToList } from '../services/favoriteApi.js';
 
 function MovieCard({ movie }) {
   const { accessToken } = useAuth();
@@ -10,6 +11,12 @@ function MovieCard({ movie }) {
   const [message, setMessage] = useState('');
   const [loadingGroups, setLoadingGroups] = useState(false);
   const [adding, setAdding] = useState(false);
+
+  const [favoriteLists, setFavoriteLists] = useState([]);
+  const [selectedListId, setSelectedListId] = useState('');
+  const [favoriteMessage, setFavoriteMessage] = useState('');
+  const [loadingFavoriteLists, setLoadingFavoriteLists] = useState(false);
+  const [addingToFavorites, setAddingToFavorites] = useState(false);
 
   useEffect(() => {
     if (!accessToken) {
@@ -31,7 +38,23 @@ function MovieCard({ movie }) {
       }
     }
 
+    async function loadFavoriteLists() {
+      try {
+        setLoadingFavoriteLists(true);
+
+        const result = await getFavorites(accessToken);
+
+        setFavoriteLists(Array.isArray(result) ? result : []);
+      } catch (error) {
+        console.error(error);
+        setFavoriteMessage('Failed to load favorite lists');
+      } finally {
+        setLoadingFavoriteLists(false);
+      }
+    }
+
     loadGroups();
+    loadFavoriteLists();
   }, [accessToken]);
 
   const handleAddToGroup = async () => {
@@ -55,6 +78,26 @@ function MovieCard({ movie }) {
       setMessage(error.message);
     } finally {
       setAdding(false);
+    }
+  };
+
+  const handleAddToFavorites = async () => {
+    if (!selectedListId) {
+      setFavoriteMessage('Select a favorite list first');
+      return;
+    }
+
+    try {
+      setAddingToFavorites(true);
+      setFavoriteMessage('');
+
+      await addItemToList(selectedListId, movie.tmdbId, accessToken);
+
+      setFavoriteMessage('Movie added to favorite list!');
+    } catch (error) {
+      setFavoriteMessage(error.message);
+    } finally {
+      setAddingToFavorites(false);
     }
   };
 
@@ -93,6 +136,34 @@ function MovieCard({ movie }) {
           </button>
 
           {message && <p>{message}</p>}
+        </div>
+      )}
+
+      {accessToken && (
+        <div>
+          <select
+            value={selectedListId}
+            onChange={(event) => setSelectedListId(event.target.value)}
+            disabled={loadingFavoriteLists || addingToFavorites}
+          >
+            <option value="">Select a favorite list</option>
+
+            {favoriteLists.map((list) => (
+              <option key={list.id} value={list.id}>
+                {list.name}
+              </option>
+            ))}
+          </select>
+
+          <button
+            type="button"
+            onClick={handleAddToFavorites}
+            disabled={!selectedListId || addingToFavorites}
+          >
+            {addingToFavorites ? 'Adding...' : 'Add to favorite list'}
+          </button>
+
+          {favoriteMessage && <p>{favoriteMessage}</p>}
         </div>
       )}
     </div>

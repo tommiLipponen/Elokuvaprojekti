@@ -111,7 +111,7 @@ const addItemToList = async (favoriteListId, movieId, userId) => {
 
     const movie = await prisma.movie.findUnique({
         where: {
-            id: movieId,
+            tmdbId: Number(movieId),
         },
     });
 
@@ -124,7 +124,7 @@ const addItemToList = async (favoriteListId, movieId, userId) => {
     const favoriteItem = await prisma.favoriteItem.create({
         data: {
             favoriteListId,
-            movieId,
+            movieId: movie.id,
         },
         include: {
             movie: true,
