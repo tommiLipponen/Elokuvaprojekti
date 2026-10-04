@@ -91,10 +91,11 @@ router.post('/', authMiddleware, create);
  * /favorites/{id}:
  *   get:
  *     summary: Get a favorite list by id
- *     description: Returns a favorite list with its items. Requires the authenticated user to be the owner, unless the list is public.
+ *     description: Returns a favorite list with its items. No authentication required if the list is public; otherwise the authenticated user must be the owner.
  *     tags: [Favorites]
  *     security:
  *       - bearerAuth: []
+ *       - {}
  *     parameters:
  *       - in: path
  *         name: id
@@ -108,10 +109,8 @@ router.post('/', authMiddleware, create);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/FavoriteList'
- *       401:
- *         description: Access token required or invalid
  *       403:
- *         description: Not the owner of this favorite list
+ *         description: List is private and the requester is not the owner
  *       404:
  *         description: Favorite list not found
  *       500:
