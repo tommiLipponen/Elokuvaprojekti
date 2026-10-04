@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth.js';
 import {getMyGroups,addMovieToGroup,} from '../services/groupApi.js';
 import { getFavorites, addItemToList } from '../services/favoriteApi.js';
@@ -103,13 +104,17 @@ function MovieCard({ movie }) {
 
   return (
     <div className="movie-card">
+      <h3>{movie.title}</h3>
+
       {movie.posterUrl && (
         <img src={movie.posterUrl} alt={movie.title} />
       )}
 
-      <h3>{movie.title}</h3>
-
       {movie.releaseYear && <p>{movie.releaseYear}</p>}
+
+      {movie.overview && <p>{movie.overview}</p>}
+
+      <Link to={`/movies/${movie.tmdbId}`}>Read reviews</Link>
 
       {accessToken && (
         <div>
