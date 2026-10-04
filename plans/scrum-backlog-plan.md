@@ -14,6 +14,8 @@ As a user, I want to browse movies, search the catalog, join groups, share favor
 >
 > PBI 28 (ADO 140, created 2026-09-15 by Tommi) was originally titled "PBI 26: Import baseline movie dataset into PostgreSQL" in Azure Boards, colliding with the real PBI 26 (ADO 72, Epic 11). Retitled in Azure Boards to "PBI 28" on 2026-09-17 and documented below under Epic 3. Its tasks are ADO 141-144 (moved to In Progress 2026-09-17). Baseline import scope reduced from ~10k to ~1,000-2,000 curated movies on 2026-09-17 (see PBI 28 scope note below).
 >
+> PBI 29=207, 30=208, 31=209 (created 2026-10-04 by Tommi, children of Epic 9 = ADO 54, same as PBI 18). Design/Bootstrap work split off from PBI 18 so it can be done without blocking in-flight feature PRs: PBI 29 (tokens only, new files) has no dependencies; PBI 30 (Bootstrap setup) soft-depends on PBI 29's final values but can start with placeholders; PBI 31 (per-page restyle) depends on PBI 30 and should wait for in-flight PRs touching the same pages (Veera's group PRs, Topi's PR #78) to merge first. Tasks: PBI 29 = ADO 220-224, PBI 30 = ADO 225-229, PBI 31 = ADO 230-234. PBI 18's own task breakdown (below) was also added as ADO tasks 235-239 at the same time.
+>
 > Task creation status: every PBI below now has a concrete task breakdown written in this document. In Azure Boards, Task work items have been created for Sprint 1-2 PBIs only (1, 2, 3, 4, 5, 19, 20, 22, 23) since their concrete steps are stable now. Tasks for Sprint 3-6 PBIs (6-18, 21, 24, 27) are intentionally **not yet created in Azure Boards** - create them from this document's task breakdown just before each of those sprints starts, since their exact steps may shift depending on what gets built in Sprint 1-2 (e.g. exact Prisma schema, auth middleware shape). PBI 25 and 26 are continuous and can be created whenever convenient.
 
 ---
@@ -682,6 +684,88 @@ Task breakdown (for reference when creating Tasks under this PBI in Azure DevOps
 - Add a mobile navigation pattern (e.g. hamburger menu) to Navbar
 - Test MovieSearchPage, GroupPage, and FavoriteListPage layouts at mobile/tablet/desktop widths
 - Fix any overflow, text-truncation, or touch-target issues found during testing
+
+### PBI 29: Define visual design system (palette, typography, spacing)
+
+Title: Define visual design system (palette, typography, spacing)
+
+User story:
+
+As a team, we want a documented color palette, typography scale, and spacing/style tokens so that the UI looks consistent and professional across every page, and so Bootstrap (PBI 30) can be themed to match instead of using default Bootstrap blue.
+
+Owner: Veera (design background).
+
+Mapped requirement: supports ID 1 - Responsiveness and overall UI quality; technical/design enabler, not itself a graded requirement ID.
+
+Acceptance criteria:
+
+- A short design spec exists listing: primary/secondary/accent colors, neutral/gray scale, heading font, body font, base font size and scale.
+- Colors meet WCAG AA contrast (4.5:1 for normal text) against their intended backgrounds.
+- Tokens are captured as CSS custom properties in a single file (e.g. `frontend/src/styles/tokens.css`), not scattered across components.
+- No other PBI's components need to change yet - this PBI only defines and documents the tokens.
+
+Why this PBI blocks almost nothing: it only adds new files (a doc + a tokens file), so it can run in parallel with any other in-progress feature branch with zero merge-conflict risk.
+
+Task breakdown (also created as Tasks under ADO 207):
+
+- Research 2-3 color palette options
+- Check color contrast and finalize the palette
+- Choose typography (fonts and sizes)
+- Create the CSS tokens file
+- Write a short design-system doc for the team
+
+### PBI 30: Introduce Bootstrap framework
+
+Title: Introduce Bootstrap framework
+
+User story:
+
+As a developer, I want Bootstrap wired into the project and themed with our own design tokens so that new and existing components can use a consistent, ready-made UI library instead of hand-rolled CSS.
+
+Mapped requirement: supports ID 1 - Responsiveness (Bootstrap's grid/breakpoints) and overall UI quality; technical enabler, not itself a graded requirement ID.
+
+Predecessor: soft-depends on PBI 29 for final color/font values, but can start immediately with placeholder values.
+
+Acceptance criteria:
+
+- Bootstrap (and react-bootstrap, for idiomatic React components) is installed and imported once from a shared entry point (`main.jsx`).
+- Bootstrap's default theme variables are overridden with PBI 29's tokens (placeholders are fine until PBI 29 lands; swapping in final values should be a one-line change).
+- One simple page renders a Bootstrap component to prove the setup works end-to-end.
+- This PBI only touches shared setup files (`package.json`, `main.jsx`, a new theme/override file) - it must NOT restyle individual pages yet, to avoid conflicting with in-flight feature PRs. Per-page restyling is PBI 31.
+
+Task breakdown (also created as Tasks under ADO 208):
+
+- Decide: Bootstrap CSS + JS, or react-bootstrap
+- Install the chosen package(s)
+- Import Bootstrap once from a shared entry point
+- Override Bootstrap's theme with the design tokens
+- Smoke test with one real component
+
+### PBI 31: Restyle components with Bootstrap, per page
+
+Title: Restyle components with Bootstrap, per page
+
+User story:
+
+As a user, I want every page to use the new Bootstrap-based design system so the app looks consistent and professional everywhere, not just on one page.
+
+Mapped requirement: supports ID 1 - Responsiveness and overall UI quality.
+
+Predecessor: PBI 30 (Bootstrap must be installed and themed first). Should start after current in-flight feature PRs touching these same pages are merged, to avoid merge conflicts - check with the team before starting a task below.
+
+Acceptance criteria:
+
+- Navbar, MovieCard/MovieSearchPage, GroupListPage/GroupDetailPage, FavoriteListPage, and the auth pages (Login/Register) all use Bootstrap components/classes and the PBI 29 design tokens.
+- No visual regressions: existing functionality (buttons, forms, links) still works exactly as before, only the look changes.
+- Each page/component is its own task, so multiple teammates can restyle different pages at the same time without editing the same files.
+
+Task breakdown (also created as Tasks under ADO 209; each note's "Conflict note" states which files that task alone should touch, to keep tasks parallel-safe):
+
+- Restyle Navbar.jsx (+ add mobile hamburger menu)
+- Restyle MovieCard.jsx and MovieSearchPage.jsx
+- Restyle GroupListPage.jsx and GroupDetailPage.jsx
+- Restyle FavoriteListPage.jsx
+- Restyle LoginPage.jsx and RegisterPage.jsx
 
 ---
 
