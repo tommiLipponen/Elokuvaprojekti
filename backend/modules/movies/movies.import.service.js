@@ -102,7 +102,24 @@ async function upsertGenres(prisma, genres) {
   return genres.length;
 }
 
+/** Fetches one movie's details from TMDB and stores it; returns the DB record or null. */
+async function importMovieByTmdbId(prisma, tmdbId) {
+  const detail = await fetchTmdbPage(`/movie/${tmdbId}`);
+  const record = mapTmdbMovieToRecord(detail);
+  if (!record) return null;
+
+  const data = {
+    ...record,
+    releaseDate: new Date(record.releaseDate),
+    runtime: detail.runtime ?? 0,
+    status: detail.status || record.status,
+  };
+
+  return prisma.movie.upsert({ where: { tmdbId: data.tmdbId }, create: data, update: data });
+}
+
 module.exports = {
+  importMovieByTmdbId,
   fetchCuratedMovies,
   fetchGenres,
   upsertMovies,

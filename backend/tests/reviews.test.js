@@ -2,11 +2,13 @@
 
 jest.mock('../config/prisma'); 
 jest.mock('../modules/auth/token.service');
+jest.mock('../modules/movies/movies.import.service');
 
 const request = require('supertest');
 const app = require('../app');
 const { getPrisma } = require('../config/prisma');
 const { verifyAccessToken } = require('../modules/auth/token.service');
+const { importMovieByTmdbId } = require('../modules/movies/movies.import.service');
 
 describe('Reviews API', () => {
     beforeEach(() => {
@@ -171,6 +173,85 @@ describe('Reviews API', () => {
             ]);
         });
 
+        test('queries newest reviews first and only exposes safe fields', async () => {
+            const findMany = jest.fn().mockResolvedValue([]);
+            getPrisma.mockResolvedValue({ review: { findMany } });
+
+            await request(app).get('/movies/movie-1/reviews');
+
+            expect(findMany).toHaveBeenCalledWith({
+                where: { movieId: 'movie-1' },
+                orderBy: { createdAt: 'desc' },
+                select: {
+                    id: true,
+                    rating: true,
+                    comment: true,
+                    createdAt: true,
+                    user: { select: { username: true } },
+                },
+            });
+        });
+
+        test('resolves a numeric TMDB id to the stored movie', async () => {
+            const findMany = jest.fn().mockResolvedValue([]);
+            getPrisma.mockResolvedValue({
+                movie: {
+                    findUnique: jest.fn().mockResolvedValue({ id: 'movie-db-1' }),
+                },
+                review: { findMany },
+            });
+
+            const response = await request(app).get('/movies/1423191/reviews');
+
+            expect(response.status).toBe(200);
+            expect(findMany.mock.calls[0][0].where).toEqual({ movieId: 'movie-db-1' });
+            expect(importMovieByTmdbId).not.toHaveBeenCalled();
+        });
+
+        test('imports an unknown TMDB movie on demand and returns its empty reviews', async () => {
+            const findMany = jest.fn().mockResolvedValue([]);
+            getPrisma.mockResolvedValue({
+                movie: { findUnique: jest.fn().mockResolvedValue(null) },
+                review: { findMany },
+            });
+            importMovieByTmdbId.mockResolvedValue({ id: 'movie-imported' });
+
+            const response = await request(app).get('/movies/1576/reviews');
+
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual([]);
+            expect(findMany.mock.calls[0][0].where).toEqual({ movieId: 'movie-imported' });
+        });
+
+        test('returns an empty list for an unknown movie when TMDB import fails', async () => {
+            jest.spyOn(console, 'error').mockImplementation(() => {});
+            getPrisma.mockResolvedValue({
+                movie: { findUnique: jest.fn().mockResolvedValue(null) },
+                review: { findMany: jest.fn().mockResolvedValue([]) },
+            });
+            importMovieByTmdbId.mockRejectedValue(new Error('TMDB down'));
+
+            const response = await request(app).get('/movies/999999999/reviews');
+
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual([]);
+            console.error.mockRestore();
+        });
+
+        test('returns 500 when the database fails', async () => {
+            jest.spyOn(console, 'error').mockImplementation(() => {});
+            getPrisma.mockResolvedValue({
+                review: {
+                    findMany: jest.fn().mockRejectedValue(new Error('db error')),
+                },
+            });
+
+            const response = await request(app).get('/movies/movie-1/reviews');
+
+            expect(response.status).toBe(500);
+            expect(response.body).toEqual({ message: 'Failed to get reviews' });
+            console.error.mockRestore();
+        });
     });
 
 });
