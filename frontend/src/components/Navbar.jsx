@@ -11,7 +11,6 @@ function Navbar() {
       <Link to="/groups">Groups</Link>
       <Link to="/profile">Profile</Link>
       <Link to="/favorites">Favorites</Link>
-      <Link to="/shared">Shared List</Link>
     </nav>
   );
 }
