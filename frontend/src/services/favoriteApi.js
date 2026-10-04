@@ -25,9 +25,7 @@ export async function createFavoriteList(name, accessToken) {
 
 export async function getFavoriteListById(listId, accessToken) {
   const res = await fetch(`${API_BASE}/${listId}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
   });
 
   return res.json();
@@ -96,6 +94,16 @@ export async function updateFavoriteListVisibility(listId, isPublic, accessToken
 
   if (!res.ok) {
     throw new Error(data.message || 'Failed to update favorite list visibility');
+  }
+
+  return data;
+}
+export async function getPublicFavoriteLists() {
+  const res = await fetch(`/api/favorites/public`);
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || 'Failed to load shared favorite lists');
   }
 
   return data;

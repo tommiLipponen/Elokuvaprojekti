@@ -1,9 +1,11 @@
 const express = require('express');
 const authMiddleware = require('../auth/auth.middleware');
+const { optionalAuthMiddleware } = require('../auth/auth.middleware');
 const {
     create,
     list,
     getById,
+    listPublic,
     remove,
     addItem,
     removeItem,
@@ -82,6 +84,7 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/Error500'
  */
+router.get('/public', listPublic);
 router.get('/', authMiddleware, list);
 router.post('/', authMiddleware, create);
 
@@ -90,10 +93,11 @@ router.post('/', authMiddleware, create);
  * /favorites/{id}:
  *   get:
  *     summary: Get a favorite list by id
- *     description: Returns a favorite list with its items. Requires the authenticated user to be the owner, unless the list is public.
+ *     description: Returns a favorite list with its items. No authentication required if the list is public; otherwise the authenticated user must be the owner.
  *     tags: [Favorites]
  *     security:
  *       - bearerAuth: []
+ *       - {}
  *     parameters:
  *       - in: path
  *         name: id
@@ -107,10 +111,8 @@ router.post('/', authMiddleware, create);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/FavoriteList'
- *       401:
- *         description: Access token required or invalid
  *       403:
- *         description: Not the owner of this favorite list
+ *         description: List is private and the requester is not the owner
  *       404:
  *         description: Favorite list not found
  *       500:
@@ -147,7 +149,7 @@ router.post('/', authMiddleware, create);
  *             schema:
  *               $ref: '#/components/schemas/Error500'
  */
-router.get('/:id', authMiddleware, getById);
+router.get('/:id', optionalAuthMiddleware, getById);
 router.delete('/:id', authMiddleware, remove);
 /**
  * @swagger
@@ -226,8 +228,9 @@ router.patch('/:id/public', authMiddleware, togglePublic);
  *             required: [movieId]
  *             properties:
  *               movieId:
- *                 type: string
- *                 example: e1a2b3d4-e5f6-7890-abcd-ef1234567890
+ *                 type: integer
+ *                 description: TMDB id of the movie (must already exist in the local database)
+ *                 example: 550
  *     responses:
  *       201:
  *         description: Movie added to the favorite list

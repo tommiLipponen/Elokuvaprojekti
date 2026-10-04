@@ -24,4 +24,25 @@ const authMiddleware = (req, res, next) => {
     }
 };
 
+// For public endpoints that behave differently for logged-in vs anonymous users:
+// attaches req.user when a valid token is present, otherwise proceeds without one instead of rejecting.
+const optionalAuthMiddleware = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return next();
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    try {
+        req.user = verifyAccessToken(token);
+    } catch {
+        // Invalid/expired token on a public route: treat as anonymous rather than failing the request.
+    }
+
+    next();
+};
+
 module.exports = authMiddleware;
+module.exports.optionalAuthMiddleware = optionalAuthMiddleware;

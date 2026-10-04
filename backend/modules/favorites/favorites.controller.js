@@ -2,6 +2,7 @@ const {
     createFavoriteList,
     getFavoriteLists,
     getFavoriteListById,
+    getPublicFavoriteLists,
     deleteFavoriteList,
     addItemToList,
     removeItemFromList,
@@ -43,7 +44,7 @@ const list = async (req, res) => {
 
 const getById = async (req, res) => {
     try {
-        const favoriteList = await getFavoriteListById(req.params.id, req.user.userId);
+        const favoriteList = await getFavoriteListById(req.params.id, req.user?.userId);
 
         if (!favoriteList) {
             return res.status(404).json({ message: 'Favorite list not found' });
@@ -58,6 +59,16 @@ const getById = async (req, res) => {
         console.error(error);
 
         return res.status(500).json({ message: 'Failed to get favorite list' });
+    }
+};
+
+const listPublic = async (req, res) => {
+    try {
+        return res.status(200).json(await getPublicFavoriteLists());
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({ message: 'Failed to get public favorite lists' });
     }
 };
 
@@ -181,6 +192,7 @@ module.exports = {
     create,
     list,
     getById,
+    listPublic,
     remove,
     addItem,
     removeItem,

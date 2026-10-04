@@ -163,6 +163,70 @@ describe('Favorites API', () => {
 
             expect(response.status).toBe(404);
         });
+
+        test('anonymous visitor (no token) can view a public list, including movie data', async () => {
+            getPrisma.mockResolvedValue({
+                favoriteList: {
+                    findUnique: jest.fn().mockResolvedValue({
+                        id: 'list-1',
+                        name: 'Weekend watchlist',
+                        userId: 'owner-1',
+                        isPublic: true,
+                        items: [
+                            { movieId: 'movie-1', movie: { id: 'movie-1', title: 'Inception' } },
+                        ],
+                    }),
+                },
+            });
+
+            const response = await request(app).get('/api/favorites/list-1');
+
+            expect(response.status).toBe(200);
+            expect(response.body.id).toBe('list-1');
+            expect(response.body.items[0].movie.title).toBe('Inception');
+        });
+
+        test('anonymous visitor (no token) cannot view a private list', async () => {
+            getPrisma.mockResolvedValue({
+                favoriteList: {
+                    findUnique: jest.fn().mockResolvedValue({
+                        id: 'list-1',
+                        name: 'Weekend watchlist',
+                        userId: 'owner-1',
+                        isPublic: false,
+                        items: [],
+                    }),
+                },
+            });
+
+            const response = await request(app).get('/api/favorites/list-1');
+
+            expect(response.status).toBe(403);
+        });
+
+        test('anonymous visitor with a garbage Authorization header is still treated as anonymous', async () => {
+            verifyAccessToken.mockImplementation(() => {
+                throw new Error('invalid token');
+            });
+
+            getPrisma.mockResolvedValue({
+                favoriteList: {
+                    findUnique: jest.fn().mockResolvedValue({
+                        id: 'list-1',
+                        name: 'Weekend watchlist',
+                        userId: 'owner-1',
+                        isPublic: true,
+                        items: [],
+                    }),
+                },
+            });
+
+            const response = await request(app)
+                .get('/api/favorites/list-1')
+                .set('Authorization', 'Bearer not-a-real-token');
+
+            expect(response.status).toBe(200);
+        });
     });
 
         describe('PATCH /api/favorites/:id/public', () => {
@@ -228,7 +292,7 @@ describe('Favorites API', () => {
                     }),
                 },
                 movie: {
-                    findUnique: jest.fn().mockResolvedValue({ id: 'movie-1' }),
+                    findUnique: jest.fn().mockResolvedValue({ id: 'movie-1', tmdbId: 550 }),
                 },
                 favoriteItem: {
                     create: jest.fn().mockResolvedValue({
@@ -242,7 +306,7 @@ describe('Favorites API', () => {
             const response = await request(app)
                 .post('/api/favorites/list-1/items')
                 .set('Authorization', 'Bearer test-token')
-                .send({ movieId: 'movie-1' });
+                .send({ movieId: 550 });
 
             expect(response.status).toBe(201);
             expect(response.body.movieId).toBe('movie-1');
@@ -273,7 +337,7 @@ describe('Favorites API', () => {
             const response = await request(app)
                 .post('/api/favorites/list-1/items')
                 .set('Authorization', 'Bearer test-token')
-                .send({ movieId: 'non-existent' });
+                .send({ movieId: 999999 });
 
             expect(response.status).toBe(404);
         });
@@ -293,7 +357,7 @@ describe('Favorites API', () => {
             const response = await request(app)
                 .post('/api/favorites/list-1/items')
                 .set('Authorization', 'Bearer other-token')
-                .send({ movieId: 'movie-1' });
+                .send({ movieId: 550 });
 
             expect(response.status).toBe(403);
         });
@@ -310,7 +374,7 @@ describe('Favorites API', () => {
                     }),
                 },
                 movie: {
-                    findUnique: jest.fn().mockResolvedValue({ id: 'movie-1' }),
+                    findUnique: jest.fn().mockResolvedValue({ id: 'movie-1', tmdbId: 550 }),
                 },
                 favoriteItem: {
                     create: jest.fn().mockRejectedValue(duplicateError),
@@ -320,7 +384,7 @@ describe('Favorites API', () => {
             const response = await request(app)
                 .post('/api/favorites/list-1/items')
                 .set('Authorization', 'Bearer test-token')
-                .send({ movieId: 'movie-1' });
+                .send({ movieId: 550 });
 
             expect(response.status).toBe(409);
         });

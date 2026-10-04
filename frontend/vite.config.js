@@ -9,7 +9,7 @@ export default defineConfig({
       '/movies': {
         target: 'http://localhost:3000',
         bypass(request) {
-          if (request.method === 'GET' && /^\/movies\/[^/]+$/.test(request.url)) {
+          if (request.method === 'GET' && /^\/movies\/\d+$/.test(request.url)) {
             return '/index.html';
           }
         },

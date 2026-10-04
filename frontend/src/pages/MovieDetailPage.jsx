@@ -3,6 +3,15 @@ import { useParams } from 'react-router-dom';
 import { useAuth } from '../context/useAuth.js';
 import { getReviews, submitReview } from '../services/reviewApi.js';
 
+function Stars({ value }) {
+  return (
+    <span role="img" aria-label={` out of 5 stars`} style={{ color: '#f5a623' }}>
+      {'★'.repeat(value)}
+      {'☆'.repeat(5 - value)}
+    </span>
+  );
+}
+
 function ReviewList({ reviews }) {
   if (reviews.length === 0) {
     return <p>No reviews yet.</p>;
@@ -11,7 +20,7 @@ function ReviewList({ reviews }) {
     <ul>
       {reviews.map((review) => (
         <li key={review.id}>
-          {review.username}: {review.rating}/5 - {review.comment}
+          {review.username}: <Stars value={review.rating} /> - {review.comment}
           <br />
           <time dateTime={review.createdAt}>
             {new Date(review.createdAt).toLocaleString('fi-FI')}
@@ -80,18 +89,28 @@ function MovieDetailPage() {
       {user && (
         <form onSubmit={handleSubmit}>
           <h2>Write a review</h2>
-          <label htmlFor="rating">Rating</label>
-          <select
-            id="rating"
-            value={rating}
-            onChange={(event) => setRating(event.target.value)}
-          >
+          <div role="radiogroup" aria-label="Rating">
+            <span>Rating </span>
             {[1, 2, 3, 4, 5].map((value) => (
-              <option key={value} value={value}>
-                {value}
-              </option>
+              <button
+                key={value}
+                type="button"
+                role="radio"
+                aria-checked={Number(rating) === value}
+                aria-label={`${value} star${value > 1 ? 's' : ''}`}
+                onClick={() => setRating(String(value))}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '1.6rem',
+                  color: value <= Number(rating) ? '#f5a623' : '#aaa',
+                }}
+              >
+                {value <= Number(rating) ? '★' : '☆'}
+              </button>
             ))}
-          </select>
+          </div>
 
           <label htmlFor="comment">Comment</label>
           <textarea

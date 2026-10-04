@@ -41,6 +41,7 @@ data/
 
 # Local-only notes (not for the shared repo)
 docs/62-implementation.md
+docs/dotenv-injection.md
 
 # Local scratch/working folders (not part of the repo)
 tmp/

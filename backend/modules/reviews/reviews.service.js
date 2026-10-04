@@ -1,7 +1,35 @@
 const { getPrisma } = require('../../config/prisma');
+const { importMovieByTmdbId } = require('../movies/movies.import.service');
+
+// Accepts either a DB movie id or a numeric TMDB id (used by search/cinema links).
+const resolveMovieId = async (prisma, movieId) => {
+    if (!/^\d+$/.test(movieId)) {
+        return movieId;
+    }
+
+    const movie = await prisma.movie.findUnique({
+        where: { tmdbId: Number(movieId) },
+        select: { id: true },
+    });
+
+    if (movie) {
+        return movie.id;
+    }
+
+    // Movies found via TMDB search may not be in the DB yet; import on demand.
+    try {
+        const imported = await importMovieByTmdbId(prisma, Number(movieId));
+        return imported ? imported.id : movieId;
+    } catch (error) {
+        console.error(error);
+        return movieId;
+    }
+};
 
 const createReview = async ({ movieId, userId, rating, comment }) => {
     const prisma = await getPrisma();
+
+    movieId = await resolveMovieId(prisma, movieId);
 
     const movie = await prisma.movie.findUnique({
         where: {
@@ -25,6 +53,7 @@ const createReview = async ({ movieId, userId, rating, comment }) => {
 
 const getMovieReviews = async (movieId) => {
     const prisma = await getPrisma();
+    movieId = await resolveMovieId(prisma, movieId);
 
     const reviews = await prisma.review.findMany({
         where: { movieId },
