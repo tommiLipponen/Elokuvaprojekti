@@ -1,4 +1,5 @@
 const { getPrisma } = require('../../config/prisma');
+const { importMovieByTmdbId } = require('../movies/movies.import.service');
 
 const createGroup = async (name, ownerId) => {
     const prisma = await getPrisma();
@@ -159,11 +160,20 @@ const addMovieToGroup = async (groupId, movieTmdbId, userId) => {
         };
     }
 
-    const movie = await prisma.movie.findUnique({
+    let movie = await prisma.movie.findUnique({
         where: {
             tmdbId: Number(movieTmdbId)
         },
     });
+
+    // Seed data only covers a curated subset of TMDB; import on demand so any searched movie can be added.
+    if (!movie) {
+        try {
+            movie = await importMovieByTmdbId(prisma, Number(movieTmdbId));
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     if (!movie) {
         return {

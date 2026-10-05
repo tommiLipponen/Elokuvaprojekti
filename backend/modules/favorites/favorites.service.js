@@ -1,4 +1,5 @@
 const { getPrisma } = require('../../config/prisma');
+const { importMovieByTmdbId } = require('../movies/movies.import.service');
 
 const createFavoriteList = async (name, isPublic, userId) => {
     const prisma = await getPrisma();
@@ -122,11 +123,20 @@ const addItemToList = async (favoriteListId, movieId, userId) => {
         };
     }
 
-    const movie = await prisma.movie.findUnique({
+    let movie = await prisma.movie.findUnique({
         where: {
             tmdbId: Number(movieId),
         },
     });
+
+    // Seed data only covers a curated subset of TMDB; import on demand so any searched movie can be favorited.
+    if (!movie) {
+        try {
+            movie = await importMovieByTmdbId(prisma, Number(movieId));
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     if (!movie) {
         return {
