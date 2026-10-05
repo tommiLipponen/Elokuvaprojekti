@@ -2,11 +2,13 @@
 
 jest.mock('../config/prisma');
 jest.mock('../modules/auth/token.service');
+jest.mock('../modules/movies/movies.import.service');
 
 const request = require('supertest');
 const app = require('../app');
 const { getPrisma } = require('../config/prisma');
 const { verifyAccessToken } = require('../modules/auth/token.service');
+const { importMovieByTmdbId } = require('../modules/movies/movies.import.service');
 
 describe('Favorites API', () => {
     beforeEach(() => {
@@ -340,6 +342,37 @@ describe('Favorites API', () => {
                 .send({ movieId: 999999 });
 
             expect(response.status).toBe(404);
+        });
+
+        test('imports the movie from TMDB when not yet seeded locally', async () => {
+            importMovieByTmdbId.mockResolvedValue({ id: 'movie-2', tmdbId: 414906 });
+
+            getPrisma.mockResolvedValue({
+                favoriteList: {
+                    findUnique: jest.fn().mockResolvedValue({
+                        id: 'list-1',
+                        userId: 'owner-1',
+                    }),
+                },
+                movie: {
+                    findUnique: jest.fn().mockResolvedValue(null),
+                },
+                favoriteItem: {
+                    create: jest.fn().mockResolvedValue({
+                        id: 'item-1',
+                        favoriteListId: 'list-1',
+                        movieId: 'movie-2',
+                    }),
+                },
+            });
+
+            const response = await request(app)
+                .post('/api/favorites/list-1/items')
+                .set('Authorization', 'Bearer test-token')
+                .send({ movieId: 414906 });
+
+            expect(response.status).toBe(201);
+            expect(response.body.movieId).toBe('movie-2');
         });
 
         test('non-owner cannot add a movie to another user list', async () => {
