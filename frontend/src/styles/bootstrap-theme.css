@@ -1,0 +1,20 @@
+/* Overrides Bootstrap's default theme with the PBI 29 design-system tokens (docs/design-system.md). */
+:root {
+  --bs-primary: #8a3719;
+  --bs-primary-rgb: 138, 55, 25;
+  --bs-body-bg: #0f3435;
+  --bs-body-color: #f5f1e8;
+  --bs-link-color: #2fdad7;
+  --bs-link-hover-color: #fab375;
+  --bs-border-color: #f5f1e8;
+
+  --bs-font-sans-serif: 'Mukta Vaani', system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+.btn-primary {
+  --bs-btn-bg: #8a3719;
+  --bs-btn-border-color: #8a3719;
+  --bs-btn-color: #f5f1e8;
+  --bs-btn-hover-bg: #6e2c14;
+  --bs-btn-hover-border-color: #6e2c14;
+}
