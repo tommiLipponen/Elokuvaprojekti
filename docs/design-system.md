@@ -25,6 +25,13 @@ flowchart LR
     linkStyle 0,1,2,3,4 stroke:transparent
 ```
 
+## Usage
+
+- `#2FDAD7` and `#FAB375` are used as text/accent colors only on `#0F3435` and `#071A1C`.
+- `#8A3719` is used as a button background with `#F5F1E8` as button text.
+- `#F5F1E8` is used at 10% opacity as a light surface on selected elements and as a main text color.
+- Text combinations meet **WCAG AA (4.5:1 for normal text)**.
+
 ## Typography
 
 - **Heading 1:** Roboto Condensed Bold — 32px — 5px letter spacing
@@ -33,9 +40,3 @@ flowchart LR
 - **Accent 1:** Cousine Bold — 24px — 10px letter spacing
 - **Accent 2:** Cousine Bold — 16px — 10px letter spacing
 
-## Usage
-
-- `#2FDAD7` and `#FAB375` are used as text/accent colors only on `#0F3435` and `#071A1C`.
-- `#8A3719` is used as a button background with `#F5F1E8` as button text.
-- `#F5F1E8` is used at 10% opacity as a light surface on selected elements and as a main text color.
-- Text combinations meet **WCAG AA (4.5:1 for normal text)**.
