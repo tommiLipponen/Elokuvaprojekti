@@ -1,0 +1,105 @@
+/* Overrides Bootstrap's default theme with the PBI 29 design-system tokens (docs/design-system.md). */
+
+:root {
+  /* Bootstrap semantic colors */
+  --bs-primary: #0f3435;
+  --bs-primary-rgb: 15, 52, 53;
+
+  --bs-secondary: #040f11;
+  --bs-secondary-rgb: 7, 26, 28;
+
+  --bs-success: #30d97f;
+  --bs-success-rgb: 48, 217, 127;
+
+  --bs-danger: #ffb566;
+  --bs-danger-rgb: 255, 181, 102;
+
+  --bs-warning: #ffa4a4;
+  --bs-warning-rgb: 255, 164, 164;
+
+  --bs-info: #2fdad7;
+  --bs-info-rgb: 47, 218, 215;
+
+  /* Bootstrap base colors */
+  --bs-body-bg: #0f3435;
+  --bs-body-color: #f5f1e8;
+  --bs-link-color: #f5f1e8;
+  --bs-link-hover-color: #2fdad7;
+  --bs-border-color: rgba(245, 241, 232, 0.1);
+
+  /* Project-specific colors */
+  --app-bg: #0f3435;
+  --app-surface: #040f11;
+  --app-text: #f5f1e8;
+  --app-accent-turquoise: #2fdad7;
+  --app-accent-orange: #fab375;
+  --app-button-orange: #8a3719;
+  --app-selected: rgba(245, 241, 232, 0.1);
+
+  /* Typography */
+  --bs-font-sans-serif: "Mukta Vaani", system-ui, "Segoe UI", Roboto, sans-serif;
+  --bs-body-font-family: var(--bs-font-sans-serif);
+}
+
+/* Typography */
+
+body,
+p {
+  font-family: "Mukta Vaani", var(--bs-body-font-family);
+  font-weight: 300;
+}
+
+h1,
+h2,
+h4,
+h5,
+h6 {
+  font-family: "Roboto Condensed", var(--bs-body-font-family);
+  letter-spacing: 2px;
+}
+
+h3,
+.navbar-brand,
+.hero-tagline,
+.nav-link,
+.btn {
+  font-family: "Cousine", var(--bs-body-font-family);
+  letter-spacing: 2px;
+}
+
+
+.nav-link {
+  color: #2fdad7;
+}
+
+.navbar-brand,
+.nav-link:hover,
+.nav-link:focus {
+  color: #fab375;
+}
+
+.login-register-link {
+  color: var(--app-text);
+  text-decoration: none;
+}
+
+.login-register-link:hover {
+  color: var(--app-accent-turquoise);
+  text-decoration: none;
+}
+
+/* Primary button */
+
+.btn-primary {
+  --bs-btn-bg: var(--app-button-orange);
+  --bs-btn-border-color: var(--app-button-orange);
+  --bs-btn-color: var(--app-text);
+
+  --bs-btn-hover-bg: #a74720;
+  --bs-btn-hover-border-color: #a74720;
+  --bs-btn-hover-color: var(--app-text);
+
+  --bs-btn-active-bg: #713016;
+  --bs-btn-active-border-color: #713016;
+  --bs-btn-active-color: var(--app-text);
+}
