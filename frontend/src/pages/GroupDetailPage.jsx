@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/useAuth.js';
 import * as groupApi from '../services/groupApi.js';
+import MovieCard from '../components/MovieCard.jsx';
 
 function GroupDetailPage() {
   const { id } = useParams();
@@ -24,13 +25,13 @@ function GroupDetailPage() {
   // useEffect(() => {...}, [dependencies]);
   useEffect(() => {
     // prevents the response from being used if the component is no longer active
-    let cancelled = false; 
+    let cancelled = false;
 
     // async → allows the function to wait for asynchronous operations
     // await → waits for the server response before continuing
     async function loadGroup() {
       try {
-        //sends a request and waits for the group data
+        // sends a request and waits for the group data
         const result = await groupApi.getGroupById(id, accessToken);
 
         // stops if the request was cancelled
@@ -64,9 +65,21 @@ function GroupDetailPage() {
     };
   }, [id, accessToken]);
 
+  // Check if the currently logged-in user is the owner of the group
+  const isOwner = group?.ownerId === user?.id;
+
+  // Check if the currently logged-in user is an approved member of the group
+  const isMember =
+    isOwner ||
+    group?.memberships?.some(
+      (membership) =>
+        membership.userId === user?.id &&
+        membership.status === 'APPROVED'
+    );
+
   useEffect(() => {
     // returns if there is no group or the user is not the group owner
-    if (!group || group.ownerId !== user?.id) {
+    if (!group || !isOwner) {
       return;
     }
 
@@ -96,7 +109,7 @@ function GroupDetailPage() {
     return () => {
       cancelled = true;
     };
-  }, [group, id, accessToken, user]);
+  }, [group, id, accessToken, isOwner]);
 
   const handleDelete = async () => {
     if (!window.confirm('Delete this group? This cannot be undone.')) {
@@ -119,7 +132,10 @@ function GroupDetailPage() {
     setJoinError('');
     setJoinMessage('');
 
-    const result = await groupApi.requestToJoinGroup(id, accessToken);
+    const result = await groupApi.requestToJoinGroup(
+      id,
+      accessToken
+    );
 
     if (result?.message) {
       setJoinError(result.message);
@@ -146,7 +162,9 @@ function GroupDetailPage() {
 
     // .filter(...) → creates a new array containing all requests except the updated request
     setJoinRequests((currentRequests) =>
-      currentRequests.filter((request) => request.userId !== userId)
+      currentRequests.filter(
+        (request) => request.userId !== userId
+      )
     );
   };
 
@@ -182,7 +200,7 @@ function GroupDetailPage() {
     // sends a request to the server to leave the group
     const result = await groupApi.leaveGroup(id, accessToken);
 
-    // checks if the server returned an error messag
+    // checks if the server returned an error message
     if (result?.message) {
       setMembersError(result.message);
       return;
@@ -200,157 +218,235 @@ function GroupDetailPage() {
     return <p>{error}</p>;
   }
 
-  // Check if the currently logged-in user is the owner of the group
-  const isOwner = group.ownerId === user?.id;
+  // Check if the group has any approved members.
+  const approvedMembers =
+    group.memberships?.filter(
+      (membership) => membership.status === 'APPROVED'
+    ) ?? [];
+
+  const memberCount = approvedMembers.length;
 
   return (
-    <div>
-      <h1>{group.name}</h1>
-
-      <p>Owner ID: {group.ownerId}</p>
-
-      <p>
-        Created: {new Date(group.createdAt).toLocaleDateString()}
-      </p>
-
-      {isOwner && (
-        <button onClick={handleDelete}>
-          Delete group
-        </button>
-      )}
-
-      {deleteError && <p>{deleteError}</p>}
-
-      {!isOwner && (
-        <button onClick={handleJoinRequest}>
-          Request to join
-        </button>
-      )}
-
-      {joinMessage && <p>{joinMessage}</p>}
-      {joinError && <p>{joinError}</p>}
-
-      {isOwner && (
+    <main className="container py-5 group-detail-page">
+      <div className="group-detail-header">
         <div>
-          <h2>Join requests</h2>
+          <h1 className="group-detail-title">
+            {group.name}
+          </h1>
 
-          {joinRequestsError && <p>{joinRequestsError}</p>}
-          
-          {/* If there are no pending join requests, display a message.
-              Otherwise, display all pending join requests as a list. */}
-          {joinRequests.length === 0 ? (
-            <p>No pending join requests.</p>
-          ) : (
-            <ul>
-              {joinRequests.map((request) => (
-                <li key={request.id}>
-                  <span>
-                    {/* Show the username if available, otherwise show the user ID */}
-                    {request.user?.username || request.userId}
-                  </span>
-
-                  <button
-                    onClick={() =>
-                      handleJoinRequestUpdate(
-                        request.userId,
-                        'APPROVED'
-                      )
-                    }
-                  >
-                    Approve
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      handleJoinRequestUpdate(
-                        request.userId,
-                        'REJECTED'
-                      )
-                    }
-                  >
-                    Reject
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
+          <p className="group-member-count">
+            {memberCount} members
+          </p>
         </div>
-      )}
 
-      {/* If the current user is not the group owner, show a button
-          that allows them to send a request to join the group */}
-      {!isOwner && (
-        <button onClick={handleJoinRequest}>
-          Request to join
-        </button>
-      )}
+        {isMember && (
+          <div className="group-detail-actions">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() =>
+                document
+                  .getElementById('group-movies')
+                  ?.scrollIntoView()
+              }
+            >
+              Movies
+            </button>
 
-      {/* Join request succesfully sent → display the confirmation message.
-          Error when sending the join request → display the error message. */}
-      {joinMessage && <p>{joinMessage}</p>}
-      {joinError && <p>{joinError}</p>}
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() =>
+                document
+                  .getElementById('group-members')
+                  ?.scrollIntoView()
+              }
+            >
+              Members
+            </button>
 
-      <section>
-        <h2>Members</h2>
+            {isOwner && (
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() =>
+                  document
+                    .getElementById('group-settings')
+                    ?.scrollIntoView()
+                }
+              >
+                Settings
+              </button>
+            )}
+          </div>
+        )}
+      </div>
 
-        {membersError && <p>{membersError}</p>}
+      {!isMember ? (
+        <section className="group-private">
+          <p>This group is private.</p>
 
-        {/* Check if the group has any approved members. */}
-        {group.memberships?.filter(
-          (membership) => membership.status === 'APPROVED'
-        ).length > 0 ? (
-          <ul>
+          {accessToken && (
+            <>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleJoinRequest}
+              >
+                Request to Join
+              </button>
+
+              {joinMessage && <p>{joinMessage}</p>}
+              {joinError && <p>{joinError}</p>}
+            </>
+          )}
+        </section>
+      ) : (
+        <>
+          <section id="group-movies" className="group-section">
+            <div className="group-section-header">
+              <h2>Movies</h2>
+            </div>
+
+            {/* Check if the group has any movies. */}
+            {group.groupMovies?.length > 0 ? (
+              <div className="group-movies">
+                {group.groupMovies.map((groupMovie) => (
+                  <MovieCard
+                    key={groupMovie.id}
+                    movie={groupMovie.movie}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p>No movies in this group yet.</p>
+            )}
+          </section>
+
+          <section id="group-members" className="group-section">
+            <div className="group-section-header">
+              <h2>Members</h2>
+            </div>
+
+            {membersError && <p>{membersError}</p>}
+
             {/* Filter the memberships to only include approved members
                 and display them in the list. */}
-            {group.memberships
-              .filter((membership) => membership.status === 'APPROVED')
-              .map((membership) => (
-                <li key={membership.id}>
-                  {membership.user?.username || membership.userId}
+            <div className="group-members-list">
+              {approvedMembers.map((membership) => (
+                <div
+                  className="group-member"
+                  key={membership.id}
+                >
+                  <span>
+                    {membership.user?.username || membership.userId}
+                  </span>
 
                   {/* If the current user is the group owner and the member is not
                       the owner, display a button to remove the member. */}
-                  {isOwner && membership.userId !== group.ownerId && (
-                    <button
-                      onClick={() => handleRemoveMember(membership.userId)}
-                    >
-                      Remove
-                    </button>
-                  )}
-                </li>
+                  {isOwner &&
+                    membership.userId !== group.ownerId && (
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={() =>
+                          handleRemoveMember(membership.userId)
+                        }
+                      >
+                        Remove
+                      </button>
+                    )}
+                </div>
               ))}
-          </ul>
-        ) : (
-          <p>No members in this group yet.</p>
-        )}
+            </div>
 
-        {/* If the current user is not the group owner, display a button
-            that allows them to leave the group. */}
-        {!isOwner && (
-          <button onClick={handleLeaveGroup}>
-            Leave group
-          </button>
-        )}
-      </section>
+            {/* If the current user is not the group owner, display a button
+                that allows the user to leave the group. */}
+            {!isOwner && (
+              <button
+                type="button"
+                className="btn btn-secondary group-leave-button"
+                onClick={handleLeaveGroup}
+              >
+                Leave Group
+              </button>
+            )}
+          </section>
 
+          {isOwner && (
+            <section id="group-settings" className="group-section">
+              <h2>Settings</h2>
 
-      <section>
-        <h2>Movies</h2>
+              {joinRequestsError && (
+                <p>{joinRequestsError}</p>
+              )}
 
-        {group.groupMovies?.length > 0 ? (
-          <ul>
-            {group.groupMovies.map((groupMovie) => (
-              <li key={groupMovie.id}>
-                {groupMovie.movie.title}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No movies in this group yet.</p>
-        )}
-      </section>
+              <h3>Join Requests</h3>
 
-    </div>
+              {/* If there are no pending join requests, display a message.
+                  Otherwise, display all pending join requests as a list. */}
+              {joinRequests.length === 0 ? (
+                <p>No pending join requests.</p>
+              ) : (
+                <div className="group-join-requests">
+                  {joinRequests.map((request) => (
+                    <div
+                      className="group-join-request"
+                      key={request.id}
+                    >
+                      <span>
+                        {/* Show the username if available, otherwise show the user ID */}
+                        {request.user?.username || request.userId}
+                      </span>
+
+                      <div>
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={() =>
+                            handleJoinRequestUpdate(
+                              request.userId,
+                              'APPROVED'
+                            )
+                          }
+                        >
+                          Approve
+                        </button>
+
+                        <button
+                          type="button"
+                          className="btn btn-secondary"
+                          onClick={() =>
+                            handleJoinRequestUpdate(
+                              request.userId,
+                              'REJECTED'
+                            )
+                          }
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {deleteError && <p>{deleteError}</p>}
+
+              {isOwner && (
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={handleDelete}
+                >
+                  Delete Group
+                </button>
+              )}
+            </section>
+          )}
+        </>
+      )}
+    </main>
   );
 }
 
