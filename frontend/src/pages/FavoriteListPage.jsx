@@ -1,10 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/useAuth.js';
 import { useFavorites } from '../hooks/useFavorites.js';
+import MovieCard from '../components/MovieCard.jsx';
 
 function FavoriteListPage() {
   const { user } = useAuth() ?? {};
-  const { lists, loading, error, loadLists, addList, removeMovie, removeList, updateListVisibility } = useFavorites();
+  const {
+    lists,
+    loading,
+    error,
+    loadLists,
+    addList,
+    removeMovie,
+    updateListVisibility,
+  } = useFavorites();
 
   const [newListName, setNewListName] = useState('');
   const [formError, setFormError] = useState('');
@@ -16,11 +25,14 @@ function FavoriteListPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
+  const favoriteList = lists[0];
+
   const handleCreateList = async (event) => {
     event.preventDefault();
     setFormError('');
 
     const name = newListName.trim();
+
     if (!name) {
       setFormError('List name is required');
       return;
@@ -34,109 +46,127 @@ function FavoriteListPage() {
     }
   };
 
-  const handleRemoveMovie = async (listId, movieId) => {
+  const handleRemoveMovie = async (movieId) => {
     try {
-      await removeMovie(listId, movieId);
+      await removeMovie(favoriteList.id, movieId);
     } catch (err) {
       setFormError(err.message || 'Failed to remove movie');
     }
   };
 
-  const handleDeleteList = async (listId) => {
-    if (!window.confirm('Delete this favorite list?')) {
+  const handleTogglePublic = async () => {
+    if (!favoriteList) {
       return;
     }
 
     try {
-      await removeList(listId);
+      await updateListVisibility(
+        favoriteList.id,
+        !favoriteList.isPublic
+      );
     } catch (err) {
-      setFormError(err.message || 'Failed to delete favorite list');
+      setFormError(err.message || 'Failed to update list visibility');
     }
   };
 
   if (!user) {
-  return (
-      <div>
-        <h1>Favorite Lists</h1>
+    return (
+      <main className="container py-5 favorite-list-page">
+        <h1 className="favorite-list-title">Favorite Lists</h1>
         <p>Log in to create and manage your favorite lists.</p>
-      </div>
+      </main>
     );
   }
 
-const handleTogglePublic = async (list) => {
-  try {
-    await updateListVisibility(list.id, !list.isPublic);
-  } catch (err) {
-    setFormError(err.message || 'Failed to update list visibility');
-  }
-};
-
-
   return (
-    <div>
-      <h1>Favorite Lists</h1>
+    <main className="container py-5 favorite-list-page">
+      <div className="favorite-list-header">
+        <h1 className="favorite-list-title">
+          {user.username}&apos;s Favorites
+        </h1>
 
-      <form onSubmit={handleCreateList}>
-        <label htmlFor="listName">New list name</label>
-        <input
-          id="listName"
-          type="text"
-          value={newListName}
-          onChange={(event) => setNewListName(event.target.value)}
-        />
-        <button type="submit">Create list</button>
-      </form>
-      {formError && <p>{formError}</p>}
-      {error && <p>{error}</p>}
+        {favoriteList && (
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={handleTogglePublic}
+          >
+            {favoriteList.isPublic ? 'Unshare List' : 'Share List'}
+          </button>
+        )}
+      </div>
+
+      {formError && (
+        <p className="favorite-list-error">{formError}</p>
+      )}
+
+      {error && (
+        <p className="favorite-list-error">{error}</p>
+      )}
 
       {loading && <p>Loading...</p>}
 
-      {!loading && lists.length === 0 ? (
-        <p>You don&apos;t have any favorite lists yet.</p>
-      ) : (
-        <ul>
-          {lists.map((list) => (
-            <li key={list.id}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <h2 style={{ margin: 0 }}>{list.name}</h2>
+      {!loading && !favoriteList && (
+        <section className="favorite-list-empty">
+          <p>You don&apos;t have a favorite list yet.</p>
 
-                <button
-                  type="button"
-                  onClick={() => handleTogglePublic(list)}
-                >
-                  {list.isPublic ? 'Make private' : 'Make public'}
-                </button>
+          <form onSubmit={handleCreateList}>
+            <label htmlFor="listName">New list name</label>
 
-                <button
-                  type="button"
-                  onClick={() => handleDeleteList(list.id)}
-                >
-                  Delete list
-                </button>
-              </div>
+            <input
+              id="listName"
+              type="text"
+              className="form-control"
+              value={newListName}
+              onChange={(event) => setNewListName(event.target.value)}
+            />
 
-              {!list.items || list.items.length === 0 ? (
-                <p>No movies in this list yet.</p>
-              ) : (
-                <ul>
-                  {list.items.map((item) => (
-                    <li key={item.movieId}>
-                      {item.movie?.title ?? item.movieId}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveMovie(list.id, item.movieId)}
-                      >
-                        Remove
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
-        </ul>
+            <button
+              type="submit"
+              className="btn btn-primary"
+            >
+              Create list
+            </button>
+          </form>
+        </section>
       )}
-    </div>
+
+      {!loading && favoriteList && (
+        <section className="favorite-list">
+          {!favoriteList.items ||
+          favoriteList.items.length === 0 ? (
+            <p className="favorite-list-empty">
+              No movies in your favorites yet.
+            </p>
+          ) : (
+            <div className="favorite-movie-grid">
+              {favoriteList.items.map((item) => (
+                <div
+                  className="favorite-movie"
+                  key={item.movieId}
+                >
+                  {item.movie ? (
+                    <MovieCard movie={item.movie} />
+                  ) : (
+                    <p>{item.movieId}</p>
+                  )}
+
+                  <button
+                    type="button"
+                    className="btn btn-secondary favorite-remove-button"
+                    onClick={() =>
+                      handleRemoveMovie(item.movieId)
+                    }
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+    </main>
   );
 }
 

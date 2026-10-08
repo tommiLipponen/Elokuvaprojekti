@@ -106,11 +106,13 @@ function MovieCard({ movie }) {
     <div className="movie-card">
       <div className="movie-card-poster">
         {movie.posterUrl ? (
-          <img
-            src={movie.posterUrl}
-            alt={movie.title}
-            className="movie-card-image"
-          />
+          <Link to={`/movies/${movie.tmdbId}`}>
+            <img
+              src={movie.posterUrl}
+              alt={movie.title}
+              className="movie-card-image"
+            />
+          </Link>
         ) : (
           <div className="movie-card-no-poster">
             no poster
