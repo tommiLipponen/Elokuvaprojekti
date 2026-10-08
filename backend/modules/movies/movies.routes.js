@@ -1,5 +1,5 @@
 const express = require('express');
-const { searchMoviesHandler, nowPlayingHandler } = require('./movies.controller');
+const { searchMoviesHandler, nowPlayingHandler, getMovieHandler } = require('./movies.controller');
 
 const router = express.Router();
 
@@ -119,5 +119,60 @@ router.get('/search', searchMoviesHandler);
  *               $ref: '#/components/schemas/Error500'
  */
 router.get('/now-playing', nowPlayingHandler);
+
+/**
+ * @swagger
+ * /movies/{tmdbId}:
+ *   get:
+ *     summary: Get movie details
+ *     description: Returns details for a movie from TMDB by its TMDB ID. Works without login.
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: path
+ *         name: tmdbId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: TMDB movie ID
+ *         example: 550
+ *     responses:
+ *       200:
+ *         description: Movie details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 tmdbId:
+ *                   type: integer
+ *                   example: 550
+ *                 title:
+ *                   type: string
+ *                   example: Fight Club
+ *                 releaseYear:
+ *                   type: integer
+ *                   example: 1999
+ *                 posterUrl:
+ *                   type: string
+ *                   nullable: true
+ *                 overview:
+ *                   type: string
+ *                 voteAverage:
+ *                   type: number
+ *                   example: 8.4
+ *       404:
+ *         description: Movie not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error404'
+ *       500:
+ *         description: Failed to fetch movie
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error500'
+ */
+router.get('/:tmdbId', getMovieHandler);
 
 module.exports = router;

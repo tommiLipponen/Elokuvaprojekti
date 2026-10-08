@@ -167,14 +167,14 @@ touch each page:
 The project uses a dark teal base with warm orange and turquoise accents. These colors are used consistently across the Bootstrap theme and Figma design.
 
 - `primary`: #0F3435
-- `secondary`: #040f11
+- `secondary`: #071a1c
 - `success`: #30D97F
 - `danger`: #FFB566 
 - `warning`: #FFA4A4
 - `info`: #2FDAD7
 
 - `app-bg` : #0F3435
-- `app-surface` : #040f11
+- `app-surface` : #071a1c
 - `app-text` : #F5F1E8
 - `app-accent-turquoise` : #2FDAD7
 - `app-accent-orange` : #FAB375
@@ -188,11 +188,11 @@ Colors used throughout the interface:
 
 Color usage rules
 
-#2FDAD7 and #FAB375 are used primarily as text/accent colors on #0F3435 and #040f11.
+#2FDAD7 and #FAB375 are used primarily as text/accent colors on #0F3435 and #071a1c.
 #8A3719 is used as the primary button/action background with #F5F1E8 as button text.
 #F5F1E8 is used as the main text color and at 10% opacity for light/selected surfaces.
 #0F3435 is the primary application/page background.
-#040f11 is used for darker secondary surfaces.
+#071a1c is used for darker secondary surfaces.
 
 Colors should be applied through Bootstrap semantic classes where appropriate, and through the project's CSS variables for project-specific colors. Avoid hard-coding colors repeatedly in components.
 

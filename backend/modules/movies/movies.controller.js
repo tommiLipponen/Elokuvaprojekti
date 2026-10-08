@@ -1,4 +1,4 @@
-const { search, nowPlaying } = require('./movies.service');
+const { search, nowPlaying, getMovie } = require('./movies.service');
 
 const searchMoviesHandler = async (req, res) => {
   const { title, genre, year } = req.query;
@@ -22,4 +22,17 @@ const nowPlayingHandler = async (req, res) => {
   }
 };
 
-module.exports = { searchMoviesHandler, nowPlayingHandler };
+const getMovieHandler = async (req, res) => {
+  const { tmdbId } = req.params;
+
+  try {
+    const movie = await getMovie(tmdbId);
+    return res.status(200).json(movie);
+  } catch {
+    return res.status(500).json({
+      errors: { message: 'Failed to fetch movie' },
+    });
+  }
+};
+
+module.exports = { searchMoviesHandler, nowPlayingHandler, getMovieHandler };
