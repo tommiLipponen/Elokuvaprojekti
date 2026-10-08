@@ -1,81 +1,90 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { getPublicFavoriteLists } from '../services/favoriteApi.js';
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { getPublicFavoriteLists } from '../services/favoriteApi.js'
 
 function SharedListPage() {
-  const [lists, setLists] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [viewedId, setViewedId] = useState(null);
+  const [lists, setLists] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
   useEffect(() => {
-    let cancelled = false;
+    let cancelled = false
 
     getPublicFavoriteLists()
       .then((data) => {
         if (!cancelled) {
-          setLists(Array.isArray(data) ? data : []);
+          setLists(Array.isArray(data) ? data : [])
         }
       })
       .catch((err) => {
         if (!cancelled) {
-          setError(err.message || 'Failed to load shared favorite lists');
+          setError(err.message || 'Failed to load shared favorite lists')
         }
       })
       .finally(() => {
         if (!cancelled) {
-          setLoading(false);
+          setLoading(false)
         }
-      });
+      })
 
     return () => {
-      cancelled = true;
-    };
-  }, []);
+      cancelled = true
+    }
+  }, [])
 
   return (
-    <div>
-      <h1>Shared Lists</h1>
+    <main className="container py-5 shared-lists-page">
+      <h1 className="shared-lists-title">shared lists</h1>
 
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
-      {!loading && !error && lists.length === 0 && <p>No public lists yet.</p>}
+      {loading && (
+        <p className="shared-lists-message">
+          Loading...
+        </p>
+      )}
 
-      <ul>
-        {lists.map((list) => (
-          <li key={list.id}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <h2 style={{ margin: 0 }}>
-                {list.name}
-                {list.user?.username && <small> by {list.user.username}</small>}
-              </h2>
-              <button
-                type="button"
-                onClick={() => setViewedId((current) => (current === list.id ? null : list.id))}
-              >
-                {viewedId === list.id ? 'Hide' : 'View'}
-              </button>
+      {error && (
+        <p className="shared-lists-message shared-lists-error">
+          {error}
+        </p>
+      )}
+
+      {!loading && !error && lists.length === 0 && (
+        <p className="shared-lists-message">
+          No public lists yet.
+        </p>
+      )}
+
+      {!loading && !error && lists.length > 0 && (
+        <div className="shared-lists-card">
+          {lists.map((list) => (
+            <div className="shared-list-row" key={list.id}>
+              <div className="shared-list-header">
+                <div>
+                  <h2 className="shared-list-name">
+                    {list.name}
+                  </h2>
+
+                  {list.user?.username && (
+                    <p className="shared-list-owner">
+                      by {list.user.username}
+                    </p>
+                  )}
+                </div>
+
+                <Link
+                  to={`/shared/${list.id}`}
+                  className="btn btn-primary shared-list-button"
+                >
+                  view
+                </Link>
+              </div>
             </div>
-
-            {viewedId === list.id &&
-              (!list.items || list.items.length === 0 ? (
-                <p>No movies in this list yet.</p>
-              ) : (
-                <ul>
-                  {list.items.map((item) => (
-                    <li key={item.movieId}>
-                      <strong>{item.movie?.title ?? item.movieId}</strong>{' '}
-                      <Link to={`/movies/${item.movieId}`}>Read reviews</Link>
-                      {item.movie?.overview && <p>{item.movie.overview}</p>}
-                    </li>
-                  ))}
-                </ul>
-              ))}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+          ))}
+        </div>
+      )}
+    </main>
+  )
 }
 
-export default SharedListPage;
+export default SharedListPage
+

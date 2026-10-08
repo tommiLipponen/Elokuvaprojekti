@@ -23,38 +23,78 @@ function MovieSearchPage() {
   }
 
   return (
-    <div>
-      <h1>Movie Search</h1>
-      <form onSubmit={handleSubmit}>
+    <main className="container py-5 movie-search-page">
+
+      <h2 className="shared-lists-title">
+        search for movies by...
+      </h2>
+
+      <form onSubmit={handleSubmit} className="movie-search-form">
         <input
           type="text"
-          placeholder="Search by title..."
+          className="form-control movie-search-input"
+          placeholder="title"
           value={title}
           onChange={(event) => setTitle(event.target.value)}
         />
-        <select value={genre} onChange={(event) => setGenre(event.target.value)}>
-          <option value="">Genre</option>
-          {GENRES.map((genreOption) => (
-            <option key={genreOption} value={genreOption}>{genreOption}</option>
-          ))}
-        </select>
-        <input
-          type="number"
-          placeholder="Year"
-          value={year}
-          onChange={(event) => setYear(event.target.value)}
-        />
-        <button type="submit">Search</button>
+
+        <div className="movie-search-filters">
+          <select
+            className="form-select"
+            placeholder="genre"
+            value={genre}
+            onChange={(event) => setGenre(event.target.value)}
+          >
+            <option value="">Genre</option>
+            {GENRES.map((genreOption) => (
+              <option
+                key={genreOption}
+                value={genreOption}
+              >
+                {genreOption}
+              </option>
+            ))}
+          </select>
+
+          <input
+            type="number"
+            className="form-control"
+            placeholder="year"
+            value={year}
+            onChange={(event) => setYear(event.target.value)}
+          />
+
+          <button
+            type="submit"
+            className="btn btn-primary movie-search-button"
+          >
+            search!
+          </button>
+        </div>
       </form>
 
-      {hasSearched && movies.length === 0 && <p>No movies found.</p>}
+      {hasSearched && (
+        <>
+        <hr className="movie-search-divider" />
+
+      <h2 className="movie-search-results-title">
+        search results
+      </h2>
+
+      {movies.length === 0 && (
+        <p className="movie-search-empty">
+          No movies found.
+        </p>
+      )}
 
       <div className="movie-results">
         {movies.map((movie) => (
           <MovieCard key={movie.tmdbId} movie={movie} />
         ))}
       </div>
-    </div>
+      </>
+      )}
+    </main>
   );
 }
 

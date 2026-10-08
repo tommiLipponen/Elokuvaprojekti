@@ -11,6 +11,8 @@ import GroupDetailPage from './pages/GroupDetailPage.jsx'
 import UserProfilePage from './pages/UserProfilePage.jsx'
 import FavoriteListPage from './pages/FavoriteListPage.jsx'
 import SharedListPage from './pages/SharedListPage.jsx'
+import SharedListDetailPage from './pages/SharedListDetailPage.jsx'
+import MovieCardTestPage from './pages/MovieCardTestPage.jsx'
 
 
 function App() {
@@ -28,6 +30,8 @@ function App() {
         <Route path="profile" element={<UserProfilePage />} />
         <Route path="favorites" element={<FavoriteListPage />} />
         <Route path="shared" element={<SharedListPage />} />
+        <Route path="shared/:id" element={<SharedListDetailPage />} />
+        <Route path="movie-card-test" element={<MovieCardTestPage />} />
       </Route>
     </Routes>
   )

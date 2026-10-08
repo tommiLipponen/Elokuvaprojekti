@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth.js';
-import {getMyGroups,addMovieToGroup,} from '../services/groupApi.js';
+import { getMyGroups, addMovieToGroup, } from '../services/groupApi.js';
 import { getFavorites, addItemToList } from '../services/favoriteApi.js';
 
 function MovieCard({ movie }) {
@@ -104,75 +104,124 @@ function MovieCard({ movie }) {
 
   return (
     <div className="movie-card">
-      <h3>{movie.title}</h3>
+      <div className="movie-card-poster">
+        {movie.posterUrl ? (
+          <img
+            src={movie.posterUrl}
+            alt={movie.title}
+            className="movie-card-image"
+          />
+        ) : (
+          <div className="movie-card-no-poster">
+            no poster
+          </div>
+        )}
+      </div>
 
-      {movie.posterUrl && (
-        <img src={movie.posterUrl} alt={movie.title} />
-      )}
+      <div className="movie-card-content">
+        <h1 className="movie-card-title">
+          <Link to={`/movies/${movie.tmdbId}`}>
+            {movie.title}
+          </Link>
+        </h1>
 
-      {movie.releaseYear && <p>{movie.releaseYear}</p>}
+        {movie.releaseYear && (
+          <p className="movie-card-year">
+            {movie.releaseYear}
+          </p>
+        )}
 
-      {movie.overview && <p>{movie.overview}</p>}
+        {movie.overview && (
+          <p className="movie-card-overview">
+            {movie.overview}
+          </p>
+        )}
 
-      <Link to={`/movies/${movie.tmdbId}`}>Read reviews</Link>
+        <Link
+          to={`/movies/${movie.tmdbId}`}
+          className="movie-card-reviews"
+        >
+          Read reviews.
+        </Link>
 
-      {accessToken && (
-        <div>
-          <select
-            value={selectedGroupId}
-            onChange={(event) => setSelectedGroupId(event.target.value)}
-            disabled={loadingGroups || adding}
-          >
-            <option value="">Select a group</option>
+        {accessToken && (
+          <div className="movie-card-actions">
+            <div className="movie-card-action">
+              <select
+                className="form-select"
+                value={selectedListId}
+                onChange={(event) =>
+                  setSelectedListId(event.target.value)
+                }
+                disabled={loadingFavoriteLists || addingToFavorites}
+              >
+                <option value="">
+                  select a favorite list
+                </option>
 
-            {groups.map((group) => (
-              <option key={group.id} value={group.id}>
-                {group.name}
-              </option>
-            ))}
-          </select>
+                {favoriteLists.map((list) => (
+                  <option key={list.id} value={list.id}>
+                    {list.name}
+                  </option>
+                ))}
+              </select>
 
-          <button
-            type="button"
-            onClick={handleAddToGroup}
-            disabled={!selectedGroupId || adding}
-          >
-            {adding ? 'Adding...' : 'Add to group'}
-          </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleAddToFavorites}
+                disabled={!selectedListId || addingToFavorites}
+              >
+                {addingToFavorites
+                  ? 'adding...'
+                  : 'add to favorite list'}
+              </button>
 
-          {message && <p>{message}</p>}
-        </div>
-      )}
+              {favoriteMessage && (
+                <p className="movie-card-message">
+                  {favoriteMessage}
+                </p>
+              )}
+            </div>
 
-      {accessToken && (
-        <div>
-          <select
-            value={selectedListId}
-            onChange={(event) => setSelectedListId(event.target.value)}
-            disabled={loadingFavoriteLists || addingToFavorites}
-          >
-            <option value="">Select a favorite list</option>
+            <div className="movie-card-action">
+              <select
+                className="form-select"
+                value={selectedGroupId}
+                onChange={(event) =>
+                  setSelectedGroupId(event.target.value)
+                }
+                disabled={loadingGroups || adding}
+              >
+                <option value="">select a group</option>
 
-            {favoriteLists.map((list) => (
-              <option key={list.id} value={list.id}>
-                {list.name}
-              </option>
-            ))}
-          </select>
+                {groups.map((group) => (
+                  <option key={group.id} value={group.id}>
+                    {group.name}
+                  </option>
+                ))}
+              </select>
 
-          <button
-            type="button"
-            onClick={handleAddToFavorites}
-            disabled={!selectedListId || addingToFavorites}
-          >
-            {addingToFavorites ? 'Adding...' : 'Add to favorite list'}
-          </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleAddToGroup}
+                disabled={!selectedGroupId || adding}
+              >
+                {adding ? 'adding...' : 'add to group'}
+              </button>
 
-          {favoriteMessage && <p>{favoriteMessage}</p>}
-        </div>
-      )}
+              {message && (
+                <p className="movie-card-message">
+                  {message}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
-  );
+  )
 }
 
 export default MovieCard;
