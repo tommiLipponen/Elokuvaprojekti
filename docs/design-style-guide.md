@@ -160,32 +160,52 @@ touch each page:
    can make default-colored text/buttons harder to read if a color is
    very light or very dark).
 
-## Our choices (fill this in as a team)
+## Our choices (team decisions)
 
-Write the actual decisions here once made, so everyone implements the
-same values and nobody has to re-derive them from `index.css` later.
+### Colors
 
-Colors (hex values go straight into the CSS override block in section 1):
+The project uses a dark teal base with warm orange and turquoise accents. These colors are used consistently across the Bootstrap theme and Figma design.
 
-- `primary`: ______ (#_______)
-- `secondary`: ______ (#_______)
-- `success`: ______ (#_______)
-- `danger`: ______ (#_______)
-- `warning`: ______ (#_______)
-- `info`: ______ (#_______)
+- `primary`: #0F3435
+- `secondary`: #071a1c
+- `success`: #30D97F
+- `danger`: #FFB566 
+- `warning`: #FFA4A4
+- `info`: #2FDAD7
 
-Fonts (names go into the `<link>` tags and `font-family` rules in section 2):
+- `app-bg` : #0F3435
+- `app-surface` : #071a1c
+- `app-text` : #F5F1E8
+- `app-accent-turquoise` : #2FDAD7
+- `app-accent-orange` : #FAB375
+- `app-button-orange` : #8A3719
 
-- Heading font: ______ (Google Fonts weights used: ______)
-- Body font: ______ (Google Fonts weights used: ______)
-- Accent font: ______ (used for: ______)
 
-## Quick checklist before calling it "done"
+Colors used throughout the interface:
 
-- [ ] 5-6 colors chosen (primary, secondary, success, danger, warning,
-      info) and overridden in `index.css`.
-- [ ] 3 fonts chosen (heading, body, accent), linked in `index.html`, set
-      in `index.css`.
-- [ ] Contrast checked for body text and buttons (AA, 4.5:1).
-- [ ] No component/file renamed — only `className` additions + the CSS
-      variable file.
+#0F3435 — primary dark page/background color.
+#F5F1E8 — main text/light surface color; also used at 10% opacity for selected/light surfaces.
+
+Color usage rules
+
+#2FDAD7 and #FAB375 are used primarily as text/accent colors on #0F3435 and #071a1c.
+#8A3719 is used as the primary button/action background with #F5F1E8 as button text.
+#F5F1E8 is used as the main text color and at 10% opacity for light/selected surfaces.
+#0F3435 is the primary application/page background.
+#071a1c is used for darker secondary surfaces.
+
+Colors should be applied through Bootstrap semantic classes where appropriate, and through the project's CSS variables for project-specific colors. Avoid hard-coding colors repeatedly in components.
+
+### Font roles
+
+- Heading font: Roboto Condensed
+   - Used for h1–h6
+   - Heading 1: Weight: 700 (Bold), 32px / 5px letter spacing
+   - Heading 2: Weight: 300 (Light), 32px / 5px letter spacing
+- Body font: Mukta Vaani
+   - Used for paragraphs, lists, labels and general UI text
+   - Body: Weight: 300 (Light), 16px / 5px letter spacing
+- Accent font: Cousine
+   - Used for button labels, logo/brand elements and selected accent UI
+   - Accent 1: Weight: 700 (Bold), 24px / 10px letter spacing
+   - Accent 2: Weight: 700 (Bold), 16px / 10px letter spacing

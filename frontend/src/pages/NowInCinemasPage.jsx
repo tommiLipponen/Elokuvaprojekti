@@ -25,10 +25,14 @@ function NowInCinemasPage() {
   }, []);
 
   return (
-    <div>
-      <h1>Now in Finnish Cinemas</h1>
+    <div className="container py-5 now-playing-page">
+      <h1 className="now-playing-title">
+        now in Finnish cinemas
+      </h1>
 
-      {hasLoaded && movies.length === 0 && <p>No movies currently playing.</p>}
+      {hasLoaded && movies.length === 0 && (
+        <p>No movies currently playing.</p>
+      )}
 
       <div className="movie-results">
         {movies.map((movie) => (
@@ -40,3 +44,5 @@ function NowInCinemasPage() {
 }
 
 export default NowInCinemasPage;
+
+

@@ -4,7 +4,7 @@
 ## Colors
 
 - **#0F3435** — Primary dark background
-- **#071A1C** — Dark background
+- **#071a1c** — Dark background
 - **#8A3719** — Button background
 - **#2FDAD7** — Turquoise text / accent
 - **#FAB375** — Orange text / accent
@@ -13,10 +13,10 @@
 
 ```mermaid
 flowchart LR
-    A["#0F3435"]:::c1 --- B["#071A1C"]:::c2 --- C["#8A3719"]:::c3 --- D["#2FDAD7"]:::c4 --- E["#FAB375"]:::c5 --- F["#F5F1E8"]:::c6
+    A["#0F3435"]:::c1 --- B["#071a1c"]:::c2 --- C["#8A3719"]:::c3 --- D["#2FDAD7"]:::c4 --- E["#FAB375"]:::c5 --- F["#F5F1E8"]:::c6
 
     classDef c1 fill:#0F3435,color:#F5F1E8,stroke:#0F3435
-    classDef c2 fill:#071A1C,color:#F5F1E8,stroke:#071A1C
+    classDef c2 fill:#071a1c,color:#F5F1E8,stroke:#071a1c
     classDef c3 fill:#8A3719,color:#F5F1E8,stroke:#8A3719
     classDef c4 fill:#2FDAD7,color:#071A1C,stroke:#2FDAD7
     classDef c5 fill:#FAB375,color:#071A1C,stroke:#FAB375
