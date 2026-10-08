@@ -32,9 +32,9 @@ function RegisterPage() {
     <div className="container py-5">
       <div className="row justify-content-center">
         <div className="col-12 col-sm-10 col-md-7 col-lg-5">
-          <div className="card">
+          <div className="register-card card">
             <div className="card-body p-4">
-              <h3 className="text-center mb-4">register</h3>
+              <h3 className="text-center mb-4">create account</h3>
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
@@ -81,6 +81,16 @@ function RegisterPage() {
                   </div>
                 </div>
 
+                <p className="text-center mt-3 mb-0">
+                  Password requirements:
+                  <br />
+                  - Minimum 8 characters
+                  <br />
+                  - One uppercase letter
+                  <br />
+                  - One number
+                </p>
+
                 <button type="submit" className="btn btn-primary w-100">
                   register!
                 </button>
@@ -107,39 +117,3 @@ function RegisterPage() {
 }
 
 export default RegisterPage;
-
-/*<div>
-      <h1>Register</h1>
-
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-            minLength={8}
-          />
-          <span id="togglePassword" onClick={() => setShowPassword(!showPassword)}>
-            👁
-          </span>
-        </div>
-
-        <button type="submit">Register</button>
-      </form>
-
-      {message && <p>{message}</p>}
-    </div> */

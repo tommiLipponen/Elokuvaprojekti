@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/useAuth.js';
 
 function Navbar() {
+  const { accessToken } = useAuth();
+
   return (
     <nav className="navbar navbar-expand-lg">
       <div className="container">
-        <Link className="navbar-brand" to="/">
-          Movie App
+        <Link className="navbar-title" to="/">
+          elokuvaprojekti
         </Link>
 
         <button
@@ -39,21 +42,25 @@ function Navbar() {
               in cinemas
             </Link>
 
-            <Link className="nav-link" to="/profile">
-              profile
-            </Link>
-
             <Link className="nav-link" to="/shared">
               shared lists
             </Link>
 
-            <Link className="nav-link" to="/login">
-              Login
-            </Link>
+            {!accessToken ? (
+              <Link className="nav-link" to="/login">
+                login
+              </Link>
+            ) : (
+              <>
+              <Link className="nav-link" to="/profile">
+                profile
+              </Link>
 
-            <Link className="nav-link" to="/register">
-              Register
-            </Link>
+              <Link className="nav-link" to="/logout">
+                logout
+              </Link>
+              </>
+            )}
 
           </div>
         </div>

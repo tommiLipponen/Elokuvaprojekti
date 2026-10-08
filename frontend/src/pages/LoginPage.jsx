@@ -26,7 +26,7 @@ function LoginPage() {
     <div className="container py-5">
       <div className="row justify-content-center">
         <div className="col-12 col-sm-10 col-md-7 col-lg-5">
-          <div className="card">
+          <div className="login-card card">
             <div className="card-body p-4">
               <h3 className="text-center mb-4">login</h3>
 
@@ -98,38 +98,3 @@ function LoginPage() {
 }
 
 export default LoginPage;
-
-/*<div>
-  <h1>Login</h1>
-
-  <form onSubmit={handleSubmit}>
-    <div>
-      <label htmlFor="email">Email</label>
-      <input
-        id="email"
-        type="email"
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-        required
-      />
-    </div>
-
-    <div>
-      <label htmlFor="password">Password</label>
-      <input
-        id="password"
-        type={showPassword ? "text" : "password"}
-        value={password}
-        onChange={(event) => setPassword(event.target.value)}
-        required
-      />
-      <span id="togglePassword" onClick={() => setShowPassword(!showPassword)}>
-        👁
-      </span>
-    </div>
-
-    <button type="submit">Login</button>
-  </form>
-
-  {message && <p>{message}</p>}
-</div>*/
