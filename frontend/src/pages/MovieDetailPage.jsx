@@ -55,7 +55,6 @@ function MovieDetailPage() {
   const [favoriteLists, setFavoriteLists] = useState([]);
 
   const [selectedGroupId, setSelectedGroupId] = useState('');
-  const [selectedFavoriteListId, setSelectedFavoriteListId] = useState('');
 
   const [rating, setRating] = useState('5');
   const [comment, setComment] = useState('');
@@ -163,13 +162,16 @@ function MovieDetailPage() {
   }
 
   async function handleAddToFavorites() {
-    if (!selectedFavoriteListId) {
+    const favoriteList = favoriteLists[0];
+
+    if (!favoriteList) {
+      setMessage('No favorites list found.');
       return;
     }
 
     try {
       await addItemToList(
-        selectedFavoriteListId,
+        favoriteList.id,
         movie.tmdbId,
         accessToken,
       );
@@ -293,27 +295,10 @@ function MovieDetailPage() {
 
           {user && (
             <div className="movie-detail-actions">
-              <select
-                className="form-select"
-                value={selectedFavoriteListId}
-                onChange={(event) =>
-                  setSelectedFavoriteListId(event.target.value)
-                }
-              >
-                <option value="">choose favorite list</option>
-
-                {favoriteLists.map((list) => (
-                  <option key={list.id} value={list.id}>
-                    {list.name}
-                  </option>
-                ))}
-              </select>
-
               <button
                 type="button"
                 className="btn btn-primary"
                 onClick={handleAddToFavorites}
-                disabled={!selectedFavoriteListId}
               >
                 add to favorites
               </button>

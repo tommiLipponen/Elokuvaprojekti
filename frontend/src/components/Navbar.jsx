@@ -1,8 +1,20 @@
-import { Link } from 'react-router-dom';
+
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth.js';
 
 function Navbar() {
-  const { accessToken } = useAuth();
+  const { accessToken, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async (event) => {
+    event.preventDefault();
+
+    try {
+      await logout();
+    } finally {
+      navigate('/');
+    }
+  };
 
   return (
     <nav className="navbar navbar-expand-lg">
@@ -25,7 +37,6 @@ function Navbar() {
 
         <div className="collapse navbar-collapse" id="mainNavbar">
           <div className="navbar-nav ms-auto">
-
             <Link className="nav-link" to="/movies">
               search
             </Link>
@@ -52,16 +63,19 @@ function Navbar() {
               </Link>
             ) : (
               <>
-              <Link className="nav-link" to="/profile">
-                profile
-              </Link>
+                <Link className="nav-link" to="/profile">
+                  profile
+                </Link>
 
-              <Link className="nav-link" to="/logout">
-                logout
-              </Link>
+                <Link
+                  className="nav-link"
+                  to="/"
+                  onClick={handleLogout}
+                >
+                  logout
+                </Link>
               </>
             )}
-
           </div>
         </div>
       </div>
@@ -70,23 +84,3 @@ function Navbar() {
 }
 
 export default Navbar;
-
-/*import { Link } from 'react-router-dom';
-
-function Navbar() {
-  return (
-    <nav>
-      <Link to="/">Home</Link>
-      <Link to="/login">Login</Link>
-      <Link to="/register">Register</Link>
-      <Link to="/movies">Movie Search</Link>
-      <Link to="/movies/now-playing">Now in Cinemas</Link>
-      <Link to="/groups">Groups</Link>
-      <Link to="/profile">Profile</Link>
-      <Link to="/favorites">Favorites</Link>
-      <Link to="/shared">Shared List</Link>
-    </nav>
-  );
-}
-
-export default Navbar;*/
