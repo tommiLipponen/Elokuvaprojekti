@@ -72,3 +72,28 @@ line-clamp: 5;
   margin-top: auto;
   padding: 2px 0;
 }
+
+.movie-card-actions .btn-primary {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  color: var(--app-accent-turquoise);
+
+  text-decoration: none;
+}
+
+.movie-card-actions .btn-primary:hover,
+.movie-card-actions .btn-primary:focus-visible {
+  color: var(--app-accent-orange);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  text-decoration: none;
+}

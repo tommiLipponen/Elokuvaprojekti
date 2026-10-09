@@ -1,36 +1,36 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { getPublicFavoriteLists } from '../services/favoriteApi.js'
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { getPublicFavoriteLists } from '../services/favoriteApi.js';
 
 function SharedListPage() {
-  const [lists, setLists] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [lists, setLists] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    let cancelled = false
+    let cancelled = false;
 
     getPublicFavoriteLists()
       .then((data) => {
         if (!cancelled) {
-          setLists(Array.isArray(data) ? data : [])
+          setLists(Array.isArray(data) ? data : []);
         }
       })
       .catch((err) => {
         if (!cancelled) {
-          setError(err.message || 'Failed to load shared favorite lists')
+          setError(err.message || 'Failed to load shared favorite lists');
         }
       })
       .finally(() => {
         if (!cancelled) {
-          setLoading(false)
+          setLoading(false);
         }
-      })
+      });
 
     return () => {
-      cancelled = true
-    }
-  }, [])
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <main className="container py-5 shared-lists-page">
@@ -60,7 +60,10 @@ function SharedListPage() {
             <div className="shared-list-row" key={list.id}>
               <div className="shared-list-header">
                 <div>
-                  <Link to={`/shared-lists/${list.id}`} className="shared-list-link">
+                  <Link
+                    to={`/shared-lists/${list.id}`}
+                    className="shared-list-link"
+                  >
                     <h2 className="shared-list-name">
                       {list.name}
                     </h2>
@@ -74,7 +77,7 @@ function SharedListPage() {
                 </div>
 
                 <Link
-                  to={`/shared/${list.id}`}
+                  to={`/shared-lists/${list.id}`}
                   className="btn btn-primary shared-list-button"
                 >
                   view
@@ -85,8 +88,7 @@ function SharedListPage() {
         </div>
       )}
     </main>
-  )
+  );
 }
 
-export default SharedListPage
-
+export default SharedListPage;
