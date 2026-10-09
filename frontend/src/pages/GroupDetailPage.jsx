@@ -395,7 +395,7 @@ function GroupDetailPage() {
                   className="btn btn-danger"
                   onClick={handleDelete}
                 >
-                  delete Group
+                  delete group
                 </button>
               )}
             </section>

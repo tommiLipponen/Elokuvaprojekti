@@ -67,7 +67,6 @@ body {
   align-items: stretch;
 }
 
-.shared-lists-error,
 .group-error,
 .favorite-list-error {
   color: var(--app-accent-orange);

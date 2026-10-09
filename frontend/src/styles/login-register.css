@@ -1,82 +1,95 @@
 .login-form,
 .register-form {
-  width: 100%;
-  max-width: 320px;
-  margin-inline: auto;
+    width: 100%;
+    max-width: 320px;
+    margin-inline: auto;
 }
 
 .login-form .form-control,
 .register-form .form-control,
 .login-form .password-toggle,
 .register-form .password-toggle {
-  color: var(--app-text);
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid rgb(245 241 232 / 65%);
-  border-radius: 0;
-  box-shadow: none;
+    color: var(--app-text);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgb(245 241 232 / 65%);
+    border-radius: 0;
+    box-shadow: none;
 }
 
 .login-form .form-control,
 .register-form .form-control {
-  padding: 10px 0;
+    padding: 10px 0;
 }
 
 .login-form .form-control::placeholder,
 .register-form .form-control::placeholder {
-  color: rgb(245 241 232 / 75%);
-  opacity: 1;
+    color: rgb(245 241 232 / 75%);
+    opacity: 1;
 }
 
 .login-form .form-control:focus,
 .register-form .form-control:focus {
-  background: transparent;
-  border-bottom-color: #f5f1e8;
-  box-shadow: none;
-  outline: none;
+    background: transparent;
+    border-bottom-color: #f5f1e8;
+    box-shadow: none;
+    outline: none;
 }
 
 .login-form .input-group .form-control,
 .register-form .input-group .form-control {
-  border-right: none;
+    border-right: none;
+}
+
+.login-form .form-control:-webkit-autofill,
+.register-form .form-control:-webkit-autofill,
+.login-form .form-control:-webkit-autofill:hover,
+.register-form .form-control:-webkit-autofill:hover,
+.login-form .form-control:-webkit-autofill:focus,
+.register-form .form-control:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--app-text);
+    caret-color: var(--app-text);
+    -webkit-box-shadow: 0 0 0 1000px var(--app-bg) inset;
+    box-shadow: 0 0 0 1000px var(--app-bg) inset;
+    transition: background-color 9999s ease-out;
 }
 
 .login-form .password-toggle,
 .register-form .password-toggle {
-  border-left: none;
-  padding-inline: 12px;
+    border-left: none;
+    padding-inline: 12px;
 }
 
 .login-form .password-toggle:hover,
 .login-form .password-toggle:focus,
 .register-form .password-toggle:hover,
 .register-form .password-toggle:focus {
-  color: var(--app-text);
-  background: transparent;
-  border-bottom-color: #f5f1e8;
-  box-shadow: none;
+    color: var(--app-text);
+    background: transparent;
+    border-bottom-color: #f5f1e8;
+    box-shadow: none;
 }
 
 .login-form .mb-3,
 .login-form .mb-4,
 .register-form .mb-3,
 .register-form .mb-4 {
-  margin-bottom: 24px;
+    margin-bottom: 24px;
 }
 
 .register-form .password-requirements {
-  width: fit-content;
-  margin: 40px auto 28px;
-  text-align: left;
+    width: fit-content;
+    margin: 40px auto 28px;
+    text-align: left;
 }
 
-.login-form > .btn,
-.register-form > .btn {
-  margin-top: 8px;
-  margin-bottom: 16px;
+.login-form>.btn,
+.register-form>.btn {
+    margin-top: 8px;
+    margin-bottom: 16px;
 }
 
 .login-register-title {
-  text-align: center;
-  margin: 24px 0 32px;
+    text-align: center;
+    margin: 24px 0 32px;
 }
