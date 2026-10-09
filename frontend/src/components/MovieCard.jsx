@@ -13,22 +13,40 @@ import {
 function MovieCard({ movie }) {
   const { accessToken } = useAuth();
 
-  const [groups, setGroups] = useState([]);
+  const [groupsState, setGroupsState] = useState({
+    token: null,
+    data: [],
+  });
+
+  const [favoritesState, setFavoritesState] = useState({
+    token: null,
+    data: [],
+  });
+
+  const groups =
+    groupsState.token === accessToken ? groupsState.data : [];
+
+  const favoriteLists =
+    favoritesState.token === accessToken
+      ? favoritesState.data
+      : [];
+
   const [selectedGroupId, setSelectedGroupId] = useState('');
   const [message, setMessage] = useState('');
   const [loadingGroups, setLoadingGroups] = useState(false);
   const [adding, setAdding] = useState(false);
 
-  const [favoriteLists, setFavoriteLists] = useState([]);
   const [favoriteMessage, setFavoriteMessage] = useState('');
   const [loadingFavoriteLists, setLoadingFavoriteLists] = useState(false);
   const [addingToFavorites, setAddingToFavorites] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
+
     if (!accessToken) {
-      setGroups([]);
-      setFavoriteLists([]);
-      return;
+      return () => {
+        cancelled = true;
+      };
     }
 
     async function loadGroups() {
@@ -36,12 +54,22 @@ function MovieCard({ movie }) {
         setLoadingGroups(true);
 
         const result = await getMyGroups(accessToken);
-        setGroups(Array.isArray(result) ? result : []);
+
+        if (!cancelled) {
+          setGroupsState({
+            token: accessToken,
+            data: Array.isArray(result) ? result : [],
+          });
+        }
       } catch (error) {
-        console.error(error);
-        setMessage('Failed to load groups');
+        if (!cancelled) {
+          console.error(error);
+          setMessage('Failed to load groups');
+        }
       } finally {
-        setLoadingGroups(false);
+        if (!cancelled) {
+          setLoadingGroups(false);
+        }
       }
     }
 
@@ -50,20 +78,38 @@ function MovieCard({ movie }) {
         setLoadingFavoriteLists(true);
 
         const result = await getFavorites(accessToken);
-        setFavoriteLists(Array.isArray(result) ? result : []);
+
+        if (!cancelled) {
+          setFavoritesState({
+            token: accessToken,
+            data: Array.isArray(result) ? result : [],
+          });
+        }
       } catch (error) {
-        console.error(error);
-        setFavoriteMessage('Failed to load favorite lists');
+        if (!cancelled) {
+          console.error(error);
+          setFavoriteMessage('Failed to load favorite lists');
+        }
       } finally {
-        setLoadingFavoriteLists(false);
+        if (!cancelled) {
+          setLoadingFavoriteLists(false);
+        }
       }
     }
 
     loadGroups();
     loadFavoriteLists();
+
+    return () => {
+      cancelled = true;
+    };
   }, [accessToken]);
 
   const handleAddToGroup = async () => {
+    if (!accessToken) {
+      return;
+    }
+
     if (!selectedGroupId) {
       setMessage('Select a group first');
       return;
@@ -88,6 +134,10 @@ function MovieCard({ movie }) {
   };
 
   const handleAddToFavorites = async () => {
+    if (!accessToken) {
+      return;
+    }
+
     const favoriteList = favoriteLists[0];
 
     if (!favoriteList) {
@@ -120,7 +170,6 @@ function MovieCard({ movie }) {
     (movie.poster_path
       ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
       : null);
-
 
   return (
     <div className="movie-card">
@@ -226,7 +275,7 @@ function MovieCard({ movie }) {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 export default MovieCard;
