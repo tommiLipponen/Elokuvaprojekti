@@ -109,6 +109,10 @@ function GroupListPage() {
     }
   };
 
+  const handleSearch = (event) => {
+    event.preventDefault();
+  };
+
   const filteredGroups = groups.filter((group) =>
     group.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -150,8 +154,8 @@ function GroupListPage() {
         <input
           type="text"
           className="group-search-input"
-          value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
           placeholder="search groups..."
         />
 
