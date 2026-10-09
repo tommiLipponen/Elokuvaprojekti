@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { deleteAccount } from '../services/userApi.js';
 
 function UserProfilePage() {
-  const { accessToken, logout } = useAuth();
+  const { user, accessToken, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleDeleteAccount = async () => {
@@ -41,11 +41,11 @@ function UserProfilePage() {
             <span>👤</span>
           </div>
 
-          <h3 className="profile-username">username</h3>
+          <h3 className="profile-username">{user.username}</h3>
         </div>
 
         <div className="profile-email">
-          <span>user@example.com</span>
+          <span>{user.email}</span>
         </div>
 
         <hr />

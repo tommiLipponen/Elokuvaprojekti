@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth.js';
+import { Container, Nav, Navbar as BootstrapNavbar } from 'react-bootstrap';
 
 function Navbar() {
+  const [expanded, setExpanded] = useState(false);
   const { accessToken, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -16,69 +19,60 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg">
-      <div className="container">
-        <Link className="navbar-title" to="/">
+    <BootstrapNavbar
+      expand="lg"
+      className="navbar"
+      expanded={expanded}
+      onToggle={setExpanded}
+    >
+      <Container>
+        <BootstrapNavbar.Brand as={Link} to="/">
           elokuvaprojekti
-        </Link>
+        </BootstrapNavbar.Brand>
 
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#mainNavbar"
-          aria-controls="mainNavbar"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+        <BootstrapNavbar.Toggle aria-controls="mainNavbar" aria-label="Toggle navigation" />
 
-        <div className="collapse navbar-collapse" id="mainNavbar">
-          <div className="navbar-nav ms-auto">
-            <Link className="nav-link" to="/movies">
+        <BootstrapNavbar.Collapse id="mainNavbar">
+          <Nav className="ms-auto" onClick={() => setExpanded(false)}>
+            <Nav.Link as={Link} to="/movies">
               search
-            </Link>
+            </Nav.Link>
 
-            <Link className="nav-link" to="/groups">
+            <Nav.Link as={Link} to="/groups">
               groups
-            </Link>
+            </Nav.Link>
 
-            <Link className="nav-link" to="/favorites">
+            <Nav.Link as={Link} to="/favorites">
               favorites
-            </Link>
+            </Nav.Link>
 
-            <Link className="nav-link" to="/movies/now-playing">
+            <Nav.Link as={Link} to="/movies/now-playing">
               in cinemas
-            </Link>
+            </Nav.Link>
 
-            <Link className="nav-link" to="/shared">
+            <Nav.Link as={Link} to="/shared">
               shared lists
-            </Link>
+            </Nav.Link>
 
             {!accessToken ? (
-              <Link className="nav-link" to="/login">
+              <Nav.Link as={Link} to="/login">
                 login
-              </Link>
+              </Nav.Link>
             ) : (
               <>
-                <Link className="nav-link" to="/profile">
+                <Nav.Link as={Link} to="/profile">
                   profile
-                </Link>
+                </Nav.Link>
 
-                <Link
-                  className="nav-link"
-                  to="/"
-                  onClick={handleLogout}
-                >
+                <Nav.Link as={Link} to="/" onClick={handleLogout}>
                   logout
-                </Link>
+                </Nav.Link>
               </>
             )}
-          </div>
-        </div>
-      </div>
-    </nav>
+          </Nav>
+        </BootstrapNavbar.Collapse>
+      </Container>
+    </BootstrapNavbar>
   );
 }
 
