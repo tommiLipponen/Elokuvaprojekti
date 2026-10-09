@@ -87,6 +87,8 @@
 .register-form>.btn {
     margin-top: 8px;
     margin-bottom: 16px;
+    width: fit-content;
+    padding: 10px 24px;
 }
 
 .login-register-title {
