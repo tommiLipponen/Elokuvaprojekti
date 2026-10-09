@@ -1,27 +1,52 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth.js';
-import { getMyGroups, addMovieToGroup, } from '../services/groupApi.js';
-import { getFavorites, addItemToList } from '../services/favoriteApi.js';
+import {
+  getMyGroups,
+  addMovieToGroup,
+} from '../services/groupApi.js';
+import {
+  getFavorites,
+  addItemToList,
+} from '../services/favoriteApi.js';
 
 function MovieCard({ movie }) {
   const { accessToken } = useAuth();
 
-  const [groups, setGroups] = useState([]);
+  const [groupsState, setGroupsState] = useState({
+    token: null,
+    data: [],
+  });
+
+  const [favoritesState, setFavoritesState] = useState({
+    token: null,
+    data: [],
+  });
+
+  const groups =
+    groupsState.token === accessToken ? groupsState.data : [];
+
+  const favoriteLists =
+    favoritesState.token === accessToken
+      ? favoritesState.data
+      : [];
+
   const [selectedGroupId, setSelectedGroupId] = useState('');
   const [message, setMessage] = useState('');
   const [loadingGroups, setLoadingGroups] = useState(false);
   const [adding, setAdding] = useState(false);
 
-  const [favoriteLists, setFavoriteLists] = useState([]);
-  const [selectedListId, setSelectedListId] = useState('');
   const [favoriteMessage, setFavoriteMessage] = useState('');
   const [loadingFavoriteLists, setLoadingFavoriteLists] = useState(false);
   const [addingToFavorites, setAddingToFavorites] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
+
     if (!accessToken) {
-      return;
+      return () => {
+        cancelled = true;
+      };
     }
 
     async function loadGroups() {
@@ -30,12 +55,21 @@ function MovieCard({ movie }) {
 
         const result = await getMyGroups(accessToken);
 
-        setGroups(result);
+        if (!cancelled) {
+          setGroupsState({
+            token: accessToken,
+            data: Array.isArray(result) ? result : [],
+          });
+        }
       } catch (error) {
-        console.error(error);
-        setMessage('Failed to load groups');
+        if (!cancelled) {
+          console.error(error);
+          setMessage('Failed to load groups');
+        }
       } finally {
-        setLoadingGroups(false);
+        if (!cancelled) {
+          setLoadingGroups(false);
+        }
       }
     }
 
@@ -45,20 +79,37 @@ function MovieCard({ movie }) {
 
         const result = await getFavorites(accessToken);
 
-        setFavoriteLists(Array.isArray(result) ? result : []);
+        if (!cancelled) {
+          setFavoritesState({
+            token: accessToken,
+            data: Array.isArray(result) ? result : [],
+          });
+        }
       } catch (error) {
-        console.error(error);
-        setFavoriteMessage('Failed to load favorite lists');
+        if (!cancelled) {
+          console.error(error);
+          setFavoriteMessage('Failed to load favorite lists');
+        }
       } finally {
-        setLoadingFavoriteLists(false);
+        if (!cancelled) {
+          setLoadingFavoriteLists(false);
+        }
       }
     }
 
     loadGroups();
     loadFavoriteLists();
+
+    return () => {
+      cancelled = true;
+    };
   }, [accessToken]);
 
   const handleAddToGroup = async () => {
+    if (!accessToken) {
+      return;
+    }
+
     if (!selectedGroupId) {
       setMessage('Select a group first');
       return;
@@ -76,15 +127,21 @@ function MovieCard({ movie }) {
 
       setMessage('Movie added to group!');
     } catch (error) {
-      setMessage(error.message);
+      setMessage(error.message || 'Failed to add movie to group');
     } finally {
       setAdding(false);
     }
   };
 
   const handleAddToFavorites = async () => {
-    if (!selectedListId) {
-      setFavoriteMessage('Select a favorite list first');
+    if (!accessToken) {
+      return;
+    }
+
+    const favoriteList = favoriteLists[0];
+
+    if (!favoriteList) {
+      setFavoriteMessage('No favorites list found');
       return;
     }
 
@@ -92,23 +149,35 @@ function MovieCard({ movie }) {
       setAddingToFavorites(true);
       setFavoriteMessage('');
 
-      await addItemToList(selectedListId, movie.tmdbId, accessToken);
+      await addItemToList(
+        favoriteList.id,
+        movie.tmdbId,
+        accessToken
+      );
 
-      setFavoriteMessage('Movie added to favorite list!');
+      setFavoriteMessage('Movie added to favorites!');
     } catch (error) {
-      setFavoriteMessage(error.message);
+      setFavoriteMessage(
+        error.message || 'Failed to add movie to favorites'
+      );
     } finally {
       setAddingToFavorites(false);
     }
   };
 
+  const posterUrl =
+    movie.posterUrl ||
+    (movie.poster_path
+      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+      : null);
+
   return (
     <div className="movie-card">
       <div className="movie-card-poster">
-        {movie.posterUrl ? (
+        {posterUrl ? (
           <Link to={`/movies/${movie.tmdbId}`}>
             <img
-              src={movie.posterUrl}
+              src={posterUrl}
               alt={movie.title}
               className="movie-card-image"
             />
@@ -149,34 +218,17 @@ function MovieCard({ movie }) {
         {accessToken && (
           <div className="movie-card-actions">
             <div className="movie-card-action">
-              <select
-                className="form-select"
-                value={selectedListId}
-                onChange={(event) =>
-                  setSelectedListId(event.target.value)
-                }
-                disabled={loadingFavoriteLists || addingToFavorites}
-              >
-                <option value="">
-                  select a favorite list
-                </option>
-
-                {favoriteLists.map((list) => (
-                  <option key={list.id} value={list.id}>
-                    {list.name}
-                  </option>
-                ))}
-              </select>
-
               <button
                 type="button"
                 className="btn btn-primary"
                 onClick={handleAddToFavorites}
-                disabled={!selectedListId || addingToFavorites}
+                disabled={loadingFavoriteLists || addingToFavorites}
               >
-                {addingToFavorites
-                  ? 'adding...'
-                  : 'add to favorite list'}
+                {loadingFavoriteLists
+                  ? 'loading...'
+                  : addingToFavorites
+                    ? 'adding...'
+                    : 'add to favorites'}
               </button>
 
               {favoriteMessage && (
@@ -195,7 +247,7 @@ function MovieCard({ movie }) {
                 }
                 disabled={loadingGroups || adding}
               >
-                <option value="">select a group</option>
+                <option value="">choose group</option>
 
                 {groups.map((group) => (
                   <option key={group.id} value={group.id}>
@@ -223,7 +275,7 @@ function MovieCard({ movie }) {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 export default MovieCard;
