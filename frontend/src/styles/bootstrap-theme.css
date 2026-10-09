@@ -98,15 +98,19 @@ h3,
 /* Primary button */
 
 .btn-primary {
-  --bs-btn-bg: var(--app-button-orange);
-  --bs-btn-border-color: var(--app-button-orange);
+  --bs-btn-bg: var(--app-bg);
+  --bs-btn-border-color: var(--app-text);
   --bs-btn-color: var(--app-text);
 
-  --bs-btn-hover-bg: #a74720;
-  --bs-btn-hover-border-color: #a74720;
+  --bs-btn-hover-bg: var(--app-button-orange);
+  --bs-btn-hover-border-color: var(--app-text);
   --bs-btn-hover-color: var(--app-text);
 
-  --bs-btn-active-bg: #713016;
-  --bs-btn-active-border-color: #713016;
+  --bs-btn-active-bg: var(--app-button-orange);
+  --bs-btn-active-border-color: var(--app-text);
   --bs-btn-active-color: var(--app-text);
+
+  font-size: 1.25rem;
+  font-weight: 300;
+  border-radius: 50px;
 }

@@ -91,7 +91,7 @@ function FavoriteListPage() {
             className="btn btn-primary"
             onClick={handleTogglePublic}
           >
-            {favoriteList.isPublic ? 'Unshare List' : 'Share List'}
+            {favoriteList.isPublic ? 'unshare list' : 'share list'}
           </button>
         )}
       </div>

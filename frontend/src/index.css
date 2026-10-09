@@ -55,6 +55,7 @@ body {
 .favorite-list-title {
   margin-bottom: 40px;
   text-align: left;
+  font-weight: 300;
 }
 
 .home-movie-results,
@@ -67,7 +68,6 @@ body {
   align-items: stretch;
 }
 
-.shared-lists-error,
 .group-error,
 .favorite-list-error {
   color: var(--app-accent-orange);
