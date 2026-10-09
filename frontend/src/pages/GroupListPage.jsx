@@ -199,61 +199,60 @@ function GroupListPage() {
       </div>
 
       {accessToken && showCreateModal && (
-        <div className="create-modal-overlay">
-          <div
-            className="create-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="createGroupModalLabel"
-          >
-            <div className="create-modal-header">
-              <h2 id="createGroupModalLabel">Create a group</h2>
+        <div
+          className="modal d-block create-group-modal"
+          tabIndex="-1"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="createGroupModalLabel"
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content create-group-modal-content">
+              <div className="modal-header">
+                <h2 className="modal-title fs-4" id="createGroupModalLabel">
+                  create a group
+                </h2>
 
-              <button
-                type="button"
-                className="create-modal-close"
-                onClick={() => setShowCreateModal(false)}
-                aria-label="Close"
-              >
-                &times;
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateGroup}>
-              <div className="create-modal-body">
-                <label htmlFor="group-name" className="form-label">
-                  Group name
-                </label>
-
-                <input
-                  id="group-name"
-                  type="text"
-                  className="form-control"
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                  placeholder="Enter group name"
-                  autoFocus
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowCreateModal(false)}
+                  aria-label="Close"
                 />
               </div>
 
-              <div className="create-modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={() => setShowCreateModal(false)}
-                >
-                  Cancel
-                </button>
+              <form onSubmit={handleCreateGroup} className="create-group-form">
+                <div className="modal-body">
+                  <input
+                    id="group-name"
+                    type="text"
+                    className="form-control"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                    placeholder="group name..."
+                    autoFocus
+                  />
+                </div>
 
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={isCreating}
-                >
-                  {isCreating ? 'Creating...' : 'Create Group'}
-                </button>
-              </div>
-            </form>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setShowCreateModal(false)}
+                  >
+                    cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={isCreating}
+                  >
+                    {isCreating ? 'Creating...' : 'Create Group'}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}

@@ -60,9 +60,11 @@ function SharedListPage() {
             <div className="shared-list-row" key={list.id}>
               <div className="shared-list-header">
                 <div>
-                  <h2 className="shared-list-name">
-                    {list.name}
-                  </h2>
+                  <Link to={`/shared-lists/${list.id}`} className="shared-list-link">
+                    <h2 className="shared-list-name">
+                      {list.name}
+                    </h2>
+                  </Link>
 
                   {list.user?.username && (
                     <p className="shared-list-owner">

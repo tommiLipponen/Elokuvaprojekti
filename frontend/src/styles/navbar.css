@@ -1,0 +1,35 @@
+.navbar {
+    padding: 20px 30px;
+}
+
+.navbar .navbar-nav {
+    gap: 20px;
+}
+
+.navbar .nav-link {
+    padding: 10px 12px;
+}
+
+.navbar .navbar-title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--app-accent-orange);
+    text-decoration: none;
+}
+
+.navbar .navbar-title:hover,
+.navbar .navbar-title:focus,
+.navbar .navbar-title:visited,
+.navbar .navbar-title:active {
+    color: var(--app-accent-orange);
+    text-decoration: none;
+}
+
+.navbar .nav-link:hover {
+color: var(--app-accent-orange);
+}
+
+.navbar .nav-link:focus {
+color: inherit;
+}

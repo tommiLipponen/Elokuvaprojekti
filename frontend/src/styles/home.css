@@ -1,0 +1,36 @@
+.home-page {
+  padding: 20px 0;
+}
+
+.home-hero {
+  max-width: 1200px;
+  min-height: 45vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.home-search-form {
+  display: flex;
+  gap: 12px;
+}
+
+.home-search-input {
+  flex: 1;
+}
+
+.home-search-form .btn {
+  flex-shrink: 0;
+}
+
+.home-now-playing {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.home-find-more {
+  margin-top: 30px;
+  text-align: center;
+}

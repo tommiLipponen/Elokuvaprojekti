@@ -238,48 +238,6 @@ function GroupDetailPage() {
             {memberCount} members
           </p>
         </div>
-
-        {isMember && (
-          <div className="group-detail-actions">
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() =>
-                document
-                  .getElementById('group-movies')
-                  ?.scrollIntoView()
-              }
-            >
-              Movies
-            </button>
-
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() =>
-                document
-                  .getElementById('group-members')
-                  ?.scrollIntoView()
-              }
-            >
-              Members
-            </button>
-
-            {isOwner && (
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() =>
-                  document
-                    .getElementById('group-settings')
-                    ?.scrollIntoView()
-                }
-              >
-                Settings
-              </button>
-            )}
-          </div>
-        )}
       </div>
 
       {!isMember ? (
@@ -375,8 +333,6 @@ function GroupDetailPage() {
 
           {isOwner && (
             <section id="group-settings" className="group-section">
-              <h2>Settings</h2>
-
               {joinRequestsError && (
                 <p>{joinRequestsError}</p>
               )}
@@ -439,7 +395,7 @@ function GroupDetailPage() {
                   className="btn btn-danger"
                   onClick={handleDelete}
                 >
-                  Delete Group
+                  delete Group
                 </button>
               )}
             </section>

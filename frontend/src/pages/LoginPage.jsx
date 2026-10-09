@@ -30,34 +30,30 @@ function LoginPage() {
         <div className="col-12 col-sm-10 col-md-7 col-lg-5">
           <div className="login-card card">
             <div className="card-body p-4">
-              <h3 className="text-center mb-4">login</h3>
+              <h3 className="login-register-title">welcome</h3>
 
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label htmlFor="email" className="form-label">
-                    email
-                  </label>
-
+              <form onSubmit={handleSubmit} className="login-form">
+                <div className="mb-4">
                   <input
                     id="email"
                     type="email"
                     className="form-control"
+                    placeholder="email"
+                    aria-label="Email"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     required
                   />
                 </div>
 
-                <div className="mb-3">
-                  <label htmlFor="password" className="form-label">
-                    password
-                  </label>
-
+                <div className="mb-4">
                   <div className="input-group">
                     <input
                       id="password"
                       type={showPassword ? 'text' : 'password'}
                       className="form-control"
+                      placeholder="password"
+                      aria-label="Password"
                       value={password}
                       onChange={(event) => setPassword(event.target.value)}
                       required
@@ -65,7 +61,7 @@ function LoginPage() {
 
                     <button
                       type="button"
-                      className="btn btn-outline-secondary"
+                      className="btn password-toggle"
                       onClick={() => setShowPassword(!showPassword)}
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >

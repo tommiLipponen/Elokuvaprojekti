@@ -1,0 +1,35 @@
+.favorite-list {
+padding-bottom: 40px;
+border-bottom: 1px solid rgb(245 241 232 / 10%);
+}
+
+.favorite-list-settings {
+display: flex;
+justify-content: flex-end;
+gap: 10px;
+margin-bottom: 25px;
+}
+
+.favorite-movie {
+display: flex;
+flex-direction: column;
+}
+
+.favorite-remove-button {
+align-self: flex-start;
+margin-top: 12px;
+}
+
+.favorite-list-empty form {
+max-width: 400px;
+margin: 30px auto 0;
+}
+
+.favorite-list-empty label {
+display: block;
+margin-bottom: 8px;
+}
+
+.favorite-list-empty input {
+margin-bottom: 12px;
+}

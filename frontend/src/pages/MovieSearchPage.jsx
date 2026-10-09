@@ -45,7 +45,7 @@ function MovieSearchPage() {
             value={genre}
             onChange={(event) => setGenre(event.target.value)}
           >
-            <option value="">Genre</option>
+            <option value="">genre</option>
             {GENRES.map((genreOption) => (
               <option
                 key={genreOption}
