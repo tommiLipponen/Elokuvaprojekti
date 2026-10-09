@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth.js';
 import * as groupApi from '../services/groupApi.js';
 
 function GroupListPage() {
   const navigate = useNavigate();
-  const { accessToken } = useAuth();
+  const { user, accessToken } = useAuth();
 
   const [groups, setGroups] = useState([]);
   const [name, setName] = useState('');
@@ -14,6 +14,8 @@ function GroupListPage() {
   const [hasLoaded, setHasLoaded] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [myGroupIds, setMyGroupIds] = useState([]);
+  const [requestedGroupIds, setRequestedGroupIds] = useState([]);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -28,6 +30,7 @@ function GroupListPage() {
           setError(result.message);
         } else {
           setGroups(result);
+          setError('');
         }
 
         if (accessToken) {
@@ -36,6 +39,8 @@ function GroupListPage() {
           if (cancelled) return;
 
           setMyGroupIds(myGroups.map((group) => group.id));
+        } else {
+          setMyGroupIds([]);
         }
 
         setHasLoaded(true);
@@ -58,7 +63,7 @@ function GroupListPage() {
     event.preventDefault();
 
     if (!name.trim()) {
-      setError('Group name is required');
+      setError('Group name is required.');
       return;
     }
 
@@ -78,6 +83,7 @@ function GroupListPage() {
 
       setGroups((currentGroups) => [result, ...currentGroups]);
       setName('');
+      setShowCreateModal(false);
     } catch {
       setError('Failed to create group');
     } finally {
@@ -86,17 +92,18 @@ function GroupListPage() {
   };
 
   const handleJoinRequest = async (groupId) => {
+    if (requestedGroupIds.includes(groupId)) return;
     setError('');
 
     try {
-      const result = await groupApi.requestToJoinGroup(
-        groupId,
-        accessToken
-      );
+      const result = await groupApi.requestToJoinGroup(groupId, accessToken);
 
       if (result.message) {
         setError(result.message);
+        return;
       }
+
+      setRequestedGroupIds((ids) => [...ids, groupId]);
     } catch {
       setError('Failed to send join request');
     }
@@ -123,122 +130,130 @@ function GroupListPage() {
           <button
             type="button"
             className="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#createGroupModal"
+            onClick={() => {
+              setError('');
+              setShowCreateModal(true);
+            }}
           >
-            Create Group
+            create group
           </button>
         )}
       </div>
 
-      <div className="group-search">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Search groups..."
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-        />
-      </div>
-
       {error && <p className="group-error">{error}</p>}
 
-      {filteredGroups.length === 0 ? (
-        <p className="group-empty">No groups found.</p>
-      ) : (
-        <div className="group-list">
-          {filteredGroups.map((group) => {
-            const isMyGroup = myGroupIds.includes(group.id);
+      <input
+        type="text"
+        className="form-control group-search"
+        placeholder="Search groups..."
+        value={search}
+        onChange={(event) => setSearch(event.target.value)}
+      />
 
-            return (
-              <div className="group-row" key={group.id}>
-                <span className="group-name">{group.name}</span>
+      <div className="group-list">
+        {filteredGroups.map((group) => {
+          const isMyGroup =
+            myGroupIds.includes(group.id) || group.user?.id === user?.id;
+          const isRequested = requestedGroupIds.includes(group.id);
 
-                <span className="group-members">
-                  {group.members?.length ?? group.memberCount ?? 0} members
-                </span>
+          return (
+            <div className="group-row" key={group.id}>
+              <h2 className="group-name">
+                <Link
+                  to={`/groups/${group.id}`}
+                  className="group-title-link"
+                >
+                  {group.name}
+                </Link>
+              </h2>
 
-                {accessToken && isMyGroup ? (
-                  <button
-                    type="button"
-                    className="btn btn-primary group-button"
-                    onClick={() => navigate(`/groups/${group.id}`)}
-                  >
-                    Open
-                  </button>
-                ) : accessToken ? (
-                  <button
-                    type="button"
-                    className="btn btn-primary group-button"
-                    onClick={() => handleJoinRequest(group.id)}
-                  >
-                    Request to join
-                  </button>
-                ) : null}
-              </div>
-            );
-          })}
-        </div>
-      )}
+              <span className="group-members">
+                {group.members?.length ?? group.memberCount ?? 0} members
+              </span>
 
-      {accessToken && (
-        <div
-          className="modal fade"
-          id="createGroupModal"
-          tabIndex="-1"
-          aria-labelledby="createGroupModalLabel"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h2 className="modal-title" id="createGroupModalLabel">
-                  Create a group
-                </h2>
-
+              {accessToken && isMyGroup ? (
                 <button
                   type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
+                  className="btn btn-primary group-button"
+                  onClick={() => navigate(`/groups/${group.id}`)}
+                >
+                  open group
+                </button>
+              ) : accessToken ? (
+                <button
+                  type="button"
+                  className="btn btn-primary group-button"
+                  onClick={() => handleJoinRequest(group.id)}
+                  disabled={isRequested}
+                >
+                  {isRequested ? 'Requested' : 'Request to join'}
+                </button>
+              ) : null}
+            </div>
+          );
+        })}
+
+        {filteredGroups.length === 0 && (
+          <p className="group-empty">No groups found.</p>
+        )}
+      </div>
+
+      {accessToken && showCreateModal && (
+        <div className="create-modal-overlay">
+          <div
+            className="create-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="createGroupModalLabel"
+          >
+            <div className="create-modal-header">
+              <h2 id="createGroupModalLabel">Create a group</h2>
+
+              <button
+                type="button"
+                className="create-modal-close"
+                onClick={() => setShowCreateModal(false)}
+                aria-label="Close"
+              >
+                &times;
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateGroup}>
+              <div className="create-modal-body">
+                <label htmlFor="group-name" className="form-label">
+                  Group name
+                </label>
+
+                <input
+                  id="group-name"
+                  type="text"
+                  className="form-control"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  placeholder="Enter group name"
+                  autoFocus
                 />
               </div>
 
-              <form onSubmit={handleCreateGroup}>
-                <div className="modal-body">
-                  <label htmlFor="group-name" className="form-label">
-                    Group name
-                  </label>
+              <div className="create-modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowCreateModal(false)}
+                >
+                  Cancel
+                </button>
 
-                  <input
-                    id="group-name"
-                    type="text"
-                    className="form-control"
-                    value={name}
-                    onChange={(event) => setName(event.target.value)}
-                    placeholder="Enter group name"
-                  />
-                </div>
-
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
-                    Cancel
-                  </button>
-
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    disabled={isCreating}
-                  >
-                    {isCreating ? 'Creating...' : 'Create Group'}
-                  </button>
-                </div>
-              </form>
-            </div>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={isCreating}
+                >
+                  {isCreating ? 'Creating...' : 'Create Group'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

@@ -1,8 +1,10 @@
 import { useAuth } from '../context/useAuth.js';
+import { useNavigate } from 'react-router-dom';
 import { deleteAccount } from '../services/userApi.js';
 
 function UserProfilePage() {
   const { accessToken, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleDeleteAccount = async () => {
     const confirmed = window.confirm(
@@ -24,6 +26,7 @@ function UserProfilePage() {
     try {
       await deleteAccount(accessToken);
       await logout();
+      navigate('/');
     } catch (error) {
       console.error(error);
       window.alert('Failed to delete account.');
@@ -48,24 +51,34 @@ function UserProfilePage() {
         <hr />
 
         <div className="profile-actions">
-          <button type="button" className="btn btn-primary">
-            Favorite List
-          </button>
-
-          <button type="button" className="btn btn-primary">
-            Groups
-          </button>
-
-          <button type="button" className="btn btn-primary">
-            Settings
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => navigate('/favorites')}
+          >
+            favorites
           </button>
 
           <button
             type="button"
             className="btn btn-primary"
-            onClick={logout}
+            onClick={() => navigate('/groups')}
           >
-            Log out
+            groups
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={async () => {
+              try {
+                await logout();
+              } finally {
+                navigate('/');
+              }
+            }}
+          >
+            log out
           </button>
         </div>
 
