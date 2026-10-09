@@ -142,13 +142,24 @@ function GroupListPage() {
 
       {error && <p className="group-error">{error}</p>}
 
-      <input
-        type="text"
-        className="form-control group-search"
-        placeholder="Search groups..."
-        value={search}
-        onChange={(event) => setSearch(event.target.value)}
-      />
+
+      <form
+        className="group-search"
+        onSubmit={handleSearch}
+      >
+        <input
+          type="text"
+          className="group-search-input"
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+          placeholder="search groups..."
+        />
+
+        <button type="submit" className="btn btn-primary group-search-button">
+          search
+        </button>
+      </form>
+
 
       <div className="group-list">
         {filteredGroups.map((group) => {
@@ -158,18 +169,20 @@ function GroupListPage() {
 
           return (
             <div className="group-row" key={group.id}>
-              <h2 className="group-name">
-                <Link
-                  to={`/groups/${group.id}`}
-                  className="group-title-link"
-                >
-                  {group.name}
-                </Link>
-              </h2>
+              <div className="group-info">
+                <h2 className="group-name">
+                  <Link
+                    to={`/groups/${group.id}`}
+                    className="group-title-link"
+                  >
+                    {group.name}
+                  </Link>
+                </h2>
 
-              <span className="group-members">
-                {group.members?.length ?? group.memberCount ?? 0} members
-              </span>
+                <span className="group-members">
+                  {group.members?.length ?? group.memberCount ?? 0} members
+                </span>
+              </div>
 
               {accessToken && isMyGroup ? (
                 <button
@@ -182,11 +195,11 @@ function GroupListPage() {
               ) : accessToken ? (
                 <button
                   type="button"
-                  className="btn btn-primary group-button"
+                  className={`btn group-button ${isRequested ? 'btn-requested' : 'btn-primary'}`}
                   onClick={() => handleJoinRequest(group.id)}
                   disabled={isRequested}
                 >
-                  {isRequested ? 'Requested' : 'Request to join'}
+                  {isRequested ? 'requested' : 'request to join'}
                 </button>
               ) : null}
             </div>
@@ -229,26 +242,27 @@ function GroupListPage() {
                     className="form-control"
                     value={name}
                     onChange={(event) => setName(event.target.value)}
-                    placeholder="group name..."
+                    placeholder="group name"
                     autoFocus
                   />
                 </div>
 
                 <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    onClick={() => setShowCreateModal(false)}
-                  >
-                    cancel
-                  </button>
 
                   <button
                     type="submit"
                     className="btn btn-primary"
                     disabled={isCreating}
                   >
-                    {isCreating ? 'Creating...' : 'Create Group'}
+                    {isCreating ? 'Creating...' : 'create Group'}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => setShowCreateModal(false)}
+                  >
+                    cancel
                   </button>
                 </div>
               </form>

@@ -1,18 +1,18 @@
-.shared-lists-card {
-  overflow: hidden;
-  background: linear-gradient(0deg, var(--app-surface), var(--app-bg));
-  border: 1px solid rgb(245 241 232 / 10%);
-  border-radius: 12px;
-  box-shadow: 0 8px 10px -8px rgb(245 241 232 / 25%);
+.shared-lists-title {
+  margin: 0 0 30px;
+  font-size: 1.8rem;
+  font-weight: 300;
 }
 
 .shared-list-row {
-  padding: 22px 24px;
+  padding: 0 0 40px;
+  margin-bottom: 30px;
   border-bottom: 1px solid rgb(245 241 232 / 10%);
 }
 
 .shared-list-row:last-child {
   border-bottom: none;
+  margin-bottom: 0;
 }
 
 .shared-list-header {
@@ -24,8 +24,8 @@
 
 .shared-list-name {
   margin: 0;
-  font-size: 1.4rem;
-  font-weight: 300;
+  font-size: 1.2rem;
+  font-weight: 500;
 }
 
 .shared-list-link {
@@ -39,11 +39,13 @@
   text-decoration: none;
 }
 
+
 .shared-list-owner {
   margin: 4px 0 0;
   color: var(--app-text);
   opacity: 0.7;
 }
+
 
 .shared-list-button {
   flex-shrink: 0;
@@ -59,19 +61,4 @@
 .group-error,
 .favorite-list-error {
   color: var(--app-accent-orange);
-}
-
-@media (max-width: 576px) {
-  .shared-list-row {
-    padding: 16px;
-  }
-
-  .shared-list-header {
-    gap: 12px;
-  }
-
-  .shared-list-name {
-    font-size: 1.1rem;
-    overflow-wrap: anywhere;
-  }
 }
