@@ -57,20 +57,20 @@ function SharedListPage() {
       {!loading && !error && lists.length > 0 && (
         <div>
           {lists.map((list) => (
-            <div className="shared-list-row" key={list.id}>
-              <div className="shared-list-header">
+            <div className="shared-lists-row" key={list.id}>
+              <div className="shared-lists-header">
                 <div>
                   <Link
                     to={`/shared/${list.id}`}
-                    className="shared-list-link"
+                    className="shared-lists-link"
                   >
-                    <h2 className="shared-list-name">
+                    <h2 className="shared-lists-name">
                       {list.name}
                     </h2>
                   </Link>
 
                   {list.user?.username && (
-                    <p className="shared-list-owner">
+                    <p className="shared-lists-owner">
                       by {list.user.username}
                     </p>
                   )}
@@ -78,7 +78,7 @@ function SharedListPage() {
 
                 <Link
                   to={`/shared/${list.id}`}
-                  className="btn btn-primary shared-list-button"
+                  className="btn btn-primary shared-lists-button"
                 >
                   view
                 </Link>

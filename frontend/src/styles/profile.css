@@ -1,5 +1,9 @@
 .profile-card {
-  padding: 40px;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 32px;
+  box-sizing: border-box;
 }
 
 .profile-title {
@@ -46,9 +50,16 @@
   gap: 12px;
 }
 
+.profile-delete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
 .profile-actions .btn,
 .profile-delete .btn {
-  width: fit-content;
+  width: 100px;
   padding: 10px 24px;
 }
 

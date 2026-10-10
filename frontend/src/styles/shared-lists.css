@@ -1,46 +1,46 @@
 
-.shared-list-row {
+.shared-lists-row {
   min-height: auto;
   padding: 0 0 40px;
   border-bottom: 1px solid rgb(245 241 232 / 10%);
 }
 
-.shared-list-row:last-child {
+.shared-lists-row:last-child {
   border-bottom: none;
   margin-bottom: 0;
 }
 
-.shared-list-header {
+.shared-lists-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
 }
 
-.shared-list-name {
+.shared-lists-name {
   margin: 0;
   font-size: 1.2rem;
   font-weight: 500;
 }
 
-.shared-list-link {
+.shared-lists-link {
   color: var(--app-text);
   text-decoration: none;
 }
 
-.shared-list-link:hover,
-.shared-list-link:focus-visible {
+.shared-lists-link:hover,
+.shared-lists-link:focus-visible {
   color: var(--app-accent-orange);
   text-decoration: none;
 }
 
-.shared-list-owner {
+.shared-lists-owner {
   margin: 4px 0 0;
   color: var(--app-text);
   opacity: 0.7;
 }
 
-.shared-list-button {
+.shared-lists-button {
   flex-shrink: 0;
   white-space: nowrap;
 }

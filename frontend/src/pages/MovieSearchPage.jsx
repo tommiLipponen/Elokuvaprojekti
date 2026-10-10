@@ -77,10 +77,6 @@ function MovieSearchPage() {
         <>
         <hr className="movie-search-divider" />
 
-      <h2 className="movie-search-results-title">
-        search results
-      </h2>
-
       {movies.length === 0 && (
         <p className="movie-search-empty">
           No movies found.
