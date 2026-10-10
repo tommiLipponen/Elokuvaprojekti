@@ -50,9 +50,6 @@ function MovieCard({ movie }) {
     let cancelled = false;
 
     if (!accessToken) {
-      setSelectedGroupId('');
-      setSelectedFavoriteListId('');
-
       return () => {
         cancelled = true;
       };
