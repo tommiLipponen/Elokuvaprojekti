@@ -2,6 +2,7 @@ const {
     createGroup,
     getGroups,
     getGroupById,
+    hasPendingJoinRequest,
     deleteGroup,
     addMovieToGroup,
     getMyGroups,
@@ -60,6 +61,23 @@ const getById = async (req, res) => {
         console.error(error);
 
         return res.status(500).json({ message: 'Failed to get group' });
+    }
+};
+
+const getJoinRequestStatus = async (req, res) => {
+    try {
+        const isPending = await hasPendingJoinRequest(
+            req.params.id,
+            req.user.userId
+        );
+
+        return res.status(200).json({ isPending });
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            message: 'Failed to get join request status',
+        });
     }
 };
 
@@ -156,6 +174,7 @@ module.exports = {
     list,
     listMyGroups,
     getById,
+    getJoinRequestStatus,
     remove,
     addMovie,
 };

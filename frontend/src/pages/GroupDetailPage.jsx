@@ -19,6 +19,7 @@ function GroupDetailPage() {
   const [joinMessage, setJoinMessage] = useState('');
   const [joinRequests, setJoinRequests] = useState([]);
   const [joinRequestsError, setJoinRequestsError] = useState('');
+  const [isRequested, setIsRequested] = useState(false);
   const [membersError, setMembersError] = useState('');
 
   // useEffect → runs code when the component loads or when specified values change,
@@ -41,8 +42,17 @@ function GroupDetailPage() {
         if (result.message) {
           setError(result.message);
         } else {
-          // saves the group data to the state
+          // Saves the group data to the state
           setGroup(result);
+
+          // Checks whether the current user already has a pending join request
+          setIsRequested(
+            result.memberships?.some(
+              (membership) =>
+                membership.userId === user?.id &&
+                membership.status === 'PENDING'
+            ) ?? false
+          );
         }
 
         // marks that the loading has finished
@@ -63,8 +73,8 @@ function GroupDetailPage() {
     return () => {
       cancelled = true;
     };
-  }, [id, accessToken]);
-
+  }, [id, accessToken, user?.id]);
+  
   // Check if the currently logged-in user is the owner of the group
   const isOwner = group?.ownerId === user?.id;
 
@@ -128,6 +138,7 @@ function GroupDetailPage() {
     navigate('/groups');
   };
 
+
   const handleJoinRequest = async () => {
     setJoinError('');
     setJoinMessage('');
@@ -142,8 +153,10 @@ function GroupDetailPage() {
       return;
     }
 
+    setIsRequested(true);
     setJoinMessage('Join request sent!');
   };
+
 
   const handleJoinRequestUpdate = async (userId, status) => {
     setJoinRequestsError('');
@@ -248,10 +261,11 @@ function GroupDetailPage() {
             <>
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn group-button btn-primary"
                 onClick={handleJoinRequest}
+                disabled={isRequested}
               >
-                Request to Join
+                {isRequested ? 'requested' : 'request to join'}
               </button>
 
               {joinMessage && <p>{joinMessage}</p>}
@@ -306,12 +320,12 @@ function GroupDetailPage() {
                     membership.userId !== group.ownerId && (
                       <button
                         type="button"
-                        className="btn btn-secondary"
+                        className="btn btn-primary"
                         onClick={() =>
                           handleRemoveMember(membership.userId)
                         }
                       >
-                        Remove
+                        remove
                       </button>
                     )}
                 </div>
@@ -323,10 +337,10 @@ function GroupDetailPage() {
             {!isOwner && (
               <button
                 type="button"
-                className="btn btn-secondary group-leave-button"
+                className="btn btn-primary group-leave-button"
                 onClick={handleLeaveGroup}
               >
-                Leave Group
+                leave group
               </button>
             )}
           </section>
@@ -366,12 +380,12 @@ function GroupDetailPage() {
                             )
                           }
                         >
-                          Approve
+                          approve
                         </button>
 
                         <button
                           type="button"
-                          className="btn btn-secondary"
+                          className="btn btn-primary"
                           onClick={() =>
                             handleJoinRequestUpdate(
                               request.userId,
@@ -379,7 +393,7 @@ function GroupDetailPage() {
                             )
                           }
                         >
-                          Reject
+                          reject
                         </button>
                       </div>
                     </div>

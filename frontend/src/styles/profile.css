@@ -30,10 +30,7 @@
 }
 
 .profile-email {
-  display: flex;
-  justify-content: space-between;
   text-align: center;
-  gap: 20px;
   margin-bottom: 30px;
 }
 
@@ -45,12 +42,14 @@
 .profile-actions {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 12px;
 }
 
 .profile-actions .btn,
 .profile-delete .btn {
-  width: 100%;
+  width: fit-content;
+  padding: 10px 24px;
 }
 
 .profile-delete h2 {
