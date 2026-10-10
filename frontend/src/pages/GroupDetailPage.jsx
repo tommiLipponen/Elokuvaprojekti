@@ -351,7 +351,7 @@ function GroupDetailPage() {
                 <p>{joinRequestsError}</p>
               )}
 
-              <h3>Join Requests</h3>
+              <h2>Join Requests</h2>
 
               {/* If there are no pending join requests, display a message.
                   Otherwise, display all pending join requests as a list. */}

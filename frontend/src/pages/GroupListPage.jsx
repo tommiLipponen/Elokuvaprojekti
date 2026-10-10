@@ -256,14 +256,7 @@ function GroupListPage() {
                   >
                     {isCreating ? 'Creating...' : 'create Group'}
                   </button>
-
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={() => setShowCreateModal(false)}
-                  >
-                    cancel
-                  </button>
+                  
                 </div>
               </form>
             </div>
