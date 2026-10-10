@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../context/useAuth.js';
 import { useFavorites } from '../hooks/useFavorites.js';
 import MovieCard from '../components/MovieCard.jsx';
-import './FavoriteListPage.css';
 
 function FavoriteListPage() {
   const { user } = useAuth() ?? {};
