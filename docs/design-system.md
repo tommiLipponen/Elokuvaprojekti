@@ -40,3 +40,15 @@ flowchart LR
 - **Accent 1:** Cousine Bold — 24px — 10px letter spacing
 - **Accent 2:** Cousine Bold — 16px — 10px letter spacing
 
+## Responsive breakpoints
+Use Bootstrap 5's default breakpoints for responsive styles so layout changes stay consistent across the application.
+| Breakpoint   | Minimum width | Viewport range |
+|--------------|--------------:|----------------|
+| xs (default) |           0px | < 576px        |
+| sm           |         576px | 576px–767px    |
+| md           |         768px | 768px–991px    |
+| lg           |         992px | 992px–1199px   |
+| xl           |        1200px | 1200px–1399px  |
+| xxl          |        1400px | >= 1400px      |
+
+Bootstrap uses a mobile-first approach: base styles apply to all screen sizes, and breakpoint-specific styles apply from their minimum width upward.
