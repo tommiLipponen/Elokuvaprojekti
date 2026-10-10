@@ -12,7 +12,7 @@
   min-width: 0;
   box-sizing: border-box;
   color: var(--app-text);
-  border: 1px solid #2fdad7;
+  border: 1px solid var(--app-accent-turquoise);
   background-color: rgb(245 241 232 / 10%);
 }
 

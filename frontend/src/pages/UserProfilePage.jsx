@@ -84,15 +84,13 @@ function UserProfilePage() {
 
         <hr />
 
-        <section className="profile-delete">
-          <h2>Delete Account</h2>
-
+        <section className="profile-delete">       
           <button
             type="button"
             className="btn btn-danger"
             onClick={handleDeleteAccount}
           >
-            Delete Account
+            delete account
           </button>
         </section>
       </div>

@@ -247,12 +247,13 @@ function GroupDetailPage() {
           {accessToken && (
             <>
               <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleJoinRequest}
-              >
-                Request to Join
-              </button>
+                  type="button"
+                  className="btn group-button btn-primary"
+                  onClick={() => handleJoinRequest(group.id)}
+                  disabled={isRequested}
+                >
+                  {isRequested ? 'requested' : 'request to join'}
+                </button>
 
               {joinMessage && <p>{joinMessage}</p>}
               {joinError && <p>{joinError}</p>}
@@ -306,12 +307,12 @@ function GroupDetailPage() {
                     membership.userId !== group.ownerId && (
                       <button
                         type="button"
-                        className="btn btn-secondary"
+                        className="btn btn-primary"
                         onClick={() =>
                           handleRemoveMember(membership.userId)
                         }
                       >
-                        Remove
+                        remove
                       </button>
                     )}
                 </div>
@@ -323,10 +324,10 @@ function GroupDetailPage() {
             {!isOwner && (
               <button
                 type="button"
-                className="btn btn-secondary group-leave-button"
+                className="btn btn-primary group-leave-button"
                 onClick={handleLeaveGroup}
               >
-                Leave Group
+                leave group
               </button>
             )}
           </section>
@@ -366,12 +367,12 @@ function GroupDetailPage() {
                             )
                           }
                         >
-                          Approve
+                          approve
                         </button>
 
                         <button
                           type="button"
-                          className="btn btn-secondary"
+                          className="btn btn-primary"
                           onClick={() =>
                             handleJoinRequestUpdate(
                               request.userId,
@@ -379,7 +380,7 @@ function GroupDetailPage() {
                             )
                           }
                         >
-                          Reject
+                          reject
                         </button>
                       </div>
                     </div>

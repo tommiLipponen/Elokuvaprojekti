@@ -127,8 +127,8 @@ function GroupListPage() {
 
   return (
     <main className="container py-5 group-page">
-      <div className="group-header">
-        <h1 className="group-title">Groups</h1>
+      <div className="groups-page-header">
+        <h1 className="group-title">groups</h1>
 
         {accessToken && (
           <button
@@ -158,10 +158,6 @@ function GroupListPage() {
           onChange={(event) => setSearch(event.target.value)}
           placeholder="search groups..."
         />
-
-        <button type="submit" className="btn btn-primary group-search-button">
-          search
-        </button>
       </form>
 
 
@@ -199,7 +195,7 @@ function GroupListPage() {
               ) : accessToken ? (
                 <button
                   type="button"
-                  className={`btn group-button ${isRequested ? 'btn-requested' : 'btn-primary'}`}
+                  className="btn group-button btn-primary"
                   onClick={() => handleJoinRequest(group.id)}
                   disabled={isRequested}
                 >
