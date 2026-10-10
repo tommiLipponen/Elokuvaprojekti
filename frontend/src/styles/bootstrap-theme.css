@@ -110,7 +110,11 @@ h3,
   --bs-btn-active-border-color: var(--app-text);
   --bs-btn-active-color: var(--app-text);
 
-  font-size: 1.25rem;
+}
+
+.btn-primary,
+.btn-danger {
+  font-size: 1rem;
   font-weight: 300;
   border-radius: 50px;
 }
