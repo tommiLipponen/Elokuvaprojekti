@@ -82,7 +82,7 @@ function HomePage() {
           now in Finnish cinemas
         </h2>
 
-        <div className="home-movie-results">
+        <div className="movie-results">
           {nowPlayingMovies.map((movie) => (
             <MovieCard
               key={movie.tmdbId}

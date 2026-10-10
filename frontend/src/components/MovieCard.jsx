@@ -24,7 +24,9 @@ function MovieCard({ movie }) {
   });
 
   const groups =
-    groupsState.token === accessToken ? groupsState.data : [];
+    groupsState.token === accessToken
+      ? groupsState.data
+      : [];
 
   const favoriteLists =
     favoritesState.token === accessToken
@@ -32,12 +34,16 @@ function MovieCard({ movie }) {
       : [];
 
   const [selectedGroupId, setSelectedGroupId] = useState('');
+  const [selectedFavoriteListId, setSelectedFavoriteListId] =
+    useState('');
+
   const [message, setMessage] = useState('');
   const [loadingGroups, setLoadingGroups] = useState(false);
   const [adding, setAdding] = useState(false);
 
   const [favoriteMessage, setFavoriteMessage] = useState('');
-  const [loadingFavoriteLists, setLoadingFavoriteLists] = useState(false);
+  const [loadingFavoriteLists, setLoadingFavoriteLists] =
+    useState(false);
   const [addingToFavorites, setAddingToFavorites] = useState(false);
 
   useEffect(() => {
@@ -138,10 +144,8 @@ function MovieCard({ movie }) {
       return;
     }
 
-    const favoriteList = favoriteLists[0];
-
-    if (!favoriteList) {
-      setFavoriteMessage('No favorites list found');
+    if (!selectedFavoriteListId) {
+      setFavoriteMessage('Select a favorite list first');
       return;
     }
 
@@ -150,7 +154,7 @@ function MovieCard({ movie }) {
       setFavoriteMessage('');
 
       await addItemToList(
-        favoriteList.id,
+        selectedFavoriteListId,
         movie.tmdbId,
         accessToken
       );
@@ -218,28 +222,76 @@ function MovieCard({ movie }) {
         {accessToken && (
           <div className="movie-card-actions">
             <div className="movie-card-action">
+              <label
+                htmlFor={`favorite-list-${movie.tmdbId}`}
+                className="form-label"
+              >
+                Favorite list
+              </label>
+
+              <select
+                id={`favorite-list-${movie.tmdbId}`}
+                className="form-select"
+                value={selectedFavoriteListId}
+                onChange={(event) =>
+                  setSelectedFavoriteListId(event.target.value)
+                }
+                disabled={
+                  loadingFavoriteLists || addingToFavorites
+                }
+              >
+                <option value="">
+                  {loadingFavoriteLists
+                    ? 'Loading favorite lists...'
+                    : 'Choose favorite list'}
+                </option>
+
+                {favoriteLists.map((list) => (
+                  <option key={list.id} value={list.id}>
+                    {list.name}
+                  </option>
+                ))}
+              </select>
+
+              {!loadingFavoriteLists &&
+                favoriteLists.length === 0 && (
+                  <p className="movie-card-message">
+                    No favorite lists found. Create a list first.
+                  </p>
+                )}
+
               <button
                 type="button"
                 className="btn btn-primary"
                 onClick={handleAddToFavorites}
-                disabled={loadingFavoriteLists || addingToFavorites}
+                disabled={
+                  !selectedFavoriteListId ||
+                  loadingFavoriteLists ||
+                  addingToFavorites
+                }
               >
-                {loadingFavoriteLists
-                  ? 'loading...'
-                  : addingToFavorites
-                    ? 'adding...'
-                    : 'add to favorites'}
+                {addingToFavorites
+                  ? 'Adding...'
+                  : 'Add to favorites'}
               </button>
 
               {favoriteMessage && (
-                <p className="movie-card-message">
+                <p className="movie-card-message" role="status">
                   {favoriteMessage}
                 </p>
               )}
             </div>
 
             <div className="movie-card-action">
+              <label
+                htmlFor={`group-${movie.tmdbId}`}
+                className="form-label"
+              >
+                Group
+              </label>
+
               <select
+                id={`group-${movie.tmdbId}`}
                 className="form-select"
                 value={selectedGroupId}
                 onChange={(event) =>
@@ -247,7 +299,11 @@ function MovieCard({ movie }) {
                 }
                 disabled={loadingGroups || adding}
               >
-                <option value="">choose group</option>
+                <option value="">
+                  {loadingGroups
+                    ? 'Loading groups...'
+                    : 'Choose group'}
+                </option>
 
                 {groups.map((group) => (
                   <option key={group.id} value={group.id}>
@@ -256,17 +312,25 @@ function MovieCard({ movie }) {
                 ))}
               </select>
 
+              {!loadingGroups && groups.length === 0 && (
+                <p className="movie-card-message">
+                  No groups found.
+                </p>
+              )}
+
               <button
                 type="button"
                 className="btn btn-primary"
                 onClick={handleAddToGroup}
-                disabled={!selectedGroupId || adding}
+                disabled={
+                  !selectedGroupId || loadingGroups || adding
+                }
               >
-                {adding ? 'adding...' : 'add to group'}
+                {adding ? 'Adding...' : 'Add to group'}
               </button>
 
               {message && (
-                <p className="movie-card-message">
+                <p className="movie-card-message" role="status">
                   {message}
                 </p>
               )}

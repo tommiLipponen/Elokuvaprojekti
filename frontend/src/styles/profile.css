@@ -59,7 +59,7 @@
 
 .profile-actions .btn,
 .profile-delete .btn {
-  width: 100px;
+  width: fit-content;
   padding: 10px 24px;
 }
 

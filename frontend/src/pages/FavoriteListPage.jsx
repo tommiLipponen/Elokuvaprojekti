@@ -5,6 +5,7 @@ import MovieCard from '../components/MovieCard.jsx';
 
 function FavoriteListPage() {
   const { user } = useAuth() ?? {};
+
   const {
     lists,
     loading,
@@ -12,6 +13,7 @@ function FavoriteListPage() {
     loadLists,
     addList,
     removeMovie,
+    removeList,
     updateListVisibility,
   } = useFavorites();
 
@@ -24,8 +26,6 @@ function FavoriteListPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
-
-  const favoriteList = lists[0];
 
   const handleCreateList = async (event) => {
     event.preventDefault();
@@ -46,24 +46,35 @@ function FavoriteListPage() {
     }
   };
 
-  const handleRemoveMovie = async (movieId) => {
+  const handleRemoveMovie = async (listId, movieId) => {
+    setFormError('');
+
     try {
-      await removeMovie(favoriteList.id, movieId);
+      await removeMovie(listId, movieId);
     } catch (err) {
       setFormError(err.message || 'Failed to remove movie');
     }
   };
 
-  const handleTogglePublic = async () => {
-    if (!favoriteList) {
+  const handleDeleteList = async (listId) => {
+    if (!window.confirm('Delete this favorite list?')) {
       return;
     }
 
+    setFormError('');
+
     try {
-      await updateListVisibility(
-        favoriteList.id,
-        !favoriteList.isPublic
-      );
+      await removeList(listId);
+    } catch (err) {
+      setFormError(err.message || 'Failed to delete favorite list');
+    }
+  };
+
+  const handleTogglePublic = async (list) => {
+    setFormError('');
+
+    try {
+      await updateListVisibility(list.id, !list.isPublic);
     } catch (err) {
       setFormError(err.message || 'Failed to update list visibility');
     }
@@ -72,46 +83,45 @@ function FavoriteListPage() {
   if (!user) {
     return (
       <main className="container py-5 favorite-list-page">
-        <h1 className="favorite-list-title">Favorite Lists</h1>
-        <p>Log in to create and manage your favorite lists.</p>
+        <h1 className="favorite-list-title">favorite lists</h1>
+
+        <p className="text-muted">
+          Log in to create and manage your favorite lists.
+        </p>
       </main>
     );
   }
 
   return (
     <main className="container py-5 favorite-list-page">
-      <div className="favorite-list-header">
+      <header className="favorite-list-header">
         <h1 className="favorite-list-title">
-          {user.username}&apos;s Favorites
+          {user.username
+            ? `${user.username}'s Favorite Lists`
+            : 'Favorite Lists'}
         </h1>
-
-        {favoriteList && (
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={handleTogglePublic}
-          >
-            {favoriteList.isPublic ? 'unshare list' : 'share list'}
-          </button>
-        )}
-      </div>
+      </header>
 
       {formError && (
-        <p className="favorite-list-error">{formError}</p>
+        <p className="favorite-list-error" role="alert">
+          {formError}
+        </p>
       )}
 
       {error && (
-        <p className="favorite-list-error">{error}</p>
+        <p className="favorite-list-error" role="alert">
+          {error}
+        </p>
       )}
 
-      {loading && <p>Loading...</p>}
+      <section className="favorite-list-create mb-5">
+        <h2 className="h4 mb-3">Create a new list</h2>
 
-      {!loading && !favoriteList && (
-        <section className="favorite-list-empty">
-          <p>You don&apos;t have a favorite list yet.</p>
-
-          <form onSubmit={handleCreateList}>
-            <label htmlFor="listName">New list name</label>
+        <form onSubmit={handleCreateList}>
+          <div className="mb-3">
+            <label htmlFor="listName" className="form-label">
+              New list name
+            </label>
 
             <input
               id="listName"
@@ -119,52 +129,99 @@ function FavoriteListPage() {
               className="form-control"
               value={newListName}
               onChange={(event) => setNewListName(event.target.value)}
+              placeholder="Enter list name"
             />
+          </div>
 
-            <button
-              type="submit"
-              className="btn btn-primary"
-            >
-              Create list
-            </button>
-          </form>
+          <button type="submit" className="btn btn-primary">
+            create list
+          </button>
+        </form>
+      </section>
+
+      {loading && (
+        <p className="text-muted" role="status">
+          Loading favorite lists...
+        </p>
+      )}
+
+      {!loading && lists.length === 0 && (
+        <section className="favorite-list-empty">
+          <p>You don't have any favorite lists yet.</p>
         </section>
       )}
 
-      {!loading && favoriteList && (
-        <section className="favorite-list">
-          {!favoriteList.items ||
-          favoriteList.items.length === 0 ? (
-            <p className="favorite-list-empty">
-              No movies in your favorites yet.
-            </p>
-          ) : (
-            <div className="favorite-movie-grid">
-              {favoriteList.items.map((item) => (
-                <div
-                  className="favorite-movie"
-                  key={item.movieId}
-                >
-                  {item.movie ? (
-                    <MovieCard movie={item.movie} />
-                  ) : (
-                    <p>{item.movieId}</p>
-                  )}
+      {!loading && lists.length > 0 && (
+        <div className="favorite-lists">
+          {lists.map((list) => (
+            <section className="favorite-list" key={list.id}>
+              <div className="favorite-list-header">
+                <h2 className="favorite-list-title">
+                  {list.name}
+                </h2>
+
+                <div className="favorite-list-settings">
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary"
+                    onClick={() => handleTogglePublic(list)}
+                    disabled={loading}
+                  >
+                    {list.isPublic ? 'Make private' : 'Make public'}
+                  </button>
 
                   <button
                     type="button"
-                    className="btn btn-secondary favorite-remove-button"
-                    onClick={() =>
-                      handleRemoveMovie(item.movieId)
-                    }
+                    className="btn btn-outline-danger"
+                    onClick={() => handleDeleteList(list.id)}
+                    disabled={loading}
                   >
-                    Remove
+                    delete list
                   </button>
                 </div>
-              ))}
-            </div>
-          )}
-        </section>
+              </div>
+
+              <p className="text-muted small">
+                Visibility:{' '}
+                <span className="fw-semibold">
+                  {list.isPublic ? 'Public' : 'Private'}
+                </span>
+              </p>
+
+              {!list.items || list.items.length === 0 ? (
+                <p className="favorite-list-empty">
+                  No movies in this list yet.
+                </p>
+              ) : (
+                <div className="favorite-movie-grid">
+                  {list.items.map((item) => (
+                    <div
+                      className="favorite-movie"
+                      key={item.movieId}
+                    >
+                      {item.movie ? (
+                        <MovieCard movie={item.movie} />
+                      ) : (
+                        <p>Movie ID: {item.movieId}</p>
+                      )}
+
+                      <button
+                        type="button"
+                        className="btn btn-outline-danger favorite-remove-button"
+                        onClick={() =>
+                          handleRemoveMovie(list.id, item.movieId)
+                        }
+                        disabled={loading}
+                      >
+                        Remove movie
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          ))}
+        </div>
       )}
     </main>
   );
