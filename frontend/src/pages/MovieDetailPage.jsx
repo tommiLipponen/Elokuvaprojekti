@@ -6,11 +6,17 @@ import { getReviews, submitReview } from '../services/reviewApi.js';
 import { getMyGroups, addMovieToGroup } from '../services/groupApi.js';
 import { getFavorites, addItemToList } from '../services/favoriteApi.js';
 
-function Stars({ value }) {
-  const rating = Math.round(Number(value) / 2);
+function Stars({ value, scale = 5 }) {
+  const rating = Math.max(
+    0,
+    Math.min(scale, Math.round(Number(value) * 5 / scale))
+  );
 
   return (
-    <span className="movie-detail-stars" aria-label={`${value} out of 10`}>
+   <span
+      className="movie-detail-stars"
+      aria-label={`${value} out of ${scale}`}
+    >
       {'★'.repeat(rating)}
       {'☆'.repeat(5 - rating)}
     </span>
