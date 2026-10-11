@@ -169,11 +169,13 @@ function MovieCard({ movie }) {
     }
   };
 
-  const posterUrl =
-    movie.posterUrl ||
-    (movie.poster_path
-      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-      : null);
+const posterPath = movie.posterPath || movie.poster_path;
+
+const posterUrl =
+  movie.posterUrl ||
+  (posterPath
+    ? `https://image.tmdb.org/t/p/w500${posterPath}`
+    : null);
 
   return (
     <div className="movie-card">
