@@ -94,10 +94,9 @@ function SharedListDetailPage() {
                         No movies in this list yet.
                     </p>
                 ) : (
-                    <div className="shared-list-movies">
+                    <div className="favorite-movie-grid">
                         {list.items.map((item) => (
                             <div
-                                className="shared-list-movie"
                                 key={item.movieId}
                             >
                                 <MovieCard movie={item.movie} />
