@@ -38,6 +38,10 @@ function Navbar() {
               search
             </Nav.Link>
 
+            <Nav.Link as={Link} to="/movies/now-playing">
+              in cinemas
+            </Nav.Link>
+
             <Nav.Link as={Link} to="/groups">
               groups
             </Nav.Link>
@@ -45,11 +49,7 @@ function Navbar() {
             <Nav.Link as={Link} to="/favorites">
               favorites
             </Nav.Link>
-
-            <Nav.Link as={Link} to="/movies/now-playing">
-              in cinemas
-            </Nav.Link>
-
+           
             <Nav.Link as={Link} to="/shared">
               shared lists
             </Nav.Link>
