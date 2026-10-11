@@ -127,7 +127,7 @@ function GroupListPage() {
 
   return (
     <main className="container py-5 group-page">
-      <div className="groups-page-header">
+      <div className="list-page-header">
         <h1 className="group-title">groups</h1>
 
         {accessToken && (
@@ -148,7 +148,7 @@ function GroupListPage() {
 
 
       <form
-        className="group-search"
+        className="list-page-search"
         onSubmit={handleSearch}
       >
         <input
@@ -168,12 +168,12 @@ function GroupListPage() {
           const isRequested = requestedGroupIds.includes(group.id);
 
           return (
-            <div className="group-row" key={group.id}>
+            <div className="list-page-row" key={group.id}>
               <div className="group-info">
-                <h2 className="group-name">
+                <h2 className="list-page-name">
                   <Link
                     to={`/groups/${group.id}`}
-                    className="group-title-link"
+                    className="list-page-title-link"
                   >
                     {group.name}
                   </Link>
