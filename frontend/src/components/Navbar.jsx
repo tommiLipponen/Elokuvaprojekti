@@ -5,7 +5,7 @@ import { Container, Nav, Navbar as BootstrapNavbar } from 'react-bootstrap';
 
 function Navbar() {
   const [expanded, setExpanded] = useState(false);
-  const { accessToken, logout } = useAuth();
+  const { accessToken, user, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async (event) => {
@@ -46,10 +46,6 @@ function Navbar() {
               groups
             </Nav.Link>
 
-            <Nav.Link as={Link} to="/favorites">
-              favorites
-            </Nav.Link>
-           
             <Nav.Link as={Link} to="/shared">
               shared lists
             </Nav.Link>
@@ -60,9 +56,17 @@ function Navbar() {
               </Nav.Link>
             ) : (
               <>
+                <Nav.Link as={Link} to="/favorites">
+                  favorites
+                </Nav.Link>
+
                 <Nav.Link as={Link} to="/profile">
                   profile
                 </Nav.Link>
+
+                <BootstrapNavbar.Text className="text-white">
+                  hello, {user?.username}
+                </BootstrapNavbar.Text>
 
                 <Nav.Link as={Link} to="/" onClick={handleLogout}>
                   logout
