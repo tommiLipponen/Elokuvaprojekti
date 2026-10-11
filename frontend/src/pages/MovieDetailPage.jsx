@@ -59,6 +59,10 @@ function MovieDetailPage() {
 
   const [groups, setGroups] = useState([]);
   const [favoriteLists, setFavoriteLists] = useState([]);
+  const [selectedFavoriteListId, setSelectedFavoriteListId] = useState('');
+  const [loadingFavoriteLists, setLoadingFavoriteLists] = useState(false);
+  const [addingToFavorites, setAddingToFavorites] = useState(false);
+  const [favoriteMessage, setFavoriteMessage] = useState('');
 
   const [selectedGroupId, setSelectedGroupId] = useState('');
 
@@ -117,6 +121,7 @@ function MovieDetailPage() {
     };
   }, [movieId]);
 
+
   useEffect(() => {
     if (!accessToken) {
       return;
@@ -125,6 +130,8 @@ function MovieDetailPage() {
     let cancelled = false;
 
     async function loadLists() {
+      setLoadingFavoriteLists(true);
+
       try {
         const [groupResult, favoriteResult] = await Promise.all([
           getMyGroups(accessToken),
@@ -136,9 +143,15 @@ function MovieDetailPage() {
         }
 
         setGroups(Array.isArray(groupResult) ? groupResult : []);
-        setFavoriteLists(Array.isArray(favoriteResult) ? favoriteResult : []);
+        setFavoriteLists(
+          Array.isArray(favoriteResult) ? favoriteResult : []
+        );
       } catch (error) {
         console.error(error);
+      } finally {
+        if (!cancelled) {
+          setLoadingFavoriteLists(false);
+        }
       }
     }
 
@@ -148,6 +161,7 @@ function MovieDetailPage() {
       cancelled = true;
     };
   }, [accessToken]);
+
 
   async function handleAddToGroup() {
     if (!selectedGroupId) {
@@ -168,23 +182,28 @@ function MovieDetailPage() {
   }
 
   async function handleAddToFavorites() {
-    const favoriteList = favoriteLists[0];
-
-    if (!favoriteList) {
-      setMessage('No favorites list found.');
+    if (!selectedFavoriteListId) {
+      setFavoriteMessage('Please choose a favorite list.');
       return;
     }
 
+    setAddingToFavorites(true);
+    setFavoriteMessage('');
+
     try {
       await addItemToList(
-        favoriteList.id,
+        selectedFavoriteListId,
         movie.tmdbId,
-        accessToken,
+        accessToken
       );
 
-      setMessage('Movie added to favorites.');
+      setFavoriteMessage('Movie added to favorites.');
     } catch (error) {
-      setMessage(error.message || 'Failed to add movie to favorites.');
+      setFavoriteMessage(
+        error.message || 'Failed to add movie to favorites.'
+      );
+    } finally {
+      setAddingToFavorites(false);
     }
   }
 
@@ -302,13 +321,57 @@ function MovieDetailPage() {
           {user && (
             <div className="movie-card-actions">
               <div className="movie-card-action">
+                <select
+                  id={`favorite-list-${movie.tmdbId}`}
+                  className="form-select"
+                  value={selectedFavoriteListId}
+                  onChange={(event) =>
+                    setSelectedFavoriteListId(event.target.value)
+                  }
+                  disabled={
+                    loadingFavoriteLists || addingToFavorites
+                  }
+                >
+                  <option value="">
+                    {loadingFavoriteLists
+                      ? 'Loading favorite lists...'
+                      : 'Choose favorite list'}
+                  </option>
+
+                  {favoriteLists.map((list) => (
+                    <option key={list.id} value={list.id}>
+                      {list.name}
+                    </option>
+                  ))}
+                </select>
+
+                {!loadingFavoriteLists &&
+                  favoriteLists.length === 0 && (
+                    <p className="movie-card-message">
+                      No favorite lists found. Create a list first.
+                    </p>
+                  )}
+
                 <button
                   type="button"
                   className="btn btn-primary"
                   onClick={handleAddToFavorites}
+                  disabled={
+                    !selectedFavoriteListId ||
+                    loadingFavoriteLists ||
+                    addingToFavorites
+                  }
                 >
-                  Add to favorites.
+                  {addingToFavorites
+                    ? 'Adding...'
+                    : 'Add to favorites.'}
                 </button>
+
+                {favoriteMessage && (
+                  <p className="movie-card-message" role="status">
+                    {favoriteMessage}
+                  </p>
+                )}
               </div>
 
               <div className="movie-card-action">
