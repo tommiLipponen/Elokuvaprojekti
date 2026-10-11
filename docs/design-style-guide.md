@@ -169,7 +169,7 @@ The project uses a dark teal base with warm orange and turquoise accents. These 
 - `primary`: #0F3435
 - `secondary`: #071a1c
 - `success`: #30D97F
-- `danger`: #FFB566 
+- `danger`: #FFB566
 - `warning`: #FFA4A4
 - `info`: #2FDAD7
 
@@ -180,32 +180,31 @@ The project uses a dark teal base with warm orange and turquoise accents. These 
 - `app-accent-orange` : #FAB375
 - `app-button-orange` : #8A3719
 
-
 Colors used throughout the interface:
 
-#0F3435 — primary dark page/background color.
-#F5F1E8 — main text/light surface color; also used at 10% opacity for selected/light surfaces.
+\#0F3435 — primary dark page/background color.
+\#F5F1E8 — main text/light surface color; also used at 10% opacity for selected/light surfaces.
 
 Color usage rules
 
-#2FDAD7 and #FAB375 are used primarily as text/accent colors on #0F3435 and #071a1c.
-#8A3719 is used as the primary button/action background with #F5F1E8 as button text.
-#F5F1E8 is used as the main text color and at 10% opacity for light/selected surfaces.
-#0F3435 is the primary application/page background.
-#071a1c is used for darker secondary surfaces.
+\#2FDAD7 and #FAB375 are used primarily as text/accent colors on #0F3435 and #071a1c.
+\#8A3719 is used as the primary button/action background with #F5F1E8 as button text.
+\#F5F1E8 is used as the main text color and at 10% opacity for light/selected surfaces.
+\#0F3435 is the primary application/page background.
+\#071a1c is used for darker secondary surfaces.
 
 Colors should be applied through Bootstrap semantic classes where appropriate, and through the project's CSS variables for project-specific colors. Avoid hard-coding colors repeatedly in components.
 
 ### Font roles
 
 - Heading font: Roboto Condensed
-   - Used for h1–h6
-   - Heading 1: Weight: 700 (Bold), 32px / 5px letter spacing
-   - Heading 2: Weight: 300 (Light), 32px / 5px letter spacing
+  - Used for h1–h6
+  - Heading 1: Weight: 700 (Bold), 32px / 5px letter spacing
+  - Heading 2: Weight: 300 (Light), 32px / 5px letter spacing
 - Body font: Mukta Vaani
-   - Used for paragraphs, lists, labels and general UI text
-   - Body: Weight: 300 (Light), 16px / 5px letter spacing
+  - Used for paragraphs, lists, labels and general UI text
+  - Body: Weight: 300 (Light), 16px / 5px letter spacing
 - Accent font: Cousine
-   - Used for button labels, logo/brand elements and selected accent UI
-   - Accent 1: Weight: 700 (Bold), 24px / 10px letter spacing
-   - Accent 2: Weight: 700 (Bold), 16px / 10px letter spacing
+  - Used for button labels, logo/brand elements and selected accent UI
+  - Accent 1: Weight: 700 (Bold), 24px / 10px letter spacing
+  - Accent 2: Weight: 700 (Bold), 16px / 10px letter spacing
