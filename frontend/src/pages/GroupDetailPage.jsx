@@ -206,9 +206,8 @@ function GroupDetailPage() {
     }));
   };
 
-    useEffect(() => {
+useEffect(() => {
   if (!accessToken || !id) {
-    setIsRequested(false);
     return;
   }
 
@@ -221,8 +220,8 @@ function GroupDetailPage() {
         accessToken
       );
 
-      if (!cancelled && typeof result.isPending === 'boolean') {
-        setIsRequested(result.isPending);
+      if (!cancelled) {
+        setIsRequested(result.isPending === true);
       }
     } catch (error) {
       console.error('Failed to load join request status:', error);
