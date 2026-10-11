@@ -1,10 +1,64 @@
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth.js';
-import { useNavigate } from 'react-router-dom';
 import { deleteAccount } from '../services/userApi.js';
+import * as groupApi from '../services/groupApi.js';
 
 function UserProfilePage() {
   const { user, accessToken, logout } = useAuth();
   const navigate = useNavigate();
+
+  const [myGroups, setMyGroups] = useState([]);
+  const [groupsError, setGroupsError] = useState('');
+
+  useEffect(() => {
+    let cancelled = false;
+
+    groupApi
+      .getMyGroups(accessToken)
+      .then((groups) => {
+        if (!cancelled) {
+          setMyGroups(groups);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setGroupsError('Failed to load your groups');
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [accessToken]);
+
+  const handleDeleteGroup = async (groupId) => {
+    if (!window.confirm('Delete this group?')) {
+      return;
+    }
+
+    try {
+      await groupApi.deleteGroup(groupId, accessToken);
+      setMyGroups((current) => current.filter((group) => group.id !== groupId));
+    } catch (error) {
+      console.error(error);
+      setGroupsError('Failed to delete group');
+    }
+  };
+
+  const handleLeaveGroup = async (groupId) => {
+    if (!window.confirm('Leave this group?')) {
+      return;
+    }
+
+    try {
+      await groupApi.leaveGroup(groupId, accessToken);
+      setMyGroups((current) => current.filter((group) => group.id !== groupId));
+    } catch (error) {
+      console.error(error);
+      setGroupsError('Failed to leave group');
+    }
+  };
 
   const handleDeleteAccount = async () => {
     const confirmed = window.confirm(
@@ -62,14 +116,6 @@ function UserProfilePage() {
           <button
             type="button"
             className="btn btn-primary"
-            onClick={() => navigate('/groups')}
-          >
-            groups
-          </button>
-
-          <button
-            type="button"
-            className="btn btn-primary"
             onClick={async () => {
               try {
                 await logout();
@@ -81,6 +127,63 @@ function UserProfilePage() {
             log out
           </button>
         </div>
+
+        <hr />
+
+        <section className="group-section">
+          <div className="group-section-header">
+            <h2>my groups</h2>
+          </div>
+
+          {groupsError && <p className="group-error">{groupsError}</p>}
+
+          <div className="group-list">
+            {myGroups.map((group) => {
+              const isOwner = group.ownerId === user.id;
+
+              return (
+                <div className="list-page-row" key={group.id}>
+                  <div className="group-info">
+                    <h2 className="list-page-name">
+                      <Link
+                        to={`/groups/${group.id}`}
+                        className="list-page-title-link"
+                      >
+                        {group.name}
+                      </Link>
+                    </h2>
+
+                    <span className="group-members">
+                      {isOwner ? 'owner' : 'member'}
+                    </span>
+                  </div>
+
+                  {isOwner ? (
+                    <button
+                      type="button"
+                      className="btn btn-danger group-button"
+                      onClick={() => handleDeleteGroup(group.id)}
+                    >
+                      delete group
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn btn-primary group-button"
+                      onClick={() => handleLeaveGroup(group.id)}
+                    >
+                      leave group
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+
+            {myGroups.length === 0 && (
+              <p className="group-empty">You are not in any groups yet.</p>
+            )}
+          </div>
+        </section>
 
         <hr />
 
