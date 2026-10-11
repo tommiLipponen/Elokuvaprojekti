@@ -139,23 +139,42 @@ function GroupDetailPage() {
   };
 
 
-  const handleJoinRequest = async () => {
-    setJoinError('');
-    setJoinMessage('');
+const handleJoinRequest = async () => {
+  setJoinError('');
+  setJoinMessage('');
 
+  try {
     const result = await groupApi.requestToJoinGroup(
       id,
       accessToken
     );
+
+    console.log('Join request response:', result);
 
     if (result?.message) {
       setJoinError(result.message);
       return;
     }
 
-    setIsRequested(true);
-    setJoinMessage('Join request sent!');
-  };
+    const status = await groupApi.getJoinRequestStatus(
+      id,
+      accessToken
+    );
+
+    console.log('Join request status:', status);
+
+    setIsRequested(status.isPending === true);
+
+    if (status.isPending) {
+      setJoinMessage('Join request sent!');
+    } else {
+      setJoinError('The request is not pending on the server.');
+    }
+  } catch (error) {
+    console.error('Join request failed:', error);
+    setJoinError('Failed to send join request.');
+  }
+};
 
 
   const handleJoinRequestUpdate = async (userId, status) => {
