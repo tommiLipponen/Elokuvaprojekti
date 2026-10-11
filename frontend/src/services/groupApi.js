@@ -84,7 +84,13 @@ export async function requestToJoinGroup(groupId, accessToken) {
     },
   });
 
-  return res.json();
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || 'Failed to send join request');
+  }
+
+  return data;
 }
 
 export async function getJoinRequests(groupId, accessToken) {
