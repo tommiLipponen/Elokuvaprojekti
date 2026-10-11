@@ -206,6 +206,35 @@ function GroupDetailPage() {
     }));
   };
 
+useEffect(() => {
+  if (!accessToken || !id) {
+    return;
+  }
+
+  let cancelled = false;
+
+  async function loadJoinRequestStatus() {
+    try {
+      const result = await groupApi.getJoinRequestStatus(
+        id,
+        accessToken
+      );
+
+      if (!cancelled) {
+        setIsRequested(result.isPending === true);
+      }
+    } catch (error) {
+      console.error('Failed to load join request status:', error);
+    }
+  }
+
+  loadJoinRequestStatus();
+
+  return () => {
+    cancelled = true;
+  };
+}, [id, accessToken]);
+
   const handleLeaveGroup = async () => {
     // clears any previous error message
     setMembersError('');

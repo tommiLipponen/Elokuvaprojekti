@@ -97,6 +97,23 @@ export async function getJoinRequests(groupId, accessToken) {
   return res.json();
 }
 
+export async function getJoinRequestStatus(groupId, accessToken) {
+  const res = await fetch(
+    `${API_BASE}/${groupId}/join-request-status`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error('Failed to get join request status');
+  }
+
+  return res.json();
+}
+
 export async function updateJoinRequest(
   groupId,
   userId,
