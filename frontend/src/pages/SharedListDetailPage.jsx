@@ -78,7 +78,7 @@ function SharedListDetailPage() {
                 go back
             </Link>
 
-            <div className="shared-list-detail-card">
+            <div>
                 <h2 className="shared-list-detail-title">
                     {list.name}
                 </h2>
