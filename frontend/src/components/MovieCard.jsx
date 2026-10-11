@@ -224,13 +224,7 @@ const posterUrl =
         {accessToken && (
           <div className="movie-card-actions">
             <div className="movie-card-action">
-              <label
-                htmlFor={`favorite-list-${movie.tmdbId}`}
-                className="form-label"
-              >
-                Favorite list
-              </label>
-
+           
               <select
                 id={`favorite-list-${movie.tmdbId}`}
                 className="form-select"
@@ -274,7 +268,7 @@ const posterUrl =
               >
                 {addingToFavorites
                   ? 'Adding...'
-                  : 'Add to favorites'}
+                  : 'Add to favorites.'}
               </button>
 
               {favoriteMessage && (
@@ -285,12 +279,6 @@ const posterUrl =
             </div>
 
             <div className="movie-card-action">
-              <label
-                htmlFor={`group-${movie.tmdbId}`}
-                className="form-label"
-              >
-                Group
-              </label>
 
               <select
                 id={`group-${movie.tmdbId}`}
@@ -328,7 +316,7 @@ const posterUrl =
                   !selectedGroupId || loadingGroups || adding
                 }
               >
-                {adding ? 'Adding...' : 'Add to group'}
+                {adding ? 'Adding...' : 'Add to group.'}
               </button>
 
               {message && (

@@ -13,7 +13,7 @@ function Stars({ value, scale = 5 }) {
   );
 
   return (
-   <span
+    <span
       className="movie-detail-stars"
       aria-label={`${value} out of ${scale}`}
     >
@@ -300,39 +300,43 @@ function MovieDetailPage() {
           </p>
 
           {user && (
-            <div className="movie-detail-actions">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleAddToFavorites}
-              >
-                add to favorites
-              </button>
+            <div className="movie-card-actions">
+              <div className="movie-card-action">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleAddToFavorites}
+                >
+                  Add to favorites.
+                </button>
+              </div>
 
-              <select
-                className="form-select"
-                value={selectedGroupId}
-                onChange={(event) =>
-                  setSelectedGroupId(event.target.value)
-                }
-              >
-                <option value="">choose group</option>
+              <div className="movie-card-action">
+                <select
+                  className="form-select"
+                  value={selectedGroupId}
+                  onChange={(event) =>
+                    setSelectedGroupId(event.target.value)
+                  }
+                >
+                  <option value="">Choose group</option>
 
-                {groups.map((group) => (
-                  <option key={group.id} value={group.id}>
-                    {group.name}
-                  </option>
-                ))}
-              </select>
+                  {groups.map((group) => (
+                    <option key={group.id} value={group.id}>
+                      {group.name}
+                    </option>
+                  ))}
+                </select>
 
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleAddToGroup}
-                disabled={!selectedGroupId}
-              >
-                add to group
-              </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleAddToGroup}
+                  disabled={!selectedGroupId}
+                >
+                  Add to group.
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -355,7 +359,7 @@ function MovieDetailPage() {
       </section>
 
       <section className="movie-detail-reviews">
-        <h2>reviews</h2>
+        <h2>reviews in elokuvaprojekti</h2>
 
         <ReviewList reviews={reviews} />
 
@@ -364,7 +368,7 @@ function MovieDetailPage() {
             onSubmit={handleSubmit}
             className="movie-detail-review-form"
           >
-            <h3>write a review</h3>
+            <h2>write a review</h2>
 
             <div
               role="radiogroup"
@@ -408,7 +412,7 @@ function MovieDetailPage() {
               className="btn btn-primary"
               disabled={loadingReview}
             >
-              {loadingReview ? 'Submitting...' : 'Submit review'}
+              {loadingReview ? 'Submitting...' : 'submit review'}
             </button>
           </form>
         )}
