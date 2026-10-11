@@ -57,14 +57,14 @@ function SharedListPage() {
       {!loading && !error && lists.length > 0 && (
         <div>
           {lists.map((list) => (
-            <div className="shared-lists-row" key={list.id}>
-              <div className="shared-lists-header">
+            <div className="list-page-row" key={list.id}>
+              <div className="list-page-header">
                 <div>
                   <Link
                     to={`/shared/${list.id}`}
-                    className="shared-lists-link"
+                    className="list-page-title-link"
                   >
-                    <h2 className="shared-lists-name">
+                    <h2>
                       {list.name}
                     </h2>
                   </Link>
