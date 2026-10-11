@@ -36,7 +36,6 @@ body {
 
 .login-card,
 .register-card,
-.shared-list-detail-card,
 .profile-card,
 .group-private {
   background: linear-gradient(0deg, var(--app-surface), var(--app-bg));
