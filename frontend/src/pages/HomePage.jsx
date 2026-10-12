@@ -50,7 +50,7 @@ function HomePage() {
   }, [])
 
   return (
-    <main className="home-page">
+    <div className="home-page">
       <section className="home-hero">
         <h2 className="home-title">
           find your next favorite movie
@@ -100,7 +100,7 @@ function HomePage() {
           </Link>
         </div>
       </section>
-    </main>
+    </div>
   )
 }
 

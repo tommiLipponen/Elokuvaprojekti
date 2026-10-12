@@ -88,7 +88,7 @@ function UserProfilePage() {
   };
 
   return (
-    <main className="container py-5 profile-page">
+    <div className="py-5 profile-page">
       <div className="profile-card">
         <div className="profile-user">
           <div className="profile-photo">
@@ -197,7 +197,7 @@ function UserProfilePage() {
           </button>
         </section>
       </div>
-    </main>
+    </div>
   );
 }
 

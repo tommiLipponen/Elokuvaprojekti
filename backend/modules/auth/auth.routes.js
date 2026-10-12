@@ -1,5 +1,5 @@
 ﻿const express = require('express');
-const { register, loginUser, logoutUser } = require('./auth.controller');
+const { register, loginUser, logoutUser, refreshUser } = require('./auth.controller');
 
 const router = express.Router();
 
@@ -162,8 +162,49 @@ const router = express.Router();
  *               $ref: '#/components/schemas/Error500'
  */
 
+/**
+ * @swagger
+ * /auth/refresh:
+ *   post:
+ *     summary: Refresh the session
+ *     description: Exchange a valid refresh token for a new access token and a new refresh token. The presented refresh token is revoked (rotation).
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refreshToken
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 example: "example-refresh-token"
+ *     responses:
+ *       200:
+ *         description: New access and refresh tokens
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error200'
+ *       401:
+ *         description: Refresh token is invalid, expired or already used
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error401'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error500'
+ */
+
 // Define the /register route and associate it with the register controller function
 router.post('/register', register);
 router.post('/login', loginUser);
+router.post('/refresh', refreshUser);
 router.post('/logout', logoutUser);
 module.exports = router;

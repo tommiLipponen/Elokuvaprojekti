@@ -23,7 +23,7 @@ function MovieSearchPage() {
   }
 
   return (
-    <main className="container py-5 movie-search-page">
+    <div className="py-5 movie-search-page">
 
       <h2 className="shared-lists-title">
         search for movies by...
@@ -90,7 +90,7 @@ function MovieSearchPage() {
       </div>
       </>
       )}
-    </main>
+    </div>
   );
 }
 

@@ -1,13 +1,29 @@
 .navbar {
-  padding: 20px 30px;
+  padding: 12px 16px;
+}
+
+@media (min-width: 768px) {
+  .navbar {
+    padding: 20px 30px;
+  }
 }
 
 .navbar .navbar-nav {
-  gap: 20px;
+  gap: 4px;
 }
 
 .navbar .navbar-greeting {
   color: var(--app-text);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (min-width: 1200px) {
+  .navbar .navbar-greeting {
+    max-width: 220px;
+  }
 }
 
 .navbar .nav-link {

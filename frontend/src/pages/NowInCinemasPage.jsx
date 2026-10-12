@@ -25,7 +25,7 @@ function NowInCinemasPage() {
   }, []);
 
   return (
-    <div className="container py-5 now-playing-page">
+    <div className="py-5 now-playing-page">
       <h1 className="now-playing-title">
         now in Finnish cinemas
       </h1>

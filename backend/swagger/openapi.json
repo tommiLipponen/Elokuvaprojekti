@@ -505,6 +505,84 @@
         }
       }
     },
+    "/movies/{tmdbId}": {
+      "get": {
+        "summary": "Get movie details",
+        "description": "Returns details for a movie from TMDB by its TMDB ID. Works without login.",
+        "tags": [
+          "Movies"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tmdbId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "TMDB movie ID",
+            "example": 550
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Movie details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "tmdbId": {
+                      "type": "integer",
+                      "example": 550
+                    },
+                    "title": {
+                      "type": "string",
+                      "example": "Fight Club"
+                    },
+                    "releaseYear": {
+                      "type": "integer",
+                      "example": 1999
+                    },
+                    "posterUrl": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "overview": {
+                      "type": "string"
+                    },
+                    "voteAverage": {
+                      "type": "number",
+                      "example": 8.4
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Movie not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to fetch movie",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/groups/{id}/join-requests": {
       "post": {
         "summary": "Request to join a group",
@@ -792,7 +870,7 @@
       },
       "post": {
         "summary": "Create a group",
-        "description": "Creates a new group owned by the authenticated user. Use the Bearer access token obtained from POST /auth/login.",
+        "description": "Creates a new group owned by the authenticated user.",
         "tags": [
           "Groups"
         ],
@@ -850,10 +928,104 @@
         }
       }
     },
+    "/groups/mine": {
+      "get": {
+        "summary": "List my groups",
+        "description": "Returns groups owned by the authenticated user or groups where the user is an approved member.",
+        "tags": [
+          "Groups"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User's groups",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Group"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token required or invalid"
+          },
+          "500": {
+            "description": "Failed to get your groups"
+          }
+        }
+      }
+    },
+    "/groups/{id}/join-request-status": {
+      "get": {
+        "summary": "Check join request status",
+        "description": "Returns only whether the authenticated user has a pending join request. Does not reveal private group details.",
+        "tags": [
+          "Groups"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Group ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Join request status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "isPending"
+                  ],
+                  "properties": {
+                    "isPending": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token required or invalid"
+          },
+          "500": {
+            "description": "Failed to get join request status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/groups/{id}": {
       "get": {
-        "summary": "Get a group by id",
-        "description": "Returns a single group. Requires the authenticated user to be the owner or an approved member.",
+        "summary": "Get a group by ID",
+        "description": "Returns a group only to its owner or an approved member.",
         "tags": [
           "Groups"
         ],
@@ -887,7 +1059,7 @@
             "description": "Access token required or invalid"
           },
           "403": {
-            "description": "Not a member of this group"
+            "description": "Not an approved member of this group"
           },
           "404": {
             "description": "Group not found"
@@ -947,6 +1119,72 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/groups/{id}/movies": {
+      "post": {
+        "summary": "Add a movie to a group",
+        "description": "Adds a movie to a group. Requires the owner or an approved member.",
+        "tags": [
+          "Groups"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "movieId"
+                ],
+                "properties": {
+                  "movieId": {
+                    "type": "integer",
+                    "example": 550
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Movie added to group"
+          },
+          "400": {
+            "description": "Movie ID is required"
+          },
+          "401": {
+            "description": "Access token required or invalid"
+          },
+          "403": {
+            "description": "Not an approved member of this group"
+          },
+          "404": {
+            "description": "Group or movie not found"
+          },
+          "409": {
+            "description": "Movie is already in this group"
+          },
+          "500": {
+            "description": "Failed to add movie to group"
           }
         }
       }
@@ -1570,6 +1808,66 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "summary": "Refresh the session",
+        "description": "Exchange a valid refresh token for a new access token and a new refresh token. The presented refresh token is revoked (rotation).",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "refreshToken"
+                ],
+                "properties": {
+                  "refreshToken": {
+                    "type": "string",
+                    "example": "example-refresh-token"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "New access and refresh tokens",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error200"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Refresh token is invalid, expired or already used",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error401"
                 }
               }
             }

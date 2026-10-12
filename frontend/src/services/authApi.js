@@ -19,6 +19,16 @@ export async function register(data) {
   return res.json();
 }
 
+export async function refresh(refreshToken) {
+  const res = await fetch(`${API_BASE}/refresh`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ refreshToken }),
+  });
+
+  return res.json();
+}
+
 export async function logout(refreshToken) {
   const res = await fetch(`${API_BASE}/logout`, {
     method: 'POST',
