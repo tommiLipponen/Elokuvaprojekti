@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth.js';
 import { useFavorites } from '../hooks/useFavorites.js';
-import MovieCard from '../components/MovieCard.jsx';
 
 function FavoriteListPage() {
   const { user } = useAuth() ?? {};
@@ -12,7 +12,6 @@ function FavoriteListPage() {
     error,
     loadLists,
     addList,
-    removeMovie,
     removeList,
     updateListVisibility,
   } = useFavorites();
@@ -50,16 +49,6 @@ function FavoriteListPage() {
       setFormError(err.message || 'Failed to create favorite list');
     } finally {
       setIsCreating(false);
-    }
-  };
-
-  const handleRemoveMovie = async (listId, movieId) => {
-    setFormError('');
-
-    try {
-      await removeMovie(listId, movieId);
-    } catch (err) {
-      setFormError(err.message || 'Failed to remove movie');
     }
   };
 
@@ -215,6 +204,13 @@ function FavoriteListPage() {
                 </h2>
 
                 <div className="favorite-list-settings">
+                  <Link
+                    to={`/favorites/${list.id}`}
+                    className="btn btn-primary"
+                  >
+                    view list
+                  </Link>
+
                   <button
                     type="button"
                     className="btn btn-outline-primary"
@@ -241,38 +237,6 @@ function FavoriteListPage() {
                   {list.isPublic ? 'Public' : 'Private'}
                 </span>
               </p>
-
-              {!list.items || list.items.length === 0 ? (
-                <p className="favorite-list-empty">
-                  No movies in this list yet.
-                </p>
-              ) : (
-                <div className="favorite-movie-grid">
-                  {list.items.map((item) => (
-                    <div
-                      className="favorite-movie"
-                      key={item.movieId}
-                    >
-                      {item.movie ? (
-                        <MovieCard movie={item.movie} />
-                      ) : (
-                        <p>Movie ID: {item.movieId}</p>
-                      )}
-
-                      <button
-                        type="button"
-                        className="btn btn-outline-danger favorite-remove-button"
-                        onClick={() =>
-                          handleRemoveMovie(list.id, item.movieId)
-                        }
-                        disabled={loading}
-                      >
-                        Remove movie
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
             </section>
           ))}
         </div>

@@ -25,9 +25,9 @@ function MovieSearchPage() {
   return (
     <div className="py-5 movie-search-page">
 
-      <h2 className="shared-lists-title">
+      <h1 className="movie-search-title">
         search for movies by...
-      </h2>
+      </h1>
 
       <form onSubmit={handleSubmit} className="movie-search-form">
         <input

@@ -36,6 +36,8 @@
 
 .navbar .navbar-greeting {
   color: var(--app-text);
+  display: flex;
+  align-items: center;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;

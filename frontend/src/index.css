@@ -16,6 +16,7 @@ body {
 }
 
 .favorite-list-page,
+.favorite-list-detail-page,
 .group-detail-page,
 .group-page,
 .home-page,
@@ -83,6 +84,9 @@ main.container {
 
 .shared-list-back-button,
 .movie-detail-back-button {
+  display: block;
+  width: fit-content;
+  margin-left: auto;
   margin-bottom: 30px;
 }
 
@@ -155,6 +159,5 @@ main.container {
 
 .list-page-name {
   margin: 0;
-  font-size: 1.2rem;
   font-weight: 500;
 }
