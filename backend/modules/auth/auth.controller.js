@@ -1,6 +1,6 @@
 const { validateAuth } = require('./auth.validation');
 const { createUser } = require('./auth.service');
-const { login, revokeRefreshToken, InvalidCredentialsError } = require('./auth.service');
+const { login, refresh, revokeRefreshToken, InvalidCredentialsError, InvalidRefreshTokenError } = require('./auth.service');
 
 
 const register = async (req, res) => {
@@ -58,4 +58,17 @@ const logoutUser = async (req, res) => {
 };
 
 
-module.exports = { register, loginUser, logoutUser };
+const refreshUser = async (req, res) => {
+  try {
+    const tokens = await refresh(req.body?.refreshToken);
+    return res.status(200).json(tokens);
+  } catch (err) {
+    if (err instanceof InvalidRefreshTokenError) {
+      return res.status(401).json({ errors: { message: 'Invalid refresh token' } });
+    }
+    console.error(err);
+    return res.status(500).json({ errors: { message: 'Token refresh failed' } });
+  }
+};
+
+module.exports = { register, loginUser, logoutUser, refreshUser };
