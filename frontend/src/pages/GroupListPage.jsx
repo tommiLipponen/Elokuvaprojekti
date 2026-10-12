@@ -213,14 +213,14 @@ function GroupListPage() {
 
       {accessToken && showCreateModal && (
         <div
-          className="modal d-block create-group-modal"
+          className="modal d-block create-list-modal"
           tabIndex="-1"
           role="dialog"
           aria-modal="true"
           aria-labelledby="createGroupModalLabel"
         >
           <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content create-group-modal-content">
+            <div className="modal-content create-list-modal-content">
               <div className="modal-header">
                 <h2 className="modal-title fs-4" id="createGroupModalLabel">
                   create a group
@@ -234,7 +234,7 @@ function GroupListPage() {
                 />
               </div>
 
-              <form onSubmit={handleCreateGroup} className="create-group-form">
+              <form onSubmit={handleCreateGroup} className="create-list-form">
                 <div className="modal-body">
                   <input
                     id="group-name"

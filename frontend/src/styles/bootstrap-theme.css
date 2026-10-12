@@ -95,6 +95,14 @@ h3,
   text-decoration: none;
 }
 
+/* Bootstrap form controls use blue focus styles by default. */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--app-accent-turquoise);
+  box-shadow: 0 0 0 0.25rem
+    color-mix(in srgb, var(--app-accent-turquoise) 25%, transparent);
+}
+
 /* Primary button */
 
 .btn-primary {

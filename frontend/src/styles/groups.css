@@ -141,11 +141,11 @@
 
 /* Create group modal */
 
-.create-group-modal {
+.create-list-modal {
   background-color: rgb(0 0 0 / 60%);
 }
 
-.create-group-modal-content {
+.create-list-modal-content {
   color: var(--app-text);
   background: linear-gradient(0deg,
       var(--app-surface),
@@ -155,13 +155,13 @@
   box-shadow: 0 8px 18px -8px rgb(245 241 232 / 25%);
 }
 
-.create-group-modal-content .modal-header {
+.create-list-modal-content .modal-header {
   position: relative;
   justify-content: center;
   border-bottom: 1px solid rgb(245 241 232 / 15%);
 }
 
-.create-group-modal-content .modal-title {
+.create-list-modal-content .modal-title {
   font-family: "Roboto Condensed", var(--bs-body-font-family);
   font-weight: 300;
   letter-spacing: 2px;
@@ -169,23 +169,23 @@
   margin: 12px 0;
 }
 
-.create-group-modal-content .btn-close {
+.create-list-modal-content .btn-close {
   position: absolute;
   right: 16px;
   filter: invert(1);
 }
 
-.create-group-form {
+.create-list-form {
   width: 100%;
   max-width: 320px;
   margin-inline: auto;
 }
 
-.create-group-form .modal-body {
+.create-list-form .modal-body {
   padding: 24px 0 8px;
 }
 
-.create-group-form .form-control {
+.create-list-form .form-control {
   color: var(--app-text);
   background: transparent;
   border: none;
@@ -195,12 +195,12 @@
   padding: 10px 0;
 }
 
-.create-group-form .form-control::placeholder {
+.create-list-form .form-control::placeholder {
   color: rgb(245 241 232 / 75%);
   opacity: 1;
 }
 
-.create-group-form .form-control:focus {
+.create-list-form .form-control:focus {
   color: var(--app-text);
   background: transparent;
   border-bottom-color: #f5f1e8;
@@ -208,7 +208,7 @@
   outline: none;
 }
 
-.create-group-form .modal-footer {
+.create-list-form .modal-footer {
   justify-content: center;
   flex-direction: column;
   align-items: center;

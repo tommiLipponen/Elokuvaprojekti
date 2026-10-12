@@ -26,13 +26,19 @@ function Navbar() {
       onToggle={setExpanded}
     >
       <Container>
-        <BootstrapNavbar.Brand as={Link} to="/">
+        <BootstrapNavbar.Brand as={Link} to="/" className="navbar-title">
           elokuvaprojekti
         </BootstrapNavbar.Brand>
 
         <BootstrapNavbar.Toggle aria-controls="mainNavbar" aria-label="Toggle navigation" />
 
         <BootstrapNavbar.Collapse id="mainNavbar">
+          {accessToken && (
+            <BootstrapNavbar.Text className="me-auto navbar-greeting">
+              hi, {user?.username}
+            </BootstrapNavbar.Text>
+          )}
+
           <Nav className="ms-auto" onClick={() => setExpanded(false)}>
             <Nav.Link as={Link} to="/movies">
               search
@@ -63,11 +69,7 @@ function Navbar() {
                 <Nav.Link as={Link} to="/profile">
                   profile
                 </Nav.Link>
-
-                <BootstrapNavbar.Text className="text-white">
-                  hello, {user?.username}
-                </BootstrapNavbar.Text>
-
+              
                 <Nav.Link as={Link} to="/" onClick={handleLogout}>
                   logout
                 </Nav.Link>
