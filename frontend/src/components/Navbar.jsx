@@ -20,7 +20,7 @@ function Navbar() {
 
   return (
     <BootstrapNavbar
-      expand="lg"
+      expand="xl"
       className="navbar"
       expanded={expanded}
       onToggle={setExpanded}
