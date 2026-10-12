@@ -10,7 +10,7 @@ import {
   addItemToList,
 } from '../services/favoriteApi.js';
 
-function MovieCard({ movie }) {
+function MovieCard({ movie, footerAction }) {
   const { accessToken } = useAuth();
 
   const [groupsState, setGroupsState] = useState({
@@ -327,6 +327,8 @@ const posterUrl =
             </div>
           </div>
         )}
+
+        {footerAction}
       </div>
     </div>
   );

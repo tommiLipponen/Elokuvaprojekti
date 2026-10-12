@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import MovieCard from '../components/MovieCard.jsx'
 import { useAuth } from '../context/useAuth.js'
-import { getFavoriteListById } from '../services/favoriteApi.js'
+import {
+    getFavoriteListById,
+    removeItemFromList,
+} from '../services/favoriteApi.js'
 
 function FavoriteListDetailPage() {
     const { id } = useParams()
@@ -13,6 +16,8 @@ function FavoriteListDetailPage() {
         loading: true,
         error: '',
     })
+    const [removingMovieId, setRemovingMovieId] = useState(null)
+    const [actionError, setActionError] = useState('')
 
     useEffect(() => {
         let cancelled = false
@@ -62,6 +67,38 @@ function FavoriteListDetailPage() {
     const list = isCurrentResult ? result.list : null
     const error = isCurrentResult ? result.error : ''
 
+    async function handleRemoveMovie(movieId) {
+        setRemovingMovieId(movieId)
+        setActionError('')
+
+        try {
+            const response = await removeItemFromList(id, movieId, accessToken)
+            if (response?.message) {
+                throw new Error(response.message)
+            }
+
+            setResult((current) => {
+                if (current.id !== id || !current.list) {
+                    return current
+                }
+
+                return {
+                    ...current,
+                    list: {
+                        ...current.list,
+                        items: current.list.items.filter(
+                            (item) => item.movieId !== movieId,
+                        ),
+                    },
+                }
+            })
+        } catch (err) {
+            setActionError(err.message || 'Failed to remove movie.')
+        } finally {
+            setRemovingMovieId(null)
+        }
+    }
+
     if (loading) {
         return (
             <main className="container py-5 favorite-list-detail-page">
@@ -100,6 +137,12 @@ function FavoriteListDetailPage() {
                 {list.name}
             </h1>
 
+            {actionError && (
+                <p className="favorite-list-error" role="alert">
+                    {actionError}
+                </p>
+            )}
+
             {!list.items || list.items.length === 0 ? (
                 <p className="favorite-list-empty">
                     No movies in this list yet.
@@ -109,7 +152,21 @@ function FavoriteListDetailPage() {
                     {list.items.map((item) => (
                         <div key={item.movieId}>
                             {item.movie ? (
-                                <MovieCard movie={item.movie} />
+                                <MovieCard
+                                    movie={item.movie}
+                                    footerAction={
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary favorite-card-remove-button"
+                                            onClick={() => handleRemoveMovie(item.movieId)}
+                                            disabled={removingMovieId === item.movieId}
+                                        >
+                                            {removingMovieId === item.movieId
+                                                ? 'removing...'
+                                                : 'remove movie'}
+                                        </button>
+                                    }
+                                />
                             ) : (
                                 <p>Movie ID: {item.movieId}</p>
                             )}

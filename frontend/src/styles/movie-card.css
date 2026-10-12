@@ -97,3 +97,18 @@ line-clamp: 5;
   box-shadow: none;
   text-decoration: none;
 }
+
+.favorite-card-remove-button {
+  align-self: flex-start;
+  margin-top: 16px;
+}
+
+.favorite-card-remove-button:hover,
+.favorite-card-remove-button:focus-visible {
+  --bs-btn-hover-bg: var(--app-bg);
+  --bs-btn-hover-border-color: var(--bs-danger);
+  --bs-btn-hover-color: var(--bs-danger);
+  --bs-btn-active-bg: var(--app-bg);
+  --bs-btn-active-border-color: var(--bs-danger);
+  --bs-btn-active-color: var(--bs-danger);
+}
