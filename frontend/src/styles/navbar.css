@@ -8,6 +8,8 @@
 
 .navbar .navbar-greeting {
   color: var(--app-text);
+  display: flex;
+  align-items: center;
 }
 
 .navbar .nav-link {

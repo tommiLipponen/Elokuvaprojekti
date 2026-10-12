@@ -33,13 +33,13 @@ function Navbar() {
         <BootstrapNavbar.Toggle aria-controls="mainNavbar" aria-label="Toggle navigation" />
 
         <BootstrapNavbar.Collapse id="mainNavbar">
-          {accessToken && (
-            <BootstrapNavbar.Text className="me-auto navbar-greeting">
-              hi, {user?.username}
-            </BootstrapNavbar.Text>
-          )}
-
           <Nav className="ms-auto" onClick={() => setExpanded(false)}>
+            {accessToken && (
+              <BootstrapNavbar.Text className="navbar-greeting">
+                hi, {user?.username}
+              </BootstrapNavbar.Text>
+            )}
+
             <Nav.Link as={Link} to="/movies">
               search
             </Nav.Link>
