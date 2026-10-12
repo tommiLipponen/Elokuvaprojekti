@@ -288,7 +288,7 @@ useEffect(() => {
   const memberCount = approvedMembers.length;
 
   return (
-    <main className="container py-5 group-detail-page">
+    <div className="py-5 group-detail-page">
       <div className="group-detail-header">
         <div>
           <h1 className="group-detail-title">
@@ -464,7 +464,7 @@ useEffect(() => {
           )}
         </>
       )}
-    </main>
+    </div>
   );
 }
 

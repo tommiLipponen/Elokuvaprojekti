@@ -119,14 +119,14 @@ function GroupListPage() {
 
   if (!hasLoaded) {
     return (
-      <main className="container py-5 group-page">
+      <div className="py-5 group-page">
         <p>Loading groups...</p>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="container py-5 group-page">
+    <div className="py-5 group-page">
       <div className="list-page-header">
         <h1 className="group-title">groups</h1>
 
@@ -263,7 +263,7 @@ function GroupListPage() {
           </div>
         </div>
       )}
-    </main>
+    </div>
   );
 }
 

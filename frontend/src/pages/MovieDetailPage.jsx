@@ -240,7 +240,7 @@ function MovieDetailPage() {
 
   if (loadingMovie) {
     return (
-      <main className="container py-5 movie-detail-page">
+      <div className="py-5 movie-detail-page">
         <button
           type="button"
           className="btn btn-primary movie-detail-back-button"
@@ -250,13 +250,13 @@ function MovieDetailPage() {
         </button>
 
         <p>Loading...</p>
-      </main>
+      </div>
     );
   }
 
   if (!movie) {
     return (
-      <main className="container py-5 movie-detail-page">
+      <div className="py-5 movie-detail-page">
         <button
           type="button"
           className="btn btn-primary movie-detail-back-button"
@@ -266,12 +266,12 @@ function MovieDetailPage() {
         </button>
 
         <p>Movie not found.</p>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="container py-5 movie-detail-page">
+    <div className="py-5 movie-detail-page">
       <button
         type="button"
         className="btn btn-primary movie-detail-back-button"
@@ -480,7 +480,7 @@ function MovieDetailPage() {
           </form>
         )}
       </section>
-    </main>
+    </div>
   );
 }
 
