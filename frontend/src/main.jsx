@@ -14,6 +14,7 @@ import './styles/search.css';
 import './styles/profile.css';
 import './styles/groups.css';
 import './styles/favorites.css';
+import './styles/shared-lists.css';
 import './styles/login-register.css';
 import App from './App.jsx'
 
