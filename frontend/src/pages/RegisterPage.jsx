@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { register } from '../services/authApi.js';
+import { useNavigate } from 'react-router-dom'
 
 function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -9,6 +10,7 @@ function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -28,6 +30,7 @@ function RegisterPage() {
       }
 
       setMessage('Registration successful!');
+      navigate('/login');
     } catch {
       setMessage('Registration failed.');
     }
