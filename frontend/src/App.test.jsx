@@ -14,7 +14,7 @@ describe('App routing', () => {
       </AuthProvider>,
     );
 
-    expect(screen.getByRole('heading', { name: 'find your next favorite movie' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'popular movies' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'search' })).toBeInTheDocument();
   });
 

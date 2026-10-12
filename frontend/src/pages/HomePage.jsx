@@ -35,11 +35,6 @@ function HomePage() {
 
   return (
     <div className="home-page">
-      <section className="home-hero">
-        <h2 className="home-title">
-          find your next favorite movie
-        </h2>
-      </section>
 
       <section>
         <h2 className="now-playing-title">
