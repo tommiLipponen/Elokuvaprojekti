@@ -55,33 +55,33 @@ function SharedListDetailPage() {
     if (error) {
         return (
             <div className="py-5 shared-list-detail-page">
-                <Link
-                    to="/shared"
-                    className="btn btn-primary shared-list-back-button"
-                >
-                    go back
-                </Link>
-
-                <p className="shared-lists-error">
-                    {error}
-                </p>
+                <div className="detail-page-title-row shared-list-detail-title-row">
+                    <p className="shared-lists-error">{error}</p>
+                    <Link
+                        to="/shared"
+                        className="btn btn-primary shared-list-back-button"
+                    >
+                        go back
+                    </Link>
+                </div>
             </div>
         )
     }
 
     return (
         <div className="py-5 shared-list-detail-page">
-            <Link
-                to="/shared"
-                className="btn btn-primary shared-list-back-button"
-            >
-                go back
-            </Link>
-
             <div>
-                <h2 className="shared-list-detail-title">
-                    {list.name}
-                </h2>
+                <div className="detail-page-title-row shared-list-detail-title-row">
+                    <h2 className="shared-list-detail-title">
+                        {list.name}
+                    </h2>
+                    <Link
+                        to="/shared"
+                        className="btn btn-primary shared-list-back-button"
+                    >
+                        go back
+                    </Link>
+                </div>
 
                 {list.user?.username && (
                     <p className="shared-list-owner">
