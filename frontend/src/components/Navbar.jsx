@@ -52,6 +52,10 @@ function Navbar() {
               shared lists
             </Nav.Link>
 
+            <Nav.Link as={Link} to="/groups">
+              groups
+            </Nav.Link>
+
             {!accessToken ? (
               <Nav.Link as={Link} to="/login">
                 login
@@ -60,10 +64,6 @@ function Navbar() {
               <>
                 <Nav.Link as={Link} to="/favorites">
                   favorites
-                </Nav.Link>
-
-                <Nav.Link as={Link} to="/groups">
-                  groups
                 </Nav.Link>
 
                 <Nav.Link as={Link} to="/profile">
