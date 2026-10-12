@@ -1,4 +1,4 @@
-const { searchMovies, getNowPlaying, getMovieDetails} = require('./movies.provider');
+const { searchMovies, getNowPlaying, getMovieDetails, getPopularMovies} = require('./movies.provider');
 
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w342';
 
@@ -42,4 +42,9 @@ async function getMovie(tmdbId) {
   return toMovieDetails(movie);
 }
 
-module.exports = { search, nowPlaying, getMovie };
+async function popular() {
+  const results = await getPopularMovies();
+  return results.map(toMovieCard);
+}
+
+module.exports = { search, nowPlaying, getMovie, popular };

@@ -27,3 +27,14 @@ export async function getMovie(movieId) {
 
   return res.json();
 }
+
+export async function getPopularMovies() {
+  const res = await fetch(`${API_BASE}/popular`);
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch popular movies');
+  }
+
+  return res.json();
+}
+
