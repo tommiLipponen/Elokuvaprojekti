@@ -78,18 +78,18 @@ function FavoriteListPage() {
 
   if (!user) {
     return (
-      <main className="container py-5 favorite-list-page">
+      <div className="py-5 favorite-list-page">
         <h1 className="favorite-list-title">favorite lists</h1>
 
         <p className="text-muted">
           Log in to create and manage your favorite lists.
         </p>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="container py-5 favorite-list-page">
+    <div className="py-5 favorite-list-page">
       <header className="favorite-list-header">
         <h1 className="favorite-list-title">
           {user.username
@@ -241,7 +241,7 @@ function FavoriteListPage() {
           ))}
         </div>
       )}
-    </main>
+    </div>
   );
 }
 

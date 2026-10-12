@@ -23,7 +23,7 @@ const generateRefreshToken = (userId) => {
     return jwt.sign(
         { userId },
         getRequiredEnv('JWT_REFRESH_SECRET'),
-        { expiresIn: '7d' }
+        { expiresIn: '7d', jwtid: crypto.randomUUID() }
     );
 };
 

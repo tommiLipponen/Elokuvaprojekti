@@ -33,7 +33,7 @@ function SharedListPage() {
   }, []);
 
   return (
-    <main className="container py-5 shared-lists-page">
+    <div className="py-5 shared-lists-page">
       <h1 className="shared-lists-title">shared lists</h1>
 
       {loading && (
@@ -87,7 +87,7 @@ function SharedListPage() {
           ))}
         </div>
       )}
-    </main>
+    </div>
   );
 }
 

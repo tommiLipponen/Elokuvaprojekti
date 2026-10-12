@@ -1,12 +1,31 @@
 .movie-detail-header {
   display: flex;
-  gap: 30px;
+  flex-direction: column;
+  gap: 24px;
   margin-bottom: 50px;
 }
 
 .movie-detail-poster {
-  width: 300px;
+  width: 100%;
+  max-width: 300px;
   flex-shrink: 0;
+}
+
+.movie-detail-info {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 768px) {
+  .movie-detail-header {
+    flex-direction: row;
+    gap: 30px;
+  }
+
+  .movie-detail-poster {
+    width: 300px;
+  }
 }
 
 .movie-detail-image {
@@ -23,10 +42,6 @@
   justify-content: center;
   background: rgb(245 241 232 / 10%);
   border-radius: 12px;
-}
-
-.movie-detail-info {
-  flex: 1;
 }
 
 .movie-detail-title {

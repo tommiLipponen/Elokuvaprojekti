@@ -20,7 +20,8 @@ function Navbar() {
 
   return (
     <BootstrapNavbar
-      expand="lg"
+      expand="xl"
+      variant="dark"
       className="navbar"
       expanded={expanded}
       onToggle={setExpanded}
@@ -52,6 +53,10 @@ function Navbar() {
               shared lists
             </Nav.Link>
 
+            <Nav.Link as={Link} to="/groups">
+              groups
+            </Nav.Link>
+
             {!accessToken ? (
               <Nav.Link as={Link} to="/login">
                 login
@@ -60,10 +65,6 @@ function Navbar() {
               <>
                 <Nav.Link as={Link} to="/favorites">
                   favorites
-                </Nav.Link>
-
-                <Nav.Link as={Link} to="/groups">
-                  groups
                 </Nav.Link>
 
                 <Nav.Link as={Link} to="/profile">

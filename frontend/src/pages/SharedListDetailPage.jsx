@@ -46,15 +46,15 @@ function SharedListDetailPage() {
 
     if (loading) {
         return (
-            <main className="container py-5 shared-list-detail-page">
+            <div className="py-5 shared-list-detail-page">
                 <p>Loading...</p>
-            </main>
+            </div>
         )
     }
 
     if (error) {
         return (
-            <main className="container py-5 shared-list-detail-page">
+            <div className="py-5 shared-list-detail-page">
                 <Link
                     to="/shared"
                     className="btn btn-primary shared-list-back-button"
@@ -65,12 +65,12 @@ function SharedListDetailPage() {
                 <p className="shared-lists-error">
                     {error}
                 </p>
-            </main>
+            </div>
         )
     }
 
     return (
-        <main className="container py-5 shared-list-detail-page">
+        <div className="py-5 shared-list-detail-page">
             <Link
                 to="/shared"
                 className="btn btn-primary shared-list-back-button"
@@ -105,7 +105,7 @@ function SharedListDetailPage() {
                     </div>
                 )}
             </div>
-        </main>
+        </div>
     )
 }
 

@@ -32,6 +32,17 @@ body {
   margin-right: auto;
 }
 
+/* One gutter for every page: 16px per side on phones, 24px from tablet up */
+main.container {
+  --bs-gutter-x: 2rem;
+}
+
+@media (min-width: 768px) {
+  main.container {
+    --bs-gutter-x: 3rem;
+  }
+}
+
 
 /* Shared styles */
 
@@ -151,23 +162,3 @@ body {
   font-size: 1.2rem;
   font-weight: 500;
 }
-
-  /* Responsiveness */
-
-  @media (max-width: 1200px) {
-
-    .home-page,
-    .shared-lists-page,
-    .shared-list-detail-page,
-    .movie-search-page,
-    .movie-detail-page,
-    .profile-page,
-    .group-page,
-    .group-detail-page,
-    .favorite-list-page,
-    .favorite-list-detail-page,
-    .now-playing-page {
-      padding-left: 24px;
-      padding-right: 24px;
-    }
-  }
