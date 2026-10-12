@@ -59,7 +59,7 @@ function SharedListPage() {
           {lists.map((list) => (
             <div className="list-page-row" key={list.id}>
               <div className="list-page-header">
-                <div>
+                <div className="shared-list-title-row">
                   <Link
                     to={`/shared/${list.id}`}
                     className="list-page-title-link"
@@ -70,9 +70,9 @@ function SharedListPage() {
                   </Link>
 
                   {list.user?.username && (
-                    <p className="shared-lists-owner">
+                    <span className="shared-lists-owner">
                       by {list.user.username}
-                    </p>
+                    </span>
                   )}
                 </div>
 
