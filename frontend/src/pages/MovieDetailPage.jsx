@@ -319,7 +319,7 @@ function MovieDetailPage() {
           </p>
 
           {user && (
-            <div className="movie-card-actions">
+            <div className="movie-card-actions movie-detail-actions">
               <div className="movie-card-action">
                 <select
                   id={`favorite-list-${movie.tmdbId}`}
