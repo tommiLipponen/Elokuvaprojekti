@@ -84,10 +84,23 @@ main.container {
 
 .shared-list-back-button,
 .movie-detail-back-button {
-  display: block;
-  width: fit-content;
-  margin-left: auto;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.detail-page-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
   margin-bottom: 30px;
+}
+
+.detail-page-title-row h1,
+.detail-page-title-row h2,
+.detail-page-title-row p {
+  min-width: 0;
+  margin: 0;
 }
 
 .group-header,

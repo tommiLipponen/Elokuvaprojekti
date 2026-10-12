@@ -5,13 +5,17 @@
 
 .shared-list-title-row {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   flex-wrap: wrap;
   gap: 12px;
 }
 
 .shared-list-title-row h2 {
   margin: 0;
+}
+
+.shared-list-detail-title-row {
+  align-items: baseline;
 }
 
 .shared-lists-owner {

@@ -200,7 +200,12 @@ function FavoriteListPage() {
             <section className="favorite-list" key={list.id}>
               <div className="favorite-list-header">
                 <h2 className="favorite-list-title">
-                  {list.name}
+                  <Link
+                    to={`/favorites/${list.id}`}
+                    className="list-page-title-link"
+                  >
+                    {list.name}
+                  </Link>
                 </h2>
 
                 <div className="favorite-list-settings">
@@ -231,12 +236,6 @@ function FavoriteListPage() {
                 </div>
               </div>
 
-              <p className="text-muted small">
-                Visibility:{' '}
-                <span className="fw-semibold">
-                  {list.isPublic ? 'Public' : 'Private'}
-                </span>
-              </p>
             </section>
           ))}
         </div>
