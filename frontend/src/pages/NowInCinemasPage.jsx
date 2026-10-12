@@ -44,5 +44,3 @@ function NowInCinemasPage() {
 }
 
 export default NowInCinemasPage;
-
-

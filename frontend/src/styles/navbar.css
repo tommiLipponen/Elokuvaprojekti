@@ -8,8 +8,6 @@
 
 .navbar .navbar-greeting {
   color: var(--app-text);
-  font-family: "Cousine", var(--bs-body-font-family);
-  letter-spacing: 2px;
 }
 
 .navbar .nav-link {

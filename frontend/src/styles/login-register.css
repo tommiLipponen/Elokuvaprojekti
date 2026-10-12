@@ -11,6 +11,7 @@
 .register-form .password-toggle {
     color: var(--app-text);
     background: transparent;
+    background-color: transparent;
     border: none;
     border-bottom: 1px solid rgb(245 241 232 / 65%);
     border-radius: 0;
@@ -50,6 +51,7 @@
     -webkit-text-fill-color: var(--app-text);
     caret-color: var(--app-text);
     background-color: transparent !important;
+    transition: background-color 5000s ease-in-out 0s;
 }
 
 .login-form .password-toggle,
