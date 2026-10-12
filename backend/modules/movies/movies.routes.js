@@ -1,5 +1,5 @@
 const express = require('express');
-const { searchMoviesHandler, nowPlayingHandler, getMovieHandler } = require('./movies.controller');
+const { searchMoviesHandler, nowPlayingHandler, getMovieHandler, popularHandler, } = require('./movies.controller');
 
 const router = express.Router();
 
@@ -173,6 +173,7 @@ router.get('/now-playing', nowPlayingHandler);
  *             schema:
  *               $ref: '#/components/schemas/Error500'
  */
+router.get('/popular', popularHandler);
 router.get('/:tmdbId', getMovieHandler);
 
 module.exports = router;

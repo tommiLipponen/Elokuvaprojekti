@@ -82,4 +82,9 @@ async function getMovieDetails(tmdbId) {
   return callTmdb(`/movie/${tmdbId}`);
 }
 
-module.exports = { searchMovies, getGenreId, getNowPlaying, GENRES, getMovieDetails };
+async function getPopularMovies() {
+  const data = await callTmdb('/movie/popular');
+  return data.results || [];
+}
+
+module.exports = { searchMovies, getGenreId, getNowPlaying, GENRES, getMovieDetails, getPopularMovies };

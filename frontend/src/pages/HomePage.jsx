@@ -1,48 +1,32 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { useMovies } from '../hooks/useMovies.js'
-import { getNowPlaying } from '../services/movieApi.js'
+import { Link } from 'react-router-dom'
+import { getNowPlaying, getPopularMovies } from '../services/movieApi.js'
 import MovieCard from '../components/MovieCard.jsx'
 
 function HomePage() {
-  const [title, setTitle] = useState('')
+  const [popularMovies, setPopularMovies] = useState([])
   const [nowPlayingMovies, setNowPlayingMovies] = useState([])
-
-  const { search } = useMovies()
-  const navigate = useNavigate()
-
-  async function handleSubmit(event) {
-    event.preventDefault()
-
-    if (!title.trim()) {
-      return
-    }
-
-    await search({
-      title,
-      genre: '',
-      year: '',
-    })
-
-    navigate('/movies')
-  }
 
   useEffect(() => {
     let cancelled = false
 
-    async function loadNowPlayingMovies() {
+    async function loadMovies() {
       try {
-        const results = await getNowPlaying({ region: 'FI' })
+        const [popular, nowPlaying] = await Promise.all([
+          getPopularMovies(),
+          getNowPlaying({ region: 'FI' }),
+        ])
 
         if (!cancelled) {
-          setNowPlayingMovies(results.slice(0, 4))
+          setPopularMovies(popular.slice(0, 4))
+          setNowPlayingMovies(nowPlaying.slice(0, 4))
         }
       } catch (error) {
         console.error(error)
       }
     }
 
-    loadNowPlayingMovies()
+    loadMovies()
 
     return () => {
       cancelled = true
@@ -55,26 +39,21 @@ function HomePage() {
         <h2 className="home-title">
           find your next favorite movie
         </h2>
+      </section>
 
-        <form
-          onSubmit={handleSubmit}
-          className="home-search-form"
-        >
-          <input
-            type="text"
-            className="form-control home-search-input"
-            placeholder="Search by movie title..."
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-          />
+      <section>
+        <h2 className="now-playing-title">
+          popular movies
+        </h2>
 
-          <button
-            type="submit"
-            className="btn btn-primary"
-          >
-            search!
-          </button>
-        </form>
+        <div className="movie-results">
+          {popularMovies.map((movie) => (
+            <MovieCard
+              key={movie.tmdbId}
+              movie={movie}
+            />
+          ))}
+        </div>
       </section>
 
       <section>
