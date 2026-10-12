@@ -21,6 +21,7 @@ function Navbar() {
   return (
     <BootstrapNavbar
       expand="xl"
+      variant="dark"
       className="navbar"
       expanded={expanded}
       onToggle={setExpanded}
