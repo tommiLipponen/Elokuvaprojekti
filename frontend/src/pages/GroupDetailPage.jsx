@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/useAuth.js';
 import * as groupApi from '../services/groupApi.js';
 import MovieCard from '../components/MovieCard.jsx';
@@ -272,11 +272,29 @@ useEffect(() => {
   };
 
   if (!hasLoaded) {
-    return <p>Loading group...</p>;
+    return (
+      <div className="py-5 group-detail-page">
+        <div className="detail-page-title-row">
+          <p>Loading group...</p>
+          <Link to="/groups" className="btn btn-primary shared-list-back-button">
+            go back
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return (
+      <div className="py-5 group-detail-page">
+        <div className="detail-page-title-row">
+          <p className="group-error">{error}</p>
+          <Link to="/groups" className="btn btn-primary shared-list-back-button">
+            go back
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   // Check if the group has any approved members.
@@ -291,9 +309,14 @@ useEffect(() => {
     <div className="py-5 group-detail-page">
       <div className="group-detail-header">
         <div>
-          <h1 className="group-detail-title">
-            {group.name}
-          </h1>
+          <div className="detail-page-title-row">
+            <h1 className="group-detail-title">
+              {group.name}
+            </h1>
+            <Link to="/groups" className="btn btn-primary shared-list-back-button">
+              go back
+            </Link>
+          </div>
 
           <p className="group-member-count">
             {memberCount} members

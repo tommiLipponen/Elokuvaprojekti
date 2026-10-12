@@ -241,15 +241,16 @@ function MovieDetailPage() {
   if (loadingMovie) {
     return (
       <div className="py-5 movie-detail-page">
-        <button
-          type="button"
-          className="btn btn-primary movie-detail-back-button"
-          onClick={() => navigate(-1)}
-        >
-          go back
-        </button>
-
-        <p>Loading...</p>
+        <div className="detail-page-title-row">
+          <p>Loading...</p>
+          <button
+            type="button"
+            className="btn btn-primary movie-detail-back-button"
+            onClick={() => navigate(-1)}
+          >
+            go back
+          </button>
+        </div>
       </div>
     );
   }
@@ -257,29 +258,22 @@ function MovieDetailPage() {
   if (!movie) {
     return (
       <div className="py-5 movie-detail-page">
-        <button
-          type="button"
-          className="btn btn-primary movie-detail-back-button"
-          onClick={() => navigate(-1)}
-        >
-          go back
-        </button>
-
-        <p>Movie not found.</p>
+        <div className="detail-page-title-row">
+          <p>Movie not found.</p>
+          <button
+            type="button"
+            className="btn btn-primary movie-detail-back-button"
+            onClick={() => navigate(-1)}
+          >
+            go back
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="py-5 movie-detail-page">
-      <button
-        type="button"
-        className="btn btn-primary movie-detail-back-button"
-        onClick={() => navigate(-1)}
-      >
-        go back
-      </button>
-
       <section className="movie-detail-header">
         <div className="movie-detail-poster">
           {movie.posterUrl ? (
@@ -296,9 +290,18 @@ function MovieDetailPage() {
         </div>
 
         <div className="movie-detail-info">
-          <h1 className="movie-detail-title">
-            {movie.title}
-          </h1>
+          <div className="detail-page-title-row">
+            <h1 className="movie-detail-title">
+              {movie.title}
+            </h1>
+            <button
+              type="button"
+              className="btn btn-primary movie-detail-back-button"
+              onClick={() => navigate(-1)}
+            >
+              go back
+            </button>
+          </div>
 
           {movie.releaseYear && (
             <p className="movie-detail-year">

@@ -110,32 +110,34 @@ function FavoriteListDetailPage() {
     if (error) {
         return (
             <main className="container py-5 favorite-list-detail-page">
-                <Link
-                    to="/favorites"
-                    className="btn btn-primary shared-list-back-button"
-                >
-                    go back
-                </Link>
-
-                <p className="favorite-list-error" role="alert">
-                    {error}
-                </p>
+                <div className="detail-page-title-row shared-list-detail-title-row">
+                    <p className="favorite-list-error" role="alert">
+                        {error}
+                    </p>
+                    <Link
+                        to="/favorites"
+                        className="btn btn-primary shared-list-back-button"
+                    >
+                        go back
+                    </Link>
+                </div>
             </main>
         )
     }
 
     return (
         <main className="container py-5 favorite-list-detail-page">
-            <Link
-                to="/favorites"
-                className="btn btn-primary shared-list-back-button"
-            >
-                go back
-            </Link>
-
-            <h1 className="favorite-list-title">
-                {list.name}
-            </h1>
+            <div className="detail-page-title-row">
+                <h1 className="favorite-list-title">
+                    {list.name}
+                </h1>
+                <Link
+                    to="/favorites"
+                    className="btn btn-primary shared-list-back-button"
+                >
+                    go back
+                </Link>
+            </div>
 
             {actionError && (
                 <p className="favorite-list-error" role="alert">

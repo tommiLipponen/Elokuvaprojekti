@@ -48,6 +48,14 @@
   margin-bottom: 20px;
 }
 
+.movie-detail-info .detail-page-title-row {
+  margin-bottom: 20px;
+}
+
+.movie-detail-info .detail-page-title-row .movie-detail-title {
+  margin: 0;
+}
+
 .movie-detail-year,
 .movie-detail-genre,
 .movie-detail-rating {
