@@ -49,9 +49,7 @@
 .register-form .form-control:-webkit-autofill:focus {
     -webkit-text-fill-color: var(--app-text);
     caret-color: var(--app-text);
-    -webkit-box-shadow: 0 0 0 1000px var(--app-bg) inset;
-    box-shadow: 0 0 0 1000px var(--app-bg) inset;
-    transition: background-color 9999s ease-out;
+    background-color: transparent !important;
 }
 
 .login-form .password-toggle,

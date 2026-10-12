@@ -55,7 +55,7 @@ function SharedListPage() {
       )}
 
       {!loading && !error && lists.length > 0 && (
-        <div>
+        <div className="group-list">
           {lists.map((list) => (
             <div className="list-page-row" key={list.id}>
               <div className="list-page-header">

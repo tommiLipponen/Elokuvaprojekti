@@ -6,6 +6,12 @@
   gap: 20px;
 }
 
+.navbar .navbar-greeting {
+  color: var(--app-text);
+  font-family: "Cousine", var(--bs-body-font-family);
+  letter-spacing: 2px;
+}
+
 .navbar .nav-link {
   padding: 10px 12px;
   color: var(--app-accent-turquoise);
@@ -27,7 +33,7 @@
 
 .navbar .navbar-title {
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 500;
   color: var(--app-accent-orange);
   text-decoration: none;

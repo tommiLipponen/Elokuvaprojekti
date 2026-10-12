@@ -19,6 +19,8 @@ function FavoriteListPage() {
 
   const [newListName, setNewListName] = useState('');
   const [formError, setFormError] = useState('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -38,11 +40,16 @@ function FavoriteListPage() {
       return;
     }
 
+    setIsCreating(true);
+
     try {
       await addList(name);
       setNewListName('');
+      setShowCreateModal(false);
     } catch (err) {
       setFormError(err.message || 'Failed to create favorite list');
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -97,12 +104,23 @@ function FavoriteListPage() {
       <header className="favorite-list-header">
         <h1 className="favorite-list-title">
           {user.username
-            ? `${user.username}'s Favorite Lists`
-            : 'Favorite Lists'}
+            ? `${user.username}'s favorite lists`
+            : 'favorite lists'}
         </h1>
+
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => {
+            setFormError('');
+            setShowCreateModal(true);
+          }}
+        >
+          create list
+        </button>
       </header>
 
-      {formError && (
+      {formError && !showCreateModal && (
         <p className="favorite-list-error" role="alert">
           {formError}
         </p>
@@ -114,30 +132,66 @@ function FavoriteListPage() {
         </p>
       )}
 
-      <section className="favorite-list-create mb-5">
-        <h2 className="h4 mb-3">Create a new list</h2>
+      {showCreateModal && (
+        <div
+          className="modal d-block create-list-modal"
+          tabIndex="-1"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="createFavoriteListModalLabel"
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content create-list-modal-content">
+              <div className="modal-header">
+                <h2 className="modal-title fs-4" id="createFavoriteListModalLabel">
+                  create a list
+                </h2>
 
-        <form onSubmit={handleCreateList}>
-          <div className="mb-3">
-            <label htmlFor="listName" className="form-label">
-              New list name
-            </label>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => {
+                    setFormError('');
+                    setShowCreateModal(false);
+                  }}
+                  aria-label="Close"
+                />
+              </div>
 
-            <input
-              id="listName"
-              type="text"
-              className="form-control"
-              value={newListName}
-              onChange={(event) => setNewListName(event.target.value)}
-              placeholder="Enter list name"
-            />
+              <form onSubmit={handleCreateList} className="create-list-form">
+                <div className="modal-body">
+                  <input
+                    id="favorite-list-name"
+                    type="text"
+                    className="form-control"
+                    value={newListName}
+                    onChange={(event) => setNewListName(event.target.value)}
+                    placeholder="list name"
+                    aria-label="List name"
+                    autoFocus
+                  />
+                </div>
+
+                {formError && (
+                  <p className="favorite-list-error text-center" role="alert">
+                    {formError}
+                  </p>
+                )}
+
+                <div className="modal-footer">
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={isCreating}
+                  >
+                    {isCreating ? 'Creating...' : 'create list'}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-
-          <button type="submit" className="btn btn-primary">
-            create list
-          </button>
-        </form>
-      </section>
+        </div>
+      )}
 
       {loading && (
         <p className="text-muted" role="status">

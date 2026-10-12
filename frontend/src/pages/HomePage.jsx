@@ -35,7 +35,7 @@ function HomePage() {
         const results = await getNowPlaying({ region: 'FI' })
 
         if (!cancelled) {
-          setNowPlayingMovies(results.slice(0, 3))
+          setNowPlayingMovies(results.slice(0, 4))
         }
       } catch (error) {
         console.error(error)
@@ -77,7 +77,7 @@ function HomePage() {
         </form>
       </section>
 
-      <section className="home-now-playing">
+      <section>
         <h2 className="now-playing-title">
           now in Finnish cinemas
         </h2>
