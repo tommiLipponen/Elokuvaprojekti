@@ -102,6 +102,40 @@ describe('Groups API', () => {
         });
     });
 
+    describe('GET /api/groups/my-requests', () => {
+        test('returns the user\'s pending and rejected requests', async () => {
+            const findMany = jest.fn().mockResolvedValue([
+                { groupId: 'group-1', status: 'PENDING' },
+                { groupId: 'group-2', status: 'REJECTED' },
+            ]);
+
+            getPrisma.mockResolvedValue({
+                groupMembership: { findMany },
+            });
+
+            const response = await request(app)
+                .get('/api/groups/my-requests')
+                .set('Authorization', 'Bearer ' + 'test-token');
+
+            expect(response.status).toBe(200);
+            expect(response.body).toHaveLength(2);
+            expect(findMany).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    where: {
+                        userId: 'owner-1',
+                        status: { in: ['PENDING', 'REJECTED'] },
+                    },
+                })
+            );
+        });
+
+        test('returns 401 without access token', async () => {
+            const response = await request(app).get('/api/groups/my-requests');
+
+            expect(response.status).toBe(401);
+        });
+    });
+
     describe('GET /api/groups/:id', () => {
         test('owner can view group details', async () => {
             verifyAccessToken.mockReturnValue({

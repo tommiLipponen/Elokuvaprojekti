@@ -134,6 +134,23 @@ const hasPendingJoinRequest = async (groupId, userId) => {
     return Boolean(request);
 };
 
+const getMyJoinRequests = async (userId) => {
+    const prisma = await getPrisma();
+
+    const requests = await prisma.groupMembership.findMany({
+        where: {
+            userId,
+            status: { in: ['PENDING', 'REJECTED'] },
+        },
+        select: {
+            groupId: true,
+            status: true,
+        },
+    });
+
+    return requests;
+};
+
 const deleteGroup = async (groupId, userId) => {
     const prisma = await getPrisma();
 
@@ -231,6 +248,7 @@ module.exports = {
     getMyGroups,
     getGroupById,
     hasPendingJoinRequest,
+    getMyJoinRequests,
     deleteGroup,
     addMovieToGroup,
 };
