@@ -43,6 +43,22 @@ main.container {
   }
 }
 
+@media (any-pointer: coarse) {
+  :where(
+    button,
+    input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+    select,
+    a:not(.btn),
+    .btn
+  ) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  :where(a:not(.btn)) {
+    display: inline-flex;
+    align-items: center;
+  }
+}
 
 /* Shared styles */
 
