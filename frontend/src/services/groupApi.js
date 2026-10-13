@@ -19,6 +19,20 @@ export async function getMyGroups(accessToken) {
   return res.json();
 }
 
+export async function getMyJoinRequests(accessToken) {
+  const res = await fetch(`${API_BASE}/my-requests`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to get your join requests');
+  }
+
+  return res.json();
+}
+
 export async function getGroupById(groupId, accessToken) {
   const res = await fetch(`${API_BASE}/${groupId}`, {
     headers: {

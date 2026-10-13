@@ -76,6 +76,19 @@
   opacity: 0.7;
 }
 
+.group-request-status {
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.group-request-pending {
+  color: var(--app-accent-turquoise);
+}
+
+.group-request-rejected {
+  color: var(--app-accent-orange);
+}
+
 .group-button {
   min-width: 90px;
 }

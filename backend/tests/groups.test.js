@@ -72,12 +72,14 @@ describe('Groups API', () => {
                     name: 'Friday Movie Club',
                     ownerId: 'owner-1',
                     createdAt: new Date(),
+                    memberships: [{ userId: 'user-2' }, { userId: 'user-3' }],
                 },
                 {
                     id: 'group-2',
                     name: 'Weekend Movies',
                     ownerId: 'owner-2',
                     createdAt: new Date(),
+                    memberships: [],
                 },
             ];
 
@@ -93,6 +95,44 @@ describe('Groups API', () => {
             expect(response.status).toBe(200);
             expect(response.body).toHaveLength(2);
             expect(response.body[0].name).toBe('Friday Movie Club');
+            // approved members plus the owner, who has no membership row
+            expect(response.body[0].memberCount).toBe(3);
+            expect(response.body[1].memberCount).toBe(1);
+            expect(response.body[0].memberships).toBeUndefined();
+        });
+    });
+
+    describe('GET /api/groups/my-requests', () => {
+        test('returns the user\'s pending and rejected requests', async () => {
+            const findMany = jest.fn().mockResolvedValue([
+                { groupId: 'group-1', status: 'PENDING' },
+                { groupId: 'group-2', status: 'REJECTED' },
+            ]);
+
+            getPrisma.mockResolvedValue({
+                groupMembership: { findMany },
+            });
+
+            const response = await request(app)
+                .get('/api/groups/my-requests')
+                .set('Authorization', 'Bearer ' + 'test-token');
+
+            expect(response.status).toBe(200);
+            expect(response.body).toHaveLength(2);
+            expect(findMany).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    where: {
+                        userId: 'owner-1',
+                        status: { in: ['PENDING', 'REJECTED'] },
+                    },
+                })
+            );
+        });
+
+        test('returns 401 without access token', async () => {
+            const response = await request(app).get('/api/groups/my-requests');
+
+            expect(response.status).toBe(401);
         });
     });
 

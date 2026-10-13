@@ -14,7 +14,7 @@ function GroupListPage() {
   const [hasLoaded, setHasLoaded] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [myGroupIds, setMyGroupIds] = useState([]);
-  const [requestedGroupIds, setRequestedGroupIds] = useState([]);
+  const [joinRequests, setJoinRequests] = useState({});
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
@@ -34,13 +34,22 @@ function GroupListPage() {
         }
 
         if (accessToken) {
-          const myGroups = await groupApi.getMyGroups(accessToken);
+          const [myGroups, myRequests] = await Promise.all([
+            groupApi.getMyGroups(accessToken),
+            groupApi.getMyJoinRequests(accessToken),
+          ]);
 
           if (cancelled) return;
 
           setMyGroupIds(myGroups.map((group) => group.id));
+          setJoinRequests(
+            Object.fromEntries(
+              myRequests.map((request) => [request.groupId, request.status])
+            )
+          );
         } else {
           setMyGroupIds([]);
+          setJoinRequests({});
         }
 
         setHasLoaded(true);
@@ -92,7 +101,7 @@ function GroupListPage() {
   };
 
   const handleJoinRequest = async (groupId) => {
-    if (requestedGroupIds.includes(groupId)) return;
+    if (joinRequests[groupId] === 'PENDING') return;
     setError('');
 
     try {
@@ -103,7 +112,7 @@ function GroupListPage() {
         return;
       }
 
-      setRequestedGroupIds((ids) => [...ids, groupId]);
+      setJoinRequests((current) => ({ ...current, [groupId]: 'PENDING' }));
     } catch {
       setError('Failed to send join request');
     }
@@ -165,7 +174,9 @@ function GroupListPage() {
         {filteredGroups.map((group) => {
           const isMyGroup =
             myGroupIds.includes(group.id) || group.user?.id === user?.id;
-          const isRequested = requestedGroupIds.includes(group.id);
+          const requestStatus = joinRequests[group.id];
+          const isRequested = requestStatus === 'PENDING';
+          const isRejected = requestStatus === 'REJECTED';
 
           return (
             <div className="list-page-row" key={group.id}>
@@ -182,6 +193,18 @@ function GroupListPage() {
                 <span className="group-members">
                   {group.members?.length ?? group.memberCount ?? 0} members
                 </span>
+
+                {accessToken && !isMyGroup && isRequested && (
+                  <span className="group-request-status group-request-pending">
+                    request sent, waiting for the owner to respond
+                  </span>
+                )}
+
+                {accessToken && !isMyGroup && isRejected && (
+                  <span className="group-request-status group-request-rejected">
+                    your request was declined
+                  </span>
+                )}
               </div>
 
               {accessToken && isMyGroup ? (
@@ -199,7 +222,11 @@ function GroupListPage() {
                   onClick={() => handleJoinRequest(group.id)}
                   disabled={isRequested}
                 >
-                  {isRequested ? 'requested' : 'request to join'}
+                  {isRequested
+                    ? 'requested'
+                    : isRejected
+                      ? 'request again'
+                      : 'request to join'}
                 </button>
               ) : null}
             </div>
