@@ -209,6 +209,19 @@ const handleJoinRequest = async () => {
         (request) => request.userId !== userId
       )
     );
+
+    // Keep the member count and members list in sync without requiring a reload
+    if (result?.status === 'APPROVED') {
+      setGroup((currentGroup) => ({
+        ...currentGroup,
+        memberships: [
+          ...(currentGroup.memberships ?? []).filter(
+            (membership) => membership.userId !== userId
+          ),
+          result,
+        ],
+      }));
+    }
   };
 
   const handleRemoveMember = async (userId) => {
