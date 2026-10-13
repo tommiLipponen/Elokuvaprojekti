@@ -35,7 +35,7 @@ const getGroups = async () => {
 
     return groups.map((group) => ({
         ...group,
-        memberCount: group.memberships.length,
+        memberCount: group.memberships?.length ?? 0,
     }));
 };
 
