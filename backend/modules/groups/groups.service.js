@@ -21,9 +21,22 @@ const getGroups = async () => {
         orderBy: {
             createdAt: 'desc',
         },
+        include: {
+            memberships: {
+                where: {
+                    status: 'APPROVED',
+                },
+                select: {
+                    id: true,
+                },
+            },
+        },
     });
 
-    return groups;
+    return groups.map((group) => ({
+        ...group,
+        memberCount: group.memberships.length,
+    }));
 };
 
 const getMyGroups = async (userId) => {
