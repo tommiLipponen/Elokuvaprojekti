@@ -21,9 +21,25 @@ const getGroups = async () => {
         orderBy: {
             createdAt: 'desc',
         },
+        include: {
+            memberships: {
+                where: { status: 'APPROVED' },
+                select: { userId: true },
+            },
+        },
     });
 
-    return groups;
+    // The owner has no membership row, so count them once on top of approved members
+    return groups.map(({ memberships, ...group }) => {
+        const ownerHasMembership = memberships.some(
+            (membership) => membership.userId === group.ownerId
+        );
+
+        return {
+            ...group,
+            memberCount: memberships.length + (ownerHasMembership ? 0 : 1),
+        };
+    });
 };
 
 const getMyGroups = async (userId) => {

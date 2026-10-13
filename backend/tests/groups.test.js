@@ -72,12 +72,14 @@ describe('Groups API', () => {
                     name: 'Friday Movie Club',
                     ownerId: 'owner-1',
                     createdAt: new Date(),
+                    memberships: [{ userId: 'user-2' }, { userId: 'user-3' }],
                 },
                 {
                     id: 'group-2',
                     name: 'Weekend Movies',
                     ownerId: 'owner-2',
                     createdAt: new Date(),
+                    memberships: [],
                 },
             ];
 
@@ -93,6 +95,10 @@ describe('Groups API', () => {
             expect(response.status).toBe(200);
             expect(response.body).toHaveLength(2);
             expect(response.body[0].name).toBe('Friday Movie Club');
+            // approved members plus the owner, who has no membership row
+            expect(response.body[0].memberCount).toBe(3);
+            expect(response.body[1].memberCount).toBe(1);
+            expect(response.body[0].memberships).toBeUndefined();
         });
     });
 

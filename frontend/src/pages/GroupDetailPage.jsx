@@ -303,7 +303,10 @@ useEffect(() => {
       (membership) => membership.status === 'APPROVED'
     ) ?? [];
 
-  const memberCount = approvedMembers.length;
+  // The owner has no membership row, so count them once on top of approved members
+  const memberCount =
+    approvedMembers.length +
+    (approvedMembers.some((membership) => membership.userId === group.ownerId) ? 0 : 1);
 
   return (
     <div className="py-5 group-detail-page">
