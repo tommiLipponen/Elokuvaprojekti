@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { login, register, refresh, logout } from './authApi.js';
+import { login, register, refresh, logout } from '../src/services/authApi.js';
 
 function mockFetchOnce(body, { status = 200 } = {}) {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue({

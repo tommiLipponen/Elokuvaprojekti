@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getGroupById, createGroup, getMyGroups } from './groupApi.js';
+import { getGroupById, createGroup, getMyGroups } from '../src/services/groupApi.js';
 
 function mockFetchOnce(body, { status = 200 } = {}) {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue({

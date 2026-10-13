@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
-import { AuthProvider } from './context/AuthContext.jsx';
-import App from './App.jsx';
+import { AuthProvider } from '../src/context/AuthContext.jsx';
+import App from '../src/App.jsx';
 
 describe('App routing', () => {
   it('renders the home page and navbar at /', () => {
