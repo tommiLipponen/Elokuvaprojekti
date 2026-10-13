@@ -22,9 +22,20 @@ function GroupDetailPage() {
   const [isRequested, setIsRequested] = useState(false);
   const [membersError, setMembersError] = useState('');
 
+  // Group details require auth on the backend, so anonymous visitors are sent to login instead of hitting a 401
+  useEffect(() => {
+    if (!accessToken) {
+      navigate('/login', { replace: true });
+    }
+  }, [accessToken, navigate]);
+
   // useEffect → runs code when the component loads or when specified values change,
   // useEffect(() => {...}, [dependencies]);
   useEffect(() => {
+    if (!accessToken) {
+      return;
+    }
+
     // prevents the response from being used if the component is no longer active
     let cancelled = false;
 
