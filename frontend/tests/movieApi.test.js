@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { searchMovies, getMovie, getPopularMovies, getNowPlaying } from './movieApi.js';
+import { searchMovies, getMovie, getPopularMovies, getNowPlaying } from '../src/services/movieApi.js';
 
 function mockFetchOnce(body, { status = 200 } = {}) {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue({

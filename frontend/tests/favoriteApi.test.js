@@ -4,7 +4,7 @@ import {
   addItemToList,
   removeItemFromList,
   updateFavoriteListVisibility,
-} from './favoriteApi.js';
+} from '../src/services/favoriteApi.js';
 
 function mockFetchOnce(body, { status = 200 } = {}) {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
