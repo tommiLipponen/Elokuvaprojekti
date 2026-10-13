@@ -40,6 +40,10 @@ export async function getGroupById(groupId, accessToken) {
     },
   });
 
+  if (!res.ok) {
+    throw new Error('Failed to load group');
+  }
+
   return res.json();
 }
 
