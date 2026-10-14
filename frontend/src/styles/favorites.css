@@ -3,11 +3,10 @@
 }
 
 .favorite-list-settings {
-display: flex;
-flex-wrap: wrap;
-justify-content: flex-end;
-gap: 10px;
-margin-bottom: 25px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .favorite-list-view-button {
