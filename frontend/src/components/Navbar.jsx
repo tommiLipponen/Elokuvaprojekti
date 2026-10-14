@@ -37,7 +37,7 @@ function Navbar() {
           <Nav className="ms-auto" onClick={() => setExpanded(false)}>
             {accessToken && (
               <BootstrapNavbar.Text className="navbar-greeting">
-                hi, {user?.username}
+                hi {user?.username}!
               </BootstrapNavbar.Text>
             )}
 

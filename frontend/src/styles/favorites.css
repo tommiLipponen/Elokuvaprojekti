@@ -10,7 +10,12 @@ gap: 10px;
 margin-bottom: 25px;
 }
 
+.favorite-list-view-button {
+  min-width: 90px;
+}
+
 .favorite-list-settings .favorite-list-visibility-button {
+  width: 170px;
   --bs-btn-hover-bg: var(--app-bg);
   --bs-btn-hover-border-color: var(--app-accent-turquoise);
   --bs-btn-hover-color: var(--app-accent-turquoise);
