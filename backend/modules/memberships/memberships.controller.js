@@ -25,9 +25,8 @@ const create = async (req, res) => {
             return res.status(400).json({ message: 'User is already a member of this group' });
         }
 
-        //tarkista
         if (membership.requestPending) {
-            return res.status(400).json({ message: 'Join request already exists' });
+            return res.status(409).json({ message: 'Join request already exists' });
         }
 
         return res.status(201).json(membership);

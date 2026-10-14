@@ -35,6 +35,7 @@
 
 .shared-lists-button {
   flex-shrink: 0;
+  min-width: 90px;
   white-space: nowrap;
 }
 

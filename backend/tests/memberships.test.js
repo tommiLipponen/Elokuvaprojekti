@@ -93,7 +93,7 @@ describe('Memberships API', () => {
             );
         });
 
-        test('returns 400 when a pending join request already exists', async () => {
+        test('returns 409 when a pending join request already exists', async () => {
             getPrisma.mockResolvedValue({
                 group: {
                     findUnique: jest.fn().mockResolvedValue({
@@ -116,7 +116,7 @@ describe('Memberships API', () => {
                 .post('/api/groups/group-1/join-requests')
                 .set('Authorization', 'Bearer test-token');
 
-            expect(response.status).toBe(400);
+            expect(response.status).toBe(409);
             expect(response.body.message).toBe(
                 'Join request already exists'
             );

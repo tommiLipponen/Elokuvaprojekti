@@ -68,8 +68,6 @@ h3,
 .btn {
   font-family: "Cousine", var(--bs-body-font-family);
   letter-spacing: 2px;
-  padding-top: calc(var(--bs-btn-padding-y) + 1px);
-  padding-bottom: calc(var(--bs-btn-padding-y) - 1px);
 }
 
 /* Links */
@@ -107,6 +105,10 @@ h3,
 /* Primary button */
 
 .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.5;
   --bs-btn-bg: var(--app-bg);
   --bs-btn-border-color: var(--app-text);
   --bs-btn-color: var(--app-text);

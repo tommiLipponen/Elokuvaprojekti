@@ -14,7 +14,7 @@
 .profile-photo {
   width: 100px;
   height: 100px;
-  margin: 0 auto 15px;
+  margin: 0 auto 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,11 +30,11 @@
 
 .profile-email {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
 .profile-card hr {
-  margin: 30px 0;
+  margin: 40px 0;
   border-color: rgb(245 241 232 / 20%);
 }
 
@@ -42,17 +42,19 @@
   border-top-color: rgb(245 241 232 / 20%);
 }
 
-.profile-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
+.profile-actions,
 .profile-delete {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.profile-actions {
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.profile-delete {
   text-align: center;
 }
 
@@ -66,4 +68,10 @@
   font-family: var(--bs-body-font-family);
   letter-spacing: normal;
   text-align: center;
+  font-size: 1rem;
+}
+
+.profile-card .group-list .list-page-row,
+.profile-card .group-list .list-page-row:last-child {
+  border-bottom: 1px solid rgb(245 241 232 / 20%);
 }

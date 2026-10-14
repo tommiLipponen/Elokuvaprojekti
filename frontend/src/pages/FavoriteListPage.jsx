@@ -211,7 +211,7 @@ function FavoriteListPage() {
                 <div className="favorite-list-settings">
                   <Link
                     to={`/favorites/${list.id}`}
-                    className="btn btn-primary"
+                    className="btn btn-primary favorite-list-view-button"
                   >
                     view
                   </Link>
