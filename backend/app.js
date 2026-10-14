@@ -22,10 +22,9 @@ app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/movies', movieRoutes);
 app.use('/movies', reviewRoutes);
-app.use('/groups', groupRoutes);
-app.use('/groups', membershipsRoutes);
-app.use('/favorites', favoriteRoutes);
 
+// Groups/favorites are only ever called via /api/*, so no bare mount here —
+// a bare mount would collide with the SPA's identical client-side routes on reload.
 app.use('/api/groups', groupRoutes);
 app.use('/api/groups', membershipsRoutes);
 app.use('/api/favorites', favoriteRoutes);
