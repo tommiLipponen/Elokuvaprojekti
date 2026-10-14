@@ -71,11 +71,9 @@ main.container {
   box-shadow: 0 8px 10px -8px rgb(245 241 232 / 25%);
 }
 
-.home-title,
 .shared-lists-title,
 .now-playing-title,
 .movie-search-title,
-.movie-search-results-title,
 .group-title,
 .group-detail-title,
 .favorite-list-title {
@@ -119,7 +117,6 @@ main.container {
   margin: 0;
 }
 
-.group-header,
 .favorite-list-header {
   display: flex;
   align-items: center;

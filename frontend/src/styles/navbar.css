@@ -9,7 +9,7 @@
 }
 
 .navbar .navbar-nav {
-  gap: 4px;
+  gap: 6px;
 }
 
 .navbar .navbar-toggler {
@@ -35,9 +35,10 @@
 }
 
 .navbar .navbar-greeting {
-  color: var(--app-text);
+  color: var(--app-accent-orange);
   display: flex;
   align-items: center;
+  margin-right: 4px;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;

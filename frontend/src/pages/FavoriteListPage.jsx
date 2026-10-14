@@ -173,7 +173,7 @@ function FavoriteListPage() {
                     className="btn btn-primary"
                     disabled={isCreating}
                   >
-                    {isCreating ? 'Creating...' : 'create list'}
+                    {isCreating ? 'Creating...' : 'create!'}
                   </button>
                 </div>
               </form>
@@ -213,21 +213,21 @@ function FavoriteListPage() {
                     to={`/favorites/${list.id}`}
                     className="btn btn-primary"
                   >
-                    view list
+                    view
                   </Link>
 
                   <button
                     type="button"
-                    className="btn btn-outline-primary"
+                    className="btn btn-primary favorite-list-visibility-button"
                     onClick={() => handleTogglePublic(list)}
                     disabled={loading}
                   >
-                    {list.isPublic ? 'Make private' : 'Make public'}
+                    {list.isPublic ? 'make private' : 'make public'}
                   </button>
 
                   <button
                     type="button"
-                    className="btn btn-outline-danger"
+                    className="btn btn-danger"
                     onClick={() => handleDeleteList(list.id)}
                     disabled={loading}
                   >

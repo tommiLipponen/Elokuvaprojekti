@@ -213,7 +213,7 @@ function GroupListPage() {
                   className="btn btn-primary group-button"
                   onClick={() => navigate(`/groups/${group.id}`)}
                 >
-                  open group
+                  open
                 </button>
               ) : accessToken ? (
                 <button
@@ -281,7 +281,7 @@ function GroupListPage() {
                     className="btn btn-primary"
                     disabled={isCreating}
                   >
-                    {isCreating ? 'Creating...' : 'create Group'}
+                    {isCreating ? 'Creating...' : 'create!'}
                   </button>
                   
                 </div>

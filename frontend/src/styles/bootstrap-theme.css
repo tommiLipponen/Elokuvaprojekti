@@ -64,11 +64,12 @@ h6,
 
 h3,
 .navbar-brand,
-.hero-tagline,
 .nav-link,
 .btn {
   font-family: "Cousine", var(--bs-body-font-family);
   letter-spacing: 2px;
+  padding-top: calc(var(--bs-btn-padding-y) + 1px);
+  padding-bottom: calc(var(--bs-btn-padding-y) - 1px);
 }
 
 /* Links */
@@ -118,6 +119,14 @@ h3,
   --bs-btn-active-border-color: var(--app-text);
   --bs-btn-active-color: var(--app-text);
 
+}
+
+.btn-primary:disabled,
+.btn-primary.disabled {
+  color: var(--app-text);
+  background-color: var(--app-button-orange);
+  border-color: var(--app-text);
+  opacity: 1;
 }
 
 .btn-primary,
