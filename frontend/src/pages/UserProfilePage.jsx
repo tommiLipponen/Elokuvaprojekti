@@ -102,34 +102,6 @@ function UserProfilePage() {
           <span>{user.email}</span>
         </div>
 
-        <hr />
-
-        <div className="profile-actions">
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => navigate('/favorites')}
-          >
-            favorites
-          </button>
-
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={async () => {
-              try {
-                await logout();
-              } finally {
-                navigate('/');
-              }
-            }}
-          >
-            log out
-          </button>
-        </div>
-
-        <hr />
-
         <section className="group-section">
           <div className="group-section-header">
             <h2>my groups</h2>
@@ -186,6 +158,22 @@ function UserProfilePage() {
         </section>
 
         <hr />
+
+        <div className="profile-actions">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={async () => {
+              try {
+                await logout();
+              } finally {
+                navigate('/');
+              }
+            }}
+          >
+            log out
+          </button>
+        </div>
 
         <section className="profile-delete">       
           <button

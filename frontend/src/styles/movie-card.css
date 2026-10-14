@@ -92,6 +92,11 @@ line-clamp: 5;
   margin: 0;
 }
 
+.movie-card-action .form-select option:checked {
+  color: var(--app-text);
+  background-color: var(--app-bg);
+}
+
 .movie-card-actions .btn-primary {
   padding: 0;
   border: none;

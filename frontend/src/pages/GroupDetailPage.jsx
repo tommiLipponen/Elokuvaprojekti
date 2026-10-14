@@ -375,33 +375,35 @@ useEffect(() => {
 
             {/* Filter the memberships to only include approved members
                 and display them in the list. */}
-            <div className="group-members-list">
+            <ul className="group-members-list">
               {approvedMembers.map((membership) => (
-                <div
+                <li
                   className="group-member"
                   key={membership.id}
                 >
-                  <span>
-                    {membership.user?.username || membership.userId}
-                  </span>
+                  <div className="group-member-content">
+                    <span>
+                      {membership.user?.username || membership.userId}
+                    </span>
 
-                  {/* If the current user is the group owner and the member is not
-                      the owner, display a button to remove the member. */}
-                  {isOwner &&
-                    membership.userId !== group.ownerId && (
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={() =>
-                          handleRemoveMember(membership.userId)
-                        }
-                      >
-                        remove
-                      </button>
-                    )}
-                </div>
+                    {/* If the current user is the group owner and the member is not
+                        the owner, display a button to remove the member. */}
+                    {isOwner &&
+                      membership.userId !== group.ownerId && (
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={() =>
+                            handleRemoveMember(membership.userId)
+                          }
+                        >
+                          remove
+                        </button>
+                      )}
+                  </div>
+                </li>
               ))}
-            </div>
+            </ul>
 
             {/* If the current user is not the group owner, display a button
                 that allows the user to leave the group. */}

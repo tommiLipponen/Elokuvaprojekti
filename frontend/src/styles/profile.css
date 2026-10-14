@@ -6,11 +6,6 @@
   box-sizing: border-box;
 }
 
-.profile-title {
-  margin-bottom: 40px;
-  text-align: center;
-}
-
 .profile-user {
   text-align: center;
   margin-bottom: 30px;
@@ -40,7 +35,11 @@
 
 .profile-card hr {
   margin: 30px 0;
-  border-color: rgb(245 241 232 / 10%);
+  border-color: rgb(245 241 232 / 20%);
+}
+
+.profile-card > .group-section {
+  border-top-color: rgb(245 241 232 / 20%);
 }
 
 .profile-actions {
@@ -60,9 +59,11 @@
 .profile-actions .btn,
 .profile-delete .btn {
   width: fit-content;
-  padding: 10px 24px;
+  padding: 11px 24px 9px;
 }
 
-.profile-delete h2 {
-  margin-bottom: 20px;
+.profile-card .group-section-header h2 {
+  font-family: var(--bs-body-font-family);
+  letter-spacing: normal;
+  text-align: center;
 }

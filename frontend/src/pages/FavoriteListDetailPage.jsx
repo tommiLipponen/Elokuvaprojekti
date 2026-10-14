@@ -128,9 +128,9 @@ function FavoriteListDetailPage() {
     return (
         <main className="container py-5 favorite-list-detail-page">
             <div className="detail-page-title-row">
-                <h1 className="favorite-list-title">
+                <h2 className="favorite-list-title">
                     {list.name}
-                </h1>
+                </h2>
                 <Link
                     to="/favorites"
                     className="btn btn-primary shared-list-back-button"

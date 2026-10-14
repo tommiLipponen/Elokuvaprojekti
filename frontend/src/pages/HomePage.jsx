@@ -35,11 +35,6 @@ function HomePage() {
 
   return (
     <div className="home-page">
-      <section className="home-hero">
-        <h2 className="home-title">
-          find your next favorite movie
-        </h2>
-      </section>
 
       <section>
         <h2 className="now-playing-title">
@@ -56,7 +51,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section>
+      <section className="home-cinema-section">
         <h2 className="now-playing-title">
           now in Finnish cinemas
         </h2>
@@ -75,7 +70,7 @@ function HomePage() {
             to="/movies/now-playing"
             className="btn btn-primary"
           >
-            find more movies!
+            find more movies in cinemas!
           </Link>
         </div>
       </section>

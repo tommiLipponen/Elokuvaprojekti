@@ -11,7 +11,6 @@
 .register-form .password-toggle {
     color: var(--app-text);
     background: transparent;
-    background-color: transparent;
     border: none;
     border-bottom: 1px solid rgb(245 241 232 / 65%);
     border-radius: 0;
@@ -70,9 +69,7 @@
     box-shadow: none;
 }
 
-.login-form .mb-3,
 .login-form .mb-4,
-.register-form .mb-3,
 .register-form .mb-4 {
     margin-bottom: 24px;
 }
@@ -88,7 +85,7 @@
     margin-top: 8px;
     margin-bottom: 16px;
     width: fit-content;
-    padding: 10px 24px;
+    padding: 11px 24px 9px;
 }
 
 .login-register-title {
