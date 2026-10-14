@@ -157,8 +157,6 @@ function UserProfilePage() {
           </div>
         </section>
 
-        <hr />
-
         <div className="profile-actions">
           <button
             type="button"

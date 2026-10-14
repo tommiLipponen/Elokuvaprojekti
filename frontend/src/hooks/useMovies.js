@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { searchMovies } from '../services/movieApi.js';
 
 export function useMovies() {
   const [movies, setMovies] = useState([]);
 
-  async function search(filters) {
+  const search = useCallback(async (filters) => {
     const results = await searchMovies(filters);
     setMovies(results);
-  }
+  }, []);
 
   return { movies, search };
 }

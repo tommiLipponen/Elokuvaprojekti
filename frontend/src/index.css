@@ -185,3 +185,7 @@ main.container {
   margin: 0;
   font-weight: 500;
 }
+
+.group-settings > .group-join-requests-title {
+  margin-bottom: 30px;
+}

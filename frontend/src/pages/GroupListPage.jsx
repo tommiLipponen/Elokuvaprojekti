@@ -196,13 +196,13 @@ function GroupListPage() {
 
                 {accessToken && !isMyGroup && isRequested && (
                   <span className="group-request-status group-request-pending">
-                    request sent, waiting for the owner to respond
+                    Request sent, waiting for the owner to respond.
                   </span>
                 )}
 
                 {accessToken && !isMyGroup && isRejected && (
                   <span className="group-request-status group-request-rejected">
-                    your request was declined
+                    Your request was declined.
                   </span>
                 )}
               </div>
