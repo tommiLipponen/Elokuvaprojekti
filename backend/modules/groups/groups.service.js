@@ -242,6 +242,60 @@ const addMovieToGroup = async (groupId, movieTmdbId, userId) => {
     return groupMovie;
 };
 
+const removeMovieFromGroup = async (groupId, movieTmdbId, userId) => {
+    const prisma = await getPrisma();
+
+    const group = await prisma.group.findUnique({
+        where: {
+            id: groupId,
+        },
+        include: {
+            memberships: true,
+        },
+    });
+
+    if (!group) {
+        return null;
+    }
+
+    const isOwner = group.ownerId === userId;
+    const isApprovedMember = group.memberships.some(
+        (membership) =>
+            membership.userId === userId &&
+            membership.status === 'APPROVED'
+    );
+
+    if (!isOwner && !isApprovedMember) {
+        return {
+            accessDenied: true,
+        };
+    }
+
+    const movie = await prisma.movie.findUnique({
+        where: {
+            tmdbId: Number(movieTmdbId),
+        },
+        select: {
+            id: true,
+        },
+    });
+
+    if (!movie) {
+        return {
+            movieNotFound: true,
+        };
+    }
+
+    const result = await prisma.groupMovie.deleteMany({
+        where: {
+            groupId,
+            movieId: movie.id,
+        },
+    });
+
+    return result.count > 0 ? true : { movieNotInGroup: true };
+};
+
 module.exports = {
     createGroup,
     getGroups,
@@ -251,4 +305,5 @@ module.exports = {
     getMyJoinRequests,
     deleteGroup,
     addMovieToGroup,
+    removeMovieFromGroup,
 };

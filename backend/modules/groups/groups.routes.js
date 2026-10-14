@@ -7,6 +7,7 @@ const {
     getJoinRequestStatus,
     remove,
     addMovie,
+    removeMovie,
     listMyGroups,
     listMyJoinRequests,
 } = require('./groups.controller');
@@ -288,7 +289,40 @@ router.get('/:id', authMiddleware, getById);
  *       500:
  *         description: Failed to add movie to group
  */
+/**
+ * @swagger
+ * /groups/{id}/movies/{movieId}:
+ *   delete:
+ *     summary: Remove a movie from a group
+ *     description: Removes a movie from a group. Requires the owner or an approved member.
+ *     tags: [Groups]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: movieId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Movie removed from group
+ *       401:
+ *         description: Access token required or invalid
+ *       403:
+ *         description: Not an approved member of this group
+ *       404:
+ *         description: Group, movie, or group movie not found
+ *       500:
+ *         description: Failed to remove movie from group
+ */
 router.post('/:id/movies', authMiddleware, addMovie);
+router.delete('/:id/movies/:movieId', authMiddleware, removeMovie);
 router.delete('/:id', authMiddleware, remove);
 
 module.exports = router;

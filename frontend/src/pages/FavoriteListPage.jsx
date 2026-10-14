@@ -199,7 +199,7 @@ function FavoriteListPage() {
           {lists.map((list) => (
             <section className="favorite-list" key={list.id}>
               <div className="favorite-list-header">
-                <h2 className="favorite-list-title">
+                <h2 className="list-page-name">
                   <Link
                     to={`/favorites/${list.id}`}
                     className="list-page-title-link"

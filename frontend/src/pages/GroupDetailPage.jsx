@@ -21,6 +21,8 @@ function GroupDetailPage() {
   const [joinRequestsError, setJoinRequestsError] = useState('');
   const [isRequested, setIsRequested] = useState(false);
   const [membersError, setMembersError] = useState('');
+  const [groupMoviesError, setGroupMoviesError] = useState('');
+  const [removingMovieId, setRemovingMovieId] = useState(null);
 
   // Group details require auth on the backend, so anonymous visitors are sent to login instead of hitting a 401
   useEffect(() => {
@@ -249,6 +251,27 @@ const handleJoinRequest = async () => {
     }));
   };
 
+  const handleRemoveMovie = async (movieTmdbId) => {
+    setGroupMoviesError('');
+    setRemovingMovieId(movieTmdbId);
+
+    try {
+      await groupApi.removeMovieFromGroup(id, movieTmdbId, accessToken);
+      setGroup((currentGroup) => ({
+        ...currentGroup,
+        groupMovies: currentGroup.groupMovies.filter(
+          (groupMovie) => groupMovie.movie.tmdbId !== movieTmdbId
+        ),
+      }));
+    } catch (removeError) {
+      setGroupMoviesError(
+        removeError.message || 'Failed to remove movie from group'
+      );
+    } finally {
+      setRemovingMovieId(null);
+    }
+  };
+
 useEffect(() => {
   if (!accessToken || !id) {
     return;
@@ -378,6 +401,8 @@ useEffect(() => {
               <h2>Movies</h2>
             </div>
 
+            {groupMoviesError && <p>{groupMoviesError}</p>}
+
             {/* Check if the group has any movies. */}
             {group.groupMovies?.length > 0 ? (
               <div className="group-movies">
@@ -385,6 +410,20 @@ useEffect(() => {
                   <MovieCard
                     key={groupMovie.id}
                     movie={groupMovie.movie}
+                    footerAction={
+                      <button
+                        type="button"
+                        className="btn btn-primary favorite-card-remove-button"
+                        onClick={() =>
+                          handleRemoveMovie(groupMovie.movie.tmdbId)
+                        }
+                        disabled={removingMovieId !== null}
+                      >
+                        {removingMovieId === groupMovie.movie.tmdbId
+                          ? 'removing...'
+                          : 'remove movie'}
+                      </button>
+                    }
                   />
                 ))}
               </div>

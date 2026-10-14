@@ -45,7 +45,7 @@ margin-bottom: 12px;
   flex-wrap: wrap;
 }
 
-.favorite-list-header .favorite-list-title {
+.favorite-list-page > .favorite-list-header > .favorite-list-title {
   min-width: 0;
   overflow-wrap: anywhere;
 }

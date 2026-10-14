@@ -1,7 +1,11 @@
 .shared-lists-page > .shared-lists-title {
   margin-bottom: 10px;
   padding-bottom: 30px;
-  border-bottom: 1px solid rgb(245 241 232 / 10%);
+  border-bottom: 1px solid rgb(245 241 232 / 20%);
+}
+
+.shared-lists-page .group-list > .list-page-row:first-child {
+  padding-top: 40px;
 }
 
 .shared-lists-page .list-page-row > .list-page-header {
