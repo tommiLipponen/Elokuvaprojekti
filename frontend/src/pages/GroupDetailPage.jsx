@@ -424,7 +424,7 @@ useEffect(() => {
                             handleRemoveMember(membership.userId)
                           }
                         >
-                          remove
+                          Remove member.
                         </button>
                       )}
                   </div>

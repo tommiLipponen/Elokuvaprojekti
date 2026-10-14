@@ -163,6 +163,10 @@
   border-bottom: 1px solid rgb(245 241 232 / 10%);
 }
 
+.group-join-request:last-child {
+  border-bottom: 0;
+}
+
 .group-join-request > span {
   font-size: 1.2rem;
 }
