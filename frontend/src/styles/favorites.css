@@ -3,6 +3,10 @@
   border-bottom: 1px solid rgb(245 241 232 / 20%);
 }
 
+.favorite-list:first-child {
+  padding-top: 0;
+}
+
 .favorite-list:last-child {
   border-bottom: none;
 }
