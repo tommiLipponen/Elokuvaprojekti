@@ -8,6 +8,7 @@ const {
     remove,
     addMovie,
     listMyGroups,
+    listMyJoinRequests,
 } = require('./groups.controller');
 
 const router = express.Router();
@@ -104,6 +105,37 @@ router.post('/', authMiddleware, create);
  *         description: Failed to get your groups
  */
 router.get('/mine', authMiddleware, listMyGroups);
+
+/**
+ * @swagger
+ * /groups/my-requests:
+ *   get:
+ *     summary: List my pending and rejected join requests
+ *     description: Returns the authenticated user's join requests that are still pending or were rejected.
+ *     tags: [Groups]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Join requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   groupId:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ *                     enum: [PENDING, REJECTED]
+ *       401:
+ *         description: Access token required or invalid
+ *       500:
+ *         description: Failed to get your join requests
+ */
+router.get('/my-requests', authMiddleware, listMyJoinRequests);
 
 /**
  * @swagger

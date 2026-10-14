@@ -3,6 +3,7 @@ const {
     getGroups,
     getGroupById,
     hasPendingJoinRequest,
+    getMyJoinRequests,
     deleteGroup,
     addMovieToGroup,
     getMyGroups,
@@ -119,6 +120,20 @@ const listMyGroups = async (req, res) => {
 };
 
 
+const listMyJoinRequests = async (req, res) => {
+    try {
+        const requests = await getMyJoinRequests(req.user.userId);
+
+        return res.status(200).json(requests);
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            message: 'Failed to get your join requests',
+        });
+    }
+};
+
 const addMovie = async (req, res) => {
     try {
         const { movieId } = req.body;
@@ -173,6 +188,7 @@ module.exports = {
     create,
     list,
     listMyGroups,
+    listMyJoinRequests,
     getById,
     getJoinRequestStatus,
     remove,

@@ -166,6 +166,15 @@ const updateJoinRequest = async (
         data: {
             status,
         },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    username: true,
+                    email: true,
+                },
+            },
+        },
     });
 
     return updatedMembership;

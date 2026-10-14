@@ -21,9 +21,25 @@ const getGroups = async () => {
         orderBy: {
             createdAt: 'desc',
         },
+        include: {
+            memberships: {
+                where: { status: 'APPROVED' },
+                select: { userId: true },
+            },
+        },
     });
 
-    return groups;
+    // The owner has no membership row, so count them once on top of approved members
+    return groups.map(({ memberships, ...group }) => {
+        const ownerHasMembership = memberships.some(
+            (membership) => membership.userId === group.ownerId
+        );
+
+        return {
+            ...group,
+            memberCount: memberships.length + (ownerHasMembership ? 0 : 1),
+        };
+    });
 };
 
 const getMyGroups = async (userId) => {
@@ -116,6 +132,23 @@ const hasPendingJoinRequest = async (groupId, userId) => {
     });
 
     return Boolean(request);
+};
+
+const getMyJoinRequests = async (userId) => {
+    const prisma = await getPrisma();
+
+    const requests = await prisma.groupMembership.findMany({
+        where: {
+            userId,
+            status: { in: ['PENDING', 'REJECTED'] },
+        },
+        select: {
+            groupId: true,
+            status: true,
+        },
+    });
+
+    return requests;
 };
 
 const deleteGroup = async (groupId, userId) => {
@@ -215,6 +248,7 @@ module.exports = {
     getMyGroups,
     getGroupById,
     hasPendingJoinRequest,
+    getMyJoinRequests,
     deleteGroup,
     addMovieToGroup,
 };

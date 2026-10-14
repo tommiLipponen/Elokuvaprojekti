@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
-import { AuthProvider } from './context/AuthContext.jsx';
-import App from './App.jsx';
+import { AuthProvider } from '../src/context/AuthContext.jsx';
+import App from '../src/App.jsx';
 
 describe('App routing', () => {
   it('renders the home page and navbar at /', () => {
@@ -14,7 +14,7 @@ describe('App routing', () => {
       </AuthProvider>,
     );
 
-    expect(screen.getByRole('heading', { name: 'find your next favorite movie' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'popular movies' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'search' })).toBeInTheDocument();
   });
 

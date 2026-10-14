@@ -22,9 +22,20 @@ function GroupDetailPage() {
   const [isRequested, setIsRequested] = useState(false);
   const [membersError, setMembersError] = useState('');
 
+  // Group details require auth on the backend, so anonymous visitors are sent to login instead of hitting a 401
+  useEffect(() => {
+    if (!accessToken) {
+      navigate('/login', { replace: true });
+    }
+  }, [accessToken, navigate]);
+
   // useEffect → runs code when the component loads or when specified values change,
   // useEffect(() => {...}, [dependencies]);
   useEffect(() => {
+    if (!accessToken) {
+      return;
+    }
+
     // prevents the response from being used if the component is no longer active
     let cancelled = false;
 
@@ -198,6 +209,19 @@ const handleJoinRequest = async () => {
         (request) => request.userId !== userId
       )
     );
+
+    // Keep the member count and members list in sync without requiring a reload
+    if (result?.status === 'APPROVED') {
+      setGroup((currentGroup) => ({
+        ...currentGroup,
+        memberships: [
+          ...(currentGroup.memberships ?? []).filter(
+            (membership) => membership.userId !== userId
+          ),
+          result,
+        ],
+      }));
+    }
   };
 
   const handleRemoveMember = async (userId) => {
@@ -303,7 +327,10 @@ useEffect(() => {
       (membership) => membership.status === 'APPROVED'
     ) ?? [];
 
-  const memberCount = approvedMembers.length;
+  // The owner has no membership row, so count them once on top of approved members
+  const memberCount =
+    approvedMembers.length +
+    (approvedMembers.some((membership) => membership.userId === group.ownerId) ? 0 : 1);
 
   return (
     <div className="py-5 group-detail-page">

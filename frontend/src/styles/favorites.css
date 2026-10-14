@@ -4,6 +4,7 @@
 
 .favorite-list-settings {
 display: flex;
+flex-wrap: wrap;
 justify-content: flex-end;
 gap: 10px;
 margin-bottom: 25px;
@@ -29,4 +30,17 @@ margin-bottom: 25px;
 .favorite-movie {
 display: flex;
 flex-direction: column;
+}
+
+.favorite-list-empty input {
+margin-bottom: 12px;
+}
+
+.favorite-list-header {
+  flex-wrap: wrap;
+}
+
+.favorite-list-header .favorite-list-title {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }

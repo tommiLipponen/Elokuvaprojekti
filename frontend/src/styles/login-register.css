@@ -57,6 +57,7 @@
 .register-form .password-toggle {
     border-left: none;
     padding-inline: 12px;
+    min-width: 44px;
 }
 
 .login-form .password-toggle:hover,
