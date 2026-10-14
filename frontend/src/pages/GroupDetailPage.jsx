@@ -409,7 +409,7 @@ useEffect(() => {
                   key={membership.id}
                 >
                   <div className="group-member-content">
-                    <span>
+                    <span className="group-member-name">
                       {membership.user?.username || membership.userId}
                     </span>
 
@@ -419,7 +419,7 @@ useEffect(() => {
                       membership.userId !== group.ownerId && (
                         <button
                           type="button"
-                          className="btn btn-primary"
+                          className="group-member-remove"
                           onClick={() =>
                             handleRemoveMember(membership.userId)
                           }
@@ -451,7 +451,7 @@ useEffect(() => {
                 <p>{joinRequestsError}</p>
               )}
 
-              <h2>Join Requests</h2>
+              <h2 className="group-join-requests-title">Join requests</h2>
 
               {/* If there are no pending join requests, display a message.
                   Otherwise, display all pending join requests as a list. */}
@@ -504,13 +504,16 @@ useEffect(() => {
               {deleteError && <p>{deleteError}</p>}
 
               {isOwner && (
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={handleDelete}
-                >
-                  delete group
-                </button>
+                <>
+                  <hr className="group-settings-divider" />
+                  <button
+                    type="button"
+                    className="btn btn-danger group-delete-button"
+                    onClick={handleDelete}
+                  >
+                    delete group
+                  </button>
+                </>
               )}
             </section>
           )}

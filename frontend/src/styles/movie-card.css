@@ -92,11 +92,26 @@ line-clamp: 5;
   margin: 0;
 }
 
+.movie-card-action .form-select {
+  color: var(--app-text);
+  background-color: var(--app-bg);
+  color-scheme: dark;
+}
+
+.movie-card-action .form-select option {
+  color: var(--app-text);
+  background-color: var(--app-bg);
+}
+
 .movie-card-action .form-select option:hover,
 .movie-card-action .form-select option:focus,
 .movie-card-action .form-select option:checked {
   color: var(--app-text);
   background-color: var(--app-bg);
+}
+
+.movie-card-message {
+  color: var(--app-accent-orange);
 }
 
 .movie-card-actions .btn-primary {

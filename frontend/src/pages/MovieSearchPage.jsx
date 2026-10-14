@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useMovies } from '../hooks/useMovies.js';
 import MovieCard from '../components/MovieCard.jsx';
 
@@ -10,16 +11,68 @@ const GENRES = [
 ];
 
 function MovieSearchPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.toString();
+
+  return (
+    <MovieSearchForm
+      key={searchQuery}
+      searchParams={searchParams}
+      searchQuery={searchQuery}
+      setSearchParams={setSearchParams}
+    />
+  );
+}
+
+function MovieSearchForm({ searchParams, searchQuery, setSearchParams }) {
   const { movies, search } = useMovies();
-  const [title, setTitle] = useState('');
-  const [genre, setGenre] = useState('');
-  const [year, setYear] = useState('');
-  const [hasSearched, setHasSearched] = useState(false);
+  const [title, setTitle] = useState(() => searchParams.get('title') ?? '');
+  const [genre, setGenre] = useState(() => searchParams.get('genre') ?? '');
+  const [year, setYear] = useState(() => searchParams.get('year') ?? '');
+  const [hasSearched, setHasSearched] = useState(
+    () => searchParams.get('searched') === '1',
+  );
+  const [searchError, setSearchError] = useState('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchQuery);
+    const filters = {
+      title: params.get('title') ?? '',
+      genre: params.get('genre') ?? '',
+      year: params.get('year') ?? '',
+    };
+    const shouldSearch = params.get('searched') === '1';
+
+    if (shouldSearch) {
+      search(filters).catch((error) => {
+        console.error(error);
+        setSearchError('Failed to search movies.');
+      });
+    }
+  }, [search, searchQuery]);
 
   async function handleSubmit(event) {
     event.preventDefault();
-    await search({ title, genre, year });
+
+    const params = new URLSearchParams();
+    if (title) params.set('title', title);
+    if (genre) params.set('genre', genre);
+    if (year) params.set('year', year);
+    params.set('searched', '1');
+
     setHasSearched(true);
+    setSearchError('');
+
+    if (params.toString() === searchQuery) {
+      try {
+        await search({ title, genre, year });
+      } catch (error) {
+        console.error(error);
+        setSearchError('Failed to search movies.');
+      }
+    } else {
+      setSearchParams(params);
+    }
   }
 
   return (
@@ -77,17 +130,25 @@ function MovieSearchPage() {
         <>
         <hr className="movie-search-divider" />
 
-      {movies.length === 0 && (
+      {searchError && (
+        <p className="movie-search-empty" role="alert">
+          {searchError}
+        </p>
+      )}
+
+      {!searchError && movies.length === 0 && (
         <p className="movie-search-empty">
           No movies found.
         </p>
       )}
 
-      <div className="movie-results">
-        {movies.map((movie) => (
-          <MovieCard key={movie.tmdbId} movie={movie} />
-        ))}
-      </div>
+      {!searchError && (
+        <div className="movie-results">
+          {movies.map((movie) => (
+            <MovieCard key={movie.tmdbId} movie={movie} />
+          ))}
+        </div>
+      )}
       </>
       )}
     </div>
