@@ -128,7 +128,7 @@ line-clamp: 5;
 }
 
 .favorite-card-remove-button {
-  align-self: flex-start;
+  align-self: center;
   margin-top: 16px;
 }
 
