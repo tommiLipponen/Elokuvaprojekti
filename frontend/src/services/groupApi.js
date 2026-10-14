@@ -94,6 +94,27 @@ export async function addMovieToGroup(groupId, movieId, accessToken) {
   return data;
 }
 
+export async function removeMovieFromGroup(
+  groupId,
+  movieId,
+  accessToken
+) {
+  const res = await fetch(
+    `${API_BASE}/${groupId}/movies/${movieId}`,
+    {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.message || 'Failed to remove movie from group');
+  }
+}
+
 export async function requestToJoinGroup(groupId, accessToken) {
   const res = await fetch(`${API_BASE}/${groupId}/join-requests`, {
     method: 'POST',

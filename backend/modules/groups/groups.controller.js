@@ -6,6 +6,7 @@ const {
     getMyJoinRequests,
     deleteGroup,
     addMovieToGroup,
+    removeMovieFromGroup,
     getMyGroups,
 } = require('./groups.service');
 
@@ -184,6 +185,48 @@ const addMovie = async (req, res) => {
     }
 };
 
+const removeMovie = async (req, res) => {
+    try {
+        const result = await removeMovieFromGroup(
+            req.params.id,
+            req.params.movieId,
+            req.user.userId
+        );
+
+        if (!result) {
+            return res.status(404).json({
+                message: 'Group not found',
+            });
+        }
+
+        if (result.accessDenied) {
+            return res.status(403).json({
+                message: 'You need to be an approved member of this group',
+            });
+        }
+
+        if (result.movieNotFound) {
+            return res.status(404).json({
+                message: 'Movie not found',
+            });
+        }
+
+        if (result.movieNotInGroup) {
+            return res.status(404).json({
+                message: 'Movie is not in this group',
+            });
+        }
+
+        return res.status(204).send();
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            message: 'Failed to remove movie from group',
+        });
+    }
+};
+
 module.exports = {
     create,
     list,
@@ -193,4 +236,5 @@ module.exports = {
     getJoinRequestStatus,
     remove,
     addMovie,
+    removeMovie,
 };

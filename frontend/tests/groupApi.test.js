@@ -1,5 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getGroupById, createGroup, getMyGroups } from '../src/services/groupApi.js';
+import {
+  getGroupById,
+  createGroup,
+  getMyGroups,
+  removeMovieFromGroup,
+} from '../src/services/groupApi.js';
 
 function mockFetchOnce(body, { status = 200 } = {}) {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
@@ -41,5 +46,29 @@ describe('groupApi', () => {
     mockFetchOnce({ error: 'Invalid or expired access token' }, { status: 401 });
 
     await expect(getMyGroups('bad-token')).rejects.toThrow('Failed to get your groups');
+  });
+
+  it('removeMovieFromGroup sends a delete request', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      status: 204,
+      ok: true,
+    }));
+
+    await removeMovieFromGroup('g1', 123, 'token');
+
+    expect(fetch).toHaveBeenCalledWith('/api/groups/g1/movies/123', {
+      method: 'DELETE',
+      headers: {
+        Authorization: 'Bearer token',
+      },
+    });
+  });
+
+  it('removeMovieFromGroup throws the server error message', async () => {
+    mockFetchOnce({ message: 'Movie is not in this group' }, { status: 404 });
+
+    await expect(
+      removeMovieFromGroup('g1', 123, 'token')
+    ).rejects.toThrow('Movie is not in this group');
   });
 });
