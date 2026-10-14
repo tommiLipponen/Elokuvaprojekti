@@ -147,6 +147,7 @@
 .group-settings-divider {
   margin: 30px 0 40px;
   border-color: rgb(245 241 232 / 20%);
+  opacity: 1;
 }
 
 .group-delete-button {

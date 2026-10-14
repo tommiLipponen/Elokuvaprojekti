@@ -134,10 +134,10 @@ line-clamp: 5;
 
 .favorite-card-remove-button:hover,
 .favorite-card-remove-button:focus-visible {
-  --bs-btn-hover-bg: var(--bs-danger);
+  --bs-btn-hover-bg: var(--app-button-orange);
   --bs-btn-hover-border-color: var(--app-text);
   --bs-btn-hover-color: var(--app-text);
-  --bs-btn-active-bg: var(--bs-danger);
+  --bs-btn-active-bg: var(--app-button-orange);
   --bs-btn-active-border-color: var(--app-text);
   --bs-btn-active-color: var(--app-text);
 }
