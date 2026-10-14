@@ -40,7 +40,7 @@ describe('Navbar', () => {
 
     renderNavbar();
 
-    expect(screen.getByText('hi, veera')).toBeInTheDocument();
+    expect(screen.getByText('hi veera!')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'favorites' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'profile' })).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'login' })).not.toBeInTheDocument();
