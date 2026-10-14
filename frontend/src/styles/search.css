@@ -46,6 +46,10 @@
   white-space: nowrap;
 }
 
+.movie-search-button span {
+  transform: translateY(2px);
+}
+
 .movie-search-divider {
   margin: 40px 0 30px;
   border-color: rgb(245 241 232 / 25%);

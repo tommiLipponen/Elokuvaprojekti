@@ -104,10 +104,14 @@ line-clamp: 5;
 }
 
 .movie-card-action .form-select option:hover,
-.movie-card-action .form-select option:focus,
+.movie-card-action .form-select option:focus {
+  color: var(--app-text);
+  background-color: var(--app-accent-orange);
+}
+
 .movie-card-action .form-select option:checked {
   color: var(--app-text);
-  background-color: var(--app-bg);
+  background-color: var(--app-accent-orange);
 }
 
 .movie-card-message {

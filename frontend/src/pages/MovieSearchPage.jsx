@@ -121,7 +121,7 @@ function MovieSearchForm({ searchParams, searchQuery, setSearchParams }) {
             type="submit"
             className="btn btn-primary movie-search-button"
           >
-            search!
+            <span>search!</span>
           </button>
         </div>
       </form>
